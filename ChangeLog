@@ -22,6 +22,13 @@ May 5, 2001:
   the hnPlayer will now send updates to its client to keep the client 
   up to date.
 
+  Fixed client to allow numpad movement as well as vi keys, for
+  those who prefer numpad stuff.  Currently it just looks for the
+  number characters -- honestly, it really ought to be looking for
+  the appropriate keys, so that htiting the numbers at the top of
+  the keyboard can be used for repeat-counts, as is done in NetHack,
+  but..  Baby steps, baby steps.  ;)
+
 May 4, 2001:
   Late update today.. that's because I've had to implement today's new
   feature twice.  I wanted to make creatures vanish from the map

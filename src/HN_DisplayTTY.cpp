@@ -124,30 +124,38 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			m_needsRefresh = true;		// need to print prompt on screen
 			break;
 		case 'h':
+		case '4':
 			//printf("Got move west.\n");
 			m_client->SendMove(DIR_West);
 			break;
 		case 'j':
+		case '2':
 			//printf("Got move south.\n");
 			m_client->SendMove(DIR_South);
 			break;
 		case 'k':
+		case '8':
 			//printf("Got move north.\n");
 			m_client->SendMove(DIR_North);
 			break;
+		case '6':
 		case 'l':
 			//printf("Got move east.\n");
 			m_client->SendMove(DIR_East);
 			break;
+		case '9':
 		case 'u':
 			m_client->SendMove(DIR_NorthEast);
 			break;
+		case '7':
 		case 'y':
 			m_client->SendMove(DIR_NorthWest);
 			break;
+		case '3':
 		case 'n':
 			m_client->SendMove(DIR_SouthEast);
 			break;
+		case '1':
 		case 'b':
 			m_client->SendMove(DIR_SouthWest);
 			break;
