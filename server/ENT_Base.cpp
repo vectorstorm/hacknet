@@ -13,10 +13,10 @@
 entBase::entBase( entType type, const hnPoint & pos, hnPlayer *player ):
 	m_type(type),
 	m_position(pos),
+	m_wieldedObject(NULL),
 	m_player(player),
 	m_hitPoints(1),		// set some minimum number of hitpoints so we don't die before somebody sets
-	m_maxHitPoints(1),	// the proper amount on us.
-	m_changedLevel(false)
+	m_maxHitPoints(1)	// the proper amount on us.
 {
 	m_status = new hnStatus(1);
 	m_inventory = new objBase(OBJECT_None,hnPoint(0,0,0));
@@ -165,6 +165,16 @@ entBase::Drop( objBase *object, uint8 count )
 	}
 }
 
+void
+entBase::Wield( objBase *object )
+{
+	if ( IsValidInventoryItem(object) )
+	{
+		m_wieldedObject = object;
+	}
+}
+
+
 bool
 entBase::IsValidMoveDestination( const hnPoint &destination )
 {
@@ -243,6 +253,18 @@ entBase::RollToHit( entBase *target)
 	return hit;
 }
 
+sint16
+entBase::RollDamage( entBase *foe )
+{
+	int damage = 1;
+	
+	// do other stuff in here too, like checking the player's
+	// strength and the weapon...  objBase should have a function
+	// to call to check a base weapon damage amount.
+	
+	return damage;
+}
+
 void
 entBase::Move( hnDirection dir )
 {
@@ -263,7 +285,6 @@ entBase::Move( hnDirection dir )
 			hnPoint2D stairsPos = map->GetDownStairs();
 			pos.x = stairsPos.x;
 			pos.y = stairsPos.y;
-			m_changedLevel = true;
 		}
 	}
 	else if ( dir == DIR_Down )
@@ -271,7 +292,6 @@ entBase::Move( hnDirection dir )
 		hnPoint2D stairsPos = map->GetUpStairs();
 		pos.x = stairsPos.x;
 		pos.y = stairsPos.y;
-		m_changedLevel = true;
 	}
 	
 	origMap->RemoveEntity(this);
@@ -344,6 +364,14 @@ entBase::Attack( hnDirection dir )
 	hnPoint target = GetPosition();
 	target.Increment(dir);
 
+	if ( m_wieldedObject )
+	{
+		// if the object is no longer in our inventory, we
+		// aren't attacking with it any more.
+		if ( !IsValidInventoryItem(m_wieldedObject) )
+			m_wieldedObject = NULL;
+	}
+
 	mapBase *map = hnDungeon::GetLevel( target.z );
 
 	entBase *foe = map->MapTile(target.x, target.y).entity;
@@ -351,7 +379,7 @@ entBase::Attack( hnDirection dir )
 	if ( RollToHit(foe) )
 	{
 		// we hit!
-		foe->GetStatus()->TakeDamage(1);	// just do one hit point of damage for now.
+		foe->GetStatus()->TakeDamage( RollDamage(foe) );	// just do one hit point of damage for now.
 
 		if ( foe->GetStatus()->Destroyed() )
 		{

@@ -19,6 +19,7 @@ class entBase
 
 	hnStatus		*m_status;
 	objBase			*m_inventory;
+	objBase			*m_wieldedObject;
 
 	hnPlayer		*m_player;	// if I'm player controlled, this is my player.
 	
@@ -53,6 +54,7 @@ public:
 	objBase *		GetInventory() { return m_inventory; }
 
 	virtual bool		RollToHit( entBase *target );
+	virtual sint16		RollDamage( entBase *target );
 	
 	void			SetPosition( const hnPoint & );
 	
@@ -74,6 +76,7 @@ public:
 	virtual bool		IsValidInventoryItem( objBase *object );
 
 	virtual void		Drop( objBase *object, uint8 count );
+	virtual void		Wield( objBase *object );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

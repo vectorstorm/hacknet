@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 14, 2001:
+  * Server-side initial implementation of 'wielding' objects.
+
 July 13, 2001:
   * Converted Take command to the newly modified system, so entBase
     should now only use objBase, not objDescription.  (This also

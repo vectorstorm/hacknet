@@ -188,6 +188,22 @@ hnPlayer::Drop( const objDescription &object, uint8 inventorySlot )
 	}
 }
 
+void
+hnPlayer::Wield( const objDescription &object, uint8 inventorySlot )
+{
+	if ( IsValidInventoryItem( object, inventorySlot ) )
+	{
+		m_queuedTurn.type = queuedTurn::Wield;
+		m_queuedTurn.wield.object = m_clientInventoryMapping[inventorySlot];
+	}
+	else
+	{
+		// unwield instead.
+		m_queuedTurn.type = queuedTurn::Wield;
+		m_queuedTurn.wield.object = NULL;
+	}
+}
+
 const hnPoint &
 hnPlayer::GetPosition()
 {
@@ -346,6 +362,9 @@ hnPlayer::DoAction()
 			break;
 		case queuedTurn::Drop:
 			m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.dropCount );
+			break;
+		case queuedTurn::Wield:
+			m_entity->Wield( m_queuedTurn.wield.object );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
