@@ -108,4 +108,14 @@ hnDisplay::MoveCommand( hnDirection dir )
 		m_client->SendAttack(dir);
 	else
 		m_client->SendMove(dir);	
+
+	PostTurnSubmit();
+}
+
+void
+hnDisplay::WaitCommand()
+{
+	m_client->SendWait();
+
+	PostTurnSubmit();
 }

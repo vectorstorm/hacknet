@@ -26,12 +26,14 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 	m_mode(MODE_Normal),
 	m_talkLength(0),
 	m_messageLines(0),
+	m_messageDisplayLine(0),
+	m_awaitingMore(false),
 	m_needsRefresh(false),
 	m_done(false)
 {
 	m_talkBuffer[0] = '\0';
 
-	for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
+	for ( int i = 0; i < MAX_MESSAGE_SCROLLBACK; i++ )
 		m_messageBuffer[i][0] = '\0';
 
 #ifndef __DEBUGGING_NETWORK__
@@ -106,7 +108,10 @@ hnDisplayTTY::EventLoop()
 		switch( m_mode )
 		{
 			case MODE_Normal:
-				HandleKeypressNormal( commandkey );
+				if ( m_awaitingMore )
+					HandleKeypressMore( commandkey );
+				else
+					HandleKeypressNormal( commandkey );
 				break;
 			case MODE_Talking:
 				HandleKeypressTalking( commandkey );
@@ -177,11 +182,35 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case '.':
 		case ' ':
-			m_client->SendWait( );
+			WaitCommand();
 			break;
 		default:
 			//printf("Got unknown keypress.\n");
 			break;
+	}
+}
+
+void
+hnDisplayTTY::HandleKeypressMore( int commandKey )
+{
+	//----------------------------------------------------------
+	//  Should we be checking to see what key is hit?
+	//  Currently, ANY key will advance to the next line.
+	//----------------------------------------------------------
+
+	if ( ++m_messageDisplayLine < m_messageLines )
+	{
+		//----------------------------------------------------------
+		// we have yet another 'more' line.
+		// this line doesn't need to be here, since it must be
+		// true in order for us to get here.. but it's here for
+		// clarity.  :)
+		//----------------------------------------------------------
+		m_awaitingMore = true;
+	}
+	else
+	{
+		m_awaitingMore = false;
 	}
 }
 
@@ -317,8 +346,8 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 			color_set( COLOR_MAGENTA, NULL );
 			theChar = 'x';
 		}
-		mvaddch(y + MAX_MESSAGE_LINES+1,x,theChar);
-		move(m_position.y + MAX_MESSAGE_LINES+1,m_position.x);
+		mvaddch(y + 3,x,theChar);
+		move(m_position.y + 3,m_position.x);
 
 		m_needsRefresh = true;
 	}
@@ -345,7 +374,12 @@ hnDisplayTTY::UpdateMapCreature( const hnPoint &point, entType type )
 void
 hnDisplayTTY::TextMessage( char * message )
 {
-	if ( m_messageLines < MAX_MESSAGE_LINES )
+	//----------------------------------------------------------------
+	//  TODO:  Concatonate messages if we can fit the new one onto
+	//         the end of the current one.
+	//----------------------------------------------------------------
+
+	if ( m_messageLines < MAX_MESSAGE_SCROLLBACK )
 	{
 		// we haven't filled up our set of lines yet, so just add us...
 		strncpy( m_messageBuffer[m_messageLines], message, MAX_MESSAGE_BYTES );
@@ -354,10 +388,16 @@ hnDisplayTTY::TextMessage( char * message )
 	else
 	{
 		// we're full, so scroll the lines up, then add us at the bottom.
-		for ( int i = 0; i < MAX_MESSAGE_LINES-1; i++ )
+		for ( int i = 0; i < m_messageLines-1; i++ )
 			strncpy( m_messageBuffer[i], m_messageBuffer[i+1], MAX_MESSAGE_BYTES );
-		strncpy( m_messageBuffer[MAX_MESSAGE_LINES-1], message, MAX_MESSAGE_BYTES );	
+		strncpy( m_messageBuffer[m_messageLines-1], message, MAX_MESSAGE_BYTES );	
 	}
+	
+	// if we're looking at a line further along than the new one
+	// (which means that we're not actually looking at anything),
+	// then reset us to look at this new line.
+	if ( m_messageDisplayLine >= m_messageLines )
+		m_messageDisplayLine = m_messageLines-1;
 	
 	m_needsRefresh = true;
 }
@@ -388,7 +428,7 @@ hnDisplayTTY::Refresh()
 		// clear upper prompt area.
 		int maxy, maxx;
 		getmaxyx(stdscr, maxy, maxx);
-		for ( int j = 0; j < MAX_MESSAGE_LINES+1; j++ )
+		for ( int j = 0; j < 3; j++ )
 		{
 			for ( int i = 0; i < maxx; i++ )
 			{
@@ -427,27 +467,48 @@ hnDisplayTTY::Refresh()
 
 		// do upper prompts.
 		
-		for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
+		/*for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
 		{
 			move( i, 0 );
 			printw("%s", m_messageBuffer[i]);
+		}*/
+		if ( m_messageDisplayLine < m_messageLines )
+		{
+			move( 0, 0 );
+			printw("%s", m_messageBuffer[m_messageDisplayLine]);
+			if ( m_awaitingMore )
+			{
+				move( 1, 0 );
+				printw("--more--");
+			}
 		}
 		
 		if ( m_mode == MODE_Talking )
 		{
 			// draw our string in the top few lines..
 			
-			move( MAX_MESSAGE_LINES, 2 );
+			move( 2, 2 );
 			printw("Say: %s", m_talkBuffer);
 		}
 		else
 		{
 			// now put our cursor back onto us, when in normal mode.
-			move(m_position.y + MAX_MESSAGE_LINES+1,m_position.x);
+			move(m_position.y + 3,m_position.x);
 		}
 	
 		refresh();
 #endif
 		m_needsRefresh = false;
 	}
+}
+
+void
+hnDisplayTTY::PostTurnSubmit()
+{
+	//--------------------------------------------------------
+	//  We've just submitted a turn, so if we received a message
+	//  during the last turn, push them back in the buffer.
+	//--------------------------------------------------------
+
+	m_messageDisplayLine = m_messageLines;
 }

@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 27, 2001:
+  * Lots of adjustments to ttyclient to switch towards a NetHack style
+    message display system.  (Only partly implemented so far)
+
 May 26, 2001:
   * MAP_Hack.cpp:  Adjusted function names.
   * OBJ_Base.cpp:  Objects should now theoretically stack properly.

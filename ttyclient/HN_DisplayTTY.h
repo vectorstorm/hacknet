@@ -14,14 +14,20 @@ class hnDisplayTTY : public hnDisplay
 
 #define MAX_TALK_BYTES		(128)
 
-#define MAX_MESSAGE_LINES	(3)
+#define MAX_MESSAGE_SCROLLBACK	(32)
 #define MAX_MESSAGE_BYTES	(256)
 	
 	char		m_talkBuffer[MAX_TALK_BYTES];
 	int		m_talkLength;
 	
-	char		m_messageBuffer[MAX_MESSAGE_LINES][MAX_MESSAGE_BYTES];
+	char		m_messageBuffer[MAX_MESSAGE_SCROLLBACK][MAX_MESSAGE_BYTES];
 	int		m_messageLines;
+	int		m_messageDisplayLine;	// current line being displayed.  If > MAX_MESSAGE_SCROLLBACK, we display nothing.
+
+	bool		m_awaitingMore;		// if true, we're waiting for a keypress to display the next line of text.
+						// this is NOT an inputmode -- We only grab the next keypress if we're in
+						// Normal mode.. otherwise, let the player finish whatever they're doing
+						// before we steal a keypress from them!
 
 	bool		m_needsRefresh;
 	bool		m_done;
@@ -33,8 +39,10 @@ public:
 
 	void		EventLoop();
 	void		HandleKeypressNormal( int key );
+	void		HandleKeypressMore( int key );
 	void		HandleKeypressTalking( int key );
 
+	virtual void	PostTurnSubmit();
 	
 	virtual void	Refresh();
 	

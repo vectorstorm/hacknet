@@ -713,6 +713,7 @@ mapHack::Generate()
 	MakeCorridors();
 	Wallify();
 	GenerateMonsters();
+	GenerateObjects();
 
 	PrepareVisibility();
 }

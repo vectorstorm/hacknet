@@ -29,6 +29,9 @@ public:
         void		AddObject(objBase *object);     // add us into our circular linked list
 	void		RemoveObject(objBase *object);  // find this object in our circular linked list and remove it
 	objBase *	RemoveObjectDescription( objDescription *objectDescription );	// match the description against one or more objects in our list and remove them, returning the removed object(s).
+
+	objBase *	GetFirstObject();		// gets the first object in our list.
+	objBase *	GetNextObject(objBase *object); // gets the next object in our list.
 		
 	
 	bool		Blessed() { return (m_blesscurse == BC_Blessed); }

@@ -37,6 +37,8 @@ public:
 	bool		isMapReady( int mapID ) { return (m_map[mapID] != NULL); }
 	
 	void		MoveCommand( hnDirection dir );	// send move or attack, as appropriate
+	void		WaitCommand();			// send wait command.
+	virtual void	PostTurnSubmit() {}		// called after submittting a turn.
 
 	virtual void	Refresh() {}
 	
