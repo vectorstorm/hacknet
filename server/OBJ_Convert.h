@@ -14,7 +14,15 @@
 #define P               DIR_Pierce
 #define S               DIR_Slash
 #define B               DIR_Whack
+#define PIERCE		DIR_Pierce
+#define SLASH		DIR_Slash
+#define WHACK		DIR_Whack
 
+#define RAY		DIR_Ray
+#define IMMEDIATE	DIR_Immediate
+#define NODIR		DIR_None
+
+#define P_NONE			SKILL_None
 #define P_DAGGER                SKILL_Dagger
 #define P_KNIFE                 SKILL_Knife
 #define P_AXE                   SKILL_Axe
@@ -34,6 +42,7 @@
 #define P_WHIP                  SKILL_Whip
 #define P_QUARTERSTAFF          SKILL_Quarterstaff
 #define P_FLAIL                 SKILL_Flail
+#define P_UNICORN_HORN		SKILL_UnicornHorn
 
 #define P_DART			SKILL_Dart
 #define P_SHURIKEN		SKILL_Shuriken
@@ -45,6 +54,15 @@
 #define P_BOW			SKILL_Bow
 #define P_SLING			SKILL_Sling
 #define P_CROSSBOW		SKILL_Crossbow
+
+#define P_ATTACK_SPELL		SKILL_AttackSpell
+#define P_ENCHANTMENT_SPELL	SKILL_EnchantmentSpell
+#define P_MATTER_SPELL		SKILL_MatterSpell
+#define P_CLERIC_SPELL		SKILL_ClericSpell
+#define P_ESCAPE_SPELL		SKILL_EscapeSpell
+#define P_HEALING_SPELL		SKILL_HealingSpell
+#define P_DIVINATION_SPELL	SKILL_DivinationSpell
+
 
 /*  Armour Types  */
 
@@ -64,13 +82,28 @@
 #define MITHRIL		MAT_Mithril
 #define GLASS		MAT_Glass
 #define COPPER		MAT_Copper
+#define FLESH		MAT_Flesh
+#define GOLD		MAT_Gold
+#define BONE		MAT_Bone
+#define PLASTIC		MAT_Plastic
+#define GEMSTONE	MAT_Gemstone
+#define WAX		MAT_Wax
+#define PLATINUM	MAT_Platinum
+#define LIQUID		MAT_Liquid
+#define PAPER		MAT_Paper
+#define VEGGY		MAT_Vegetable
 
 #define HI_METAL        MAT_Metal
+#define HI_MINERAL	MAT_Mineral
 #define HI_WOOD         MAT_Wood
 #define HI_SILVER       MAT_Silver
 #define HI_COPPER	MAT_Copper
 #define HI_CLOTH	MAT_Cloth
 #define HI_LEATHER	MAT_Leather
+#define HI_GOLD		MAT_Gold
+#define HI_GLASS	MAT_Glass
+#define HI_ORGANIC	MAT_Organic
+#define HI_PAPER	MAT_Paper
 
 /*  Colors */
 
@@ -85,6 +118,10 @@
 #define CLR_GRAY		COLOR_Gray
 #define CLR_YELLOW		COLOR_Yellow
 #define CLR_ORANGE		COLOR_Orange
+#define CLR_CYAN		COLOR_Cyan
+#define CLR_BRIGHT_GREEN	COLOR_BrightGreen
+#define CLR_BRIGHT_CYAN		COLOR_BrightCyan
+#define CLR_BRIGHT_BLUE		COLOR_BrightBlue
 
 /* Properties */
 
@@ -108,5 +145,30 @@
 #define LEVITATION		PROP_Levitation
 #define CLAIRVOYANT		PROP_Clairvoyant
 #define TELEPAT			PROP_Telepathy
+#define UNCHANGING		PROP_Unchanging
+#define MAGICAL_BREATHING	PROP_Magical_Breathing
+#define ADORNED			PROP_Adorned
+#define REGENERATION		PROP_Regeneration
+#define SEARCHING		PROP_Searching
+#define FIXED_ABIL		PROP_Fixed_Abilities
+#define HUNGER			PROP_Hunger
+#define CONFLICT		PROP_Conflict
+#define WARNING			PROP_Warning
+#define FREE_ACTION		PROP_Free_Action
+#define SLOW_DIGESTION		PROP_Slow_Digestion
+#define TELEPORT		PROP_Teleport
+#define TELEPORT_CONTROL	PROP_Teleport_Control
+#define POLYMORPH		PROP_Polymorph
+#define POLYMORPH_CONTROL	PROP_Polymorph_Control
+#define AGGRAVATE_MONSTER	PROP_Aggravate_Monster
+#define PROT_FROM_SHAPE_CHANGERS	PROP_Protection_From_Shape_Changers
+#define LIFESAVED		PROP_Life_Saved
+#define STRANGLED		PROP_Strangled
+#define SLEEPING		PROP_Sleeping
+#define SEE_INVIS		PROP_See_Invisible
+#define CONFUSION		PROP_Confusion
+#define BLINDED			PROP_Blinded
+#define HALLUC			PROP_Hallucination
+
 
 #endif  // OBJ_CONVERT_H

@@ -41,7 +41,8 @@ enum {
         MAT_Plastic,
         MAT_Glass,
         MAT_Gemstone,
-        MAT_Mineral
+        MAT_Mineral,
+	MAT_Organic
 };
 
 typedef uint8 colorType;
@@ -60,7 +61,11 @@ enum{
 	COLOR_Yellow,
 	COLOR_Orange,
 	COLOR_Magenta,
-	COLOR_Gray
+	COLOR_Gray,
+	COLOR_Cyan,
+	COLOR_BrightGreen,
+	COLOR_BrightCyan,
+	COLOR_BrightBlue
 };
 
 typedef uint8 armCategory;
@@ -120,6 +125,7 @@ struct objPrototype
 
 enum skillType
 {
+	SKILL_None,
 	SKILL_Dagger,
 	SKILL_Knife,
 	SKILL_Axe,

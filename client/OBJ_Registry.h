@@ -21,7 +21,7 @@ public:
 	static objRegistry *	GetInstance();
 	
 	void			SetName(uint16 i, char *name);
-	char *			GetName(uint16 i);
+	void			GetName(uint16 i, char *namebuffer, int bufferLength);
 	void			SetType(uint16 i, objType type);
 	objType			GetType(uint16 i);
 

@@ -151,6 +151,8 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 //    commands yet, even!)
 //----------------------------------------------------------------------
 
+	PostTurnSubmit();
+			
 	switch( commandkey )
 	{ 
 		case 'p':
@@ -224,7 +226,6 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			HandleDrop();
 			break;
 		case 'i':
-			PostTurnSubmit();
 			HandleInventory();
 			break;
 		case ',':
@@ -830,14 +831,20 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 	bool drawheaders = true;
 	bool drawletters = true;
 
-#define CATEGORY_COUNT (4)
+#define CATEGORY_COUNT (10)
 
 	const char * categoryName[CATEGORY_COUNT] =
 	{
 		"Amulets",
 		"Weapons",
 		"Armour",
-		"Potions"
+		"Comestibles",
+		"Scrolls",
+		"Spellbooks",
+		"Potions",
+		"Rings",
+		"Tools",
+		"Gems"
 	};
 
 	const objType categoryValue[CATEGORY_COUNT] =
@@ -845,7 +852,13 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		Amulet,
 		Weapon,
 		Armour,
-		Potion
+		Food,
+		Scroll,
+		Spellbook,
+		Potion,
+		Ring,
+		Tool,
+		Gem
 	};
 
 	if ( m_mode == MODE_FloorObjectDisplay )

@@ -69,15 +69,13 @@ objRegistry::SetName(uint16 i, char *name)
 	}
 }
 
-char *
-objRegistry::GetName(uint16 i)
+void
+objRegistry::GetName(uint16 i, char *result, int bufferLength)
 {
-	char * result = NULL;
-	
 	if ( i < m_nameCount )
-		result = m_objectName[i];
-	
-	return result;
+	{
+		snprintf(result, bufferLength, "%s", m_objectName[i]);
+	}
 }
 
 void
@@ -102,7 +100,36 @@ objRegistry::GetType(uint16 i)
 void
 objRegistry::GetObjectDescriptionText(const objDescription &desc, char *buffer, uint16 bufferlength)
 {
-	const char * name = GetName(desc.itemID);
+#define NAMEBUFFER_LEN (64)
+	char name[NAMEBUFFER_LEN] = "";
+	char adjective[NAMEBUFFER_LEN] = "";
+	char scrap[NAMEBUFFER_LEN] = "";
+	objType type = m_objectType[desc.itemID];
+	
+	GetName(desc.itemID, scrap, NAMEBUFFER_LEN);
+
+	switch( type )
+	{
+		case Potion:
+			snprintf(name, NAMEBUFFER_LEN, "potion");
+			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
+			break;
+		case Scroll:
+			snprintf(name, NAMEBUFFER_LEN, "scroll");
+			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
+			break;
+		case Wand:
+			snprintf(name, NAMEBUFFER_LEN, "wand");
+			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
+			break;
+		case Spellbook:
+			snprintf(name, NAMEBUFFER_LEN, "spellbook");
+			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
+			break;
+		default:
+			name = scrap;
+			break;
+	}
 	
 	if ( desc.count == 0 )
 		buffer[0]='\0';
@@ -110,12 +137,12 @@ objRegistry::GetObjectDescriptionText(const objDescription &desc, char *buffer, 
 	{
 		if ( name[0] == 'a' || name[0] == 'i' || name[0] == 'u' ||
 			name[0] == 'o' )
-			snprintf(buffer, bufferlength, "an %s", name);
+			snprintf(buffer, bufferlength, "an %s%s", name, adjective);
 		else
-			snprintf(buffer, bufferlength, "a %s", name);
+			snprintf(buffer, bufferlength, "a %s%s", name, adjective);
 	}
 	else
 	{
-		snprintf(buffer, bufferlength, "%d %ss", desc.count, name);
+		snprintf(buffer, bufferlength, "%d %ss%s", desc.count, name, adjective);
 	}
 }
