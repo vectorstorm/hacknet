@@ -92,6 +92,12 @@ hnPlayer::IsValidAttack( hnDirection dir )
 	return m_entity->IsValidAttack( dir );
 }
 
+bool
+hnPlayer::IsValidTake( const objDescription &object, uint8 stackID )
+{
+	return m_entity->IsValidTake(object,stackID);
+}
+
 void
 hnPlayer::Move( hnDirection dir )
 {
@@ -116,6 +122,17 @@ void
 hnPlayer::Wait()
 {
 	m_queuedTurn.type = queuedTurn::Wait;
+}
+
+void
+hnPlayer::Take( const objDescription &object, uint8 stackID )
+{
+	if ( IsValidTake( object, stackID ) )
+	{
+		m_queuedTurn.type = queuedTurn::Take;
+		m_queuedTurn.take.object = object;
+		m_queuedTurn.take.stackID = stackID;
+	}
 }
 
 const hnPoint &
@@ -242,7 +259,7 @@ hnPlayer::DoAction()
 	int result;
 	char name[128];
 	char buffer[128];
-	
+
 	switch ( m_queuedTurn.type )
 	{
 		case queuedTurn::Move:
@@ -270,6 +287,9 @@ hnPlayer::DoAction()
 			//netServer::GetInstance()->StartMetaPacket(m_playerID);
 			//netServer::GetInstance()->SendMessage(buffer);
 			//netServer::GetInstance()->TransmitMetaPacket();
+			break;
+		case queuedTurn::Take:
+			m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.stackID );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

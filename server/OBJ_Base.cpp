@@ -99,16 +99,16 @@ objBase::Unlink()
 }
 
 bool
-objBase::ExactMatch( objDescription *desc )
+objBase::ExactMatch( const objDescription &desc )
 {
 	bool matches = false;
 	
-	if ( desc->type == m_type )
+	if ( desc.type == m_type )
 	{
-		if ( desc->blesscurse == BC_Unknown ||
-			desc->blesscurse == m_blesscurse )
+		if ( desc.blesscurse == BC_Unknown ||
+			desc.blesscurse == m_blesscurse )
 		{
-			if ( desc->count == m_count )
+			if ( desc.count == m_count )
 			{
 				matches = true;
 			}
@@ -119,16 +119,16 @@ objBase::ExactMatch( objDescription *desc )
 }
 
 bool
-objBase::PartialMatch( objDescription *desc )
+objBase::PartialMatch( const objDescription &desc )
 {
 	bool matches = false;
 	
-	if ( desc->type == m_type )
+	if ( desc.type == m_type )
 	{
-		if ( desc->blesscurse == BC_Unknown ||
-			desc->blesscurse == m_blesscurse )
+		if ( desc.blesscurse == BC_Unknown ||
+			desc.blesscurse == m_blesscurse )
 		{
-			if ( desc->count <= m_count )
+			if ( desc.count <= m_count )
 			{
 				matches = true;
 			}

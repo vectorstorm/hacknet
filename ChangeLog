@@ -6,6 +6,11 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 2, 2001:
+  * 'Pick up' code migrated from hnGame to hnPlayer and entBase, so
+    that any entity can pick objects up, and players can queue up
+    object pickup commands, the same as movement commands.
+
 July 1, 2001:
   * Client can now 'pick up' objects with ',' -- no inventory yet,
     so 'picked up' items merely vanish from the level.  TODO:

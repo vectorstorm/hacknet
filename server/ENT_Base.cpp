@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ENT_Base.h"
+#include "OBJ_Base.h"
 #include "MAP_Base.h"
 #include "HN_Dungeon.h"
 #include "HN_Player.h"
@@ -59,6 +60,48 @@ entBase::IsValidMove( hnDirection dir )
 	hnPoint point;
 
 	return FindMoveDestination(point,dir);
+}
+
+bool
+entBase::IsValidTake( const objDescription &object, uint8 stackID )
+{
+	return ( GetTakeTarget(object,stackID) != NULL );
+}
+
+objBase *
+entBase::GetTakeTarget( const objDescription &desc, uint8 stackID )
+{
+	objBase *result = NULL;
+	
+	mapBase *map = hnDungeon::GetLevel( GetPosition().z );
+	
+	if ( map )
+	{
+		hnPoint pos = GetPosition();
+		objBase *realObject = map->MapTile( pos.x, pos.y ).object->GetObject(stackID);
+
+		if ( realObject && realObject->PartialMatch(desc) )
+			result = realObject;
+	}
+	return result;
+}
+
+void
+entBase::Take( const objDescription &desc, uint8 stackID )
+{
+	objBase *object = GetTakeTarget(desc,stackID);
+
+	if ( object )
+	{
+		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
+	
+		if ( map )
+		{
+			hnPoint pos = GetPosition();
+			map->MapTile(pos.x,pos.y).object->RemoveObject(object);
+			printf("Purging picked up item. (TODO: Implement inventory!)\n");
+		}
+	}
 }
 
 bool

@@ -40,8 +40,8 @@ public:
 
 	void			FillDescription( objDescription & );		// set the passed description to exactly match this object.
 	
-	bool			ExactMatch( objDescription *objectDescription );	// returns true if the passed description matches me exactly.  (ie: '3 beers' matches an object of '3 beers', but not of '4 beers'.)
-	bool			PartialMatch( objDescription *objectDescription );	// returns true if the passed description matches any quantity of me.	(ie: '3 beers' matches an object of '3 beers', and also of '4 beers'.)
+	bool			ExactMatch( const objDescription &objectDescription );	// returns true if the passed description matches me exactly.  (ie: '3 beers' matches an object of '3 beers', but not of '4 beers'.)
+	bool			PartialMatch( const objDescription &objectDescription );	// returns true if the passed description matches any quantity of me.	(ie: '3 beers' matches an object of '3 beers', and also of '4 beers'.)
 	
 	bool			Blessed() { return (m_blesscurse == BC_Blessed); }
 	bool			Cursed() { return (m_blesscurse == BC_Cursed); }

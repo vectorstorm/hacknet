@@ -228,19 +228,9 @@ hnGame::ClientTake(int playerID, objDescription &desc, uint8 stackID)
 	// check to make sure that the description and the stackID match.
 	
 	hnPoint pos = m_player[playerID]->GetPosition();
-
-	mapBase *map = hnDungeon::GetLevel(pos.z);
-
-	if ( map )
-	{
-		objBase *object = map->MapTile(pos.x,pos.y).object->GetObject(stackID);
-		
-		if ( object->PartialMatch( &desc ) )
-		{
-			map->MapTile(pos.x,pos.y).object->RemoveObject(object);
-			printf("Pickup from %s (player id %d).  Purging item.\n", m_player[playerID]->GetName(), playerID);
-		}
-	}
+	
+	m_player[playerID]->Take( desc, stackID );
+	ClientTurn();
 }
 
 void

@@ -352,7 +352,7 @@ mapBase::UpdateMap( mapClient * destMap )
 					for ( int i = 0; i < myTile->objectCount; i++ )
 					{
 						objBase *object = realTile->object->GetObject(i);
-						if ( !object->ExactMatch( &myTile->object[i] ) )
+						if ( !object->ExactMatch( myTile->object[i] ) )
 						{
 							reconstructDesc = true;
 						}

@@ -4,6 +4,7 @@
 #include "HN_Types.h"
 #include "HN_Enum.h"
 #include "HN_Point.h"
+#include "OBJ_Types.h"
 
 //class mapBase;
 class mapClient;
@@ -16,7 +17,8 @@ struct queuedTurn
 		None,
 		Move,
 		Wait,
-		Attack
+		Attack,
+		Take
 	};
 	int type;
 
@@ -27,6 +29,10 @@ struct queuedTurn
 		struct{
 			hnDirection direction;
 		} attack;
+		struct{
+			objDescription object;
+			uint8 stackID;
+		} take;
 	};
 };
 
@@ -76,6 +82,7 @@ public:
 	bool		HasQueuedTurn();	// are we ready to process a turn?
 	virtual bool	IsValidMove( hnDirection dir );
 	virtual bool	IsValidAttack( hnDirection dir );
+	virtual bool	IsValidTake( const objDescription &object, uint8 stackID );
 
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
@@ -97,6 +104,7 @@ public:
 	//  Queued Actions Beneath This Point ------------------------------------------
 	virtual void	Move( hnDirection dir );
 	virtual void	Attack( hnDirection dir );
+	virtual void	Take( const objDescription &desc, uint8 stackID );
 	virtual void	Wait( );
 	
 };

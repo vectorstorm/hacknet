@@ -5,8 +5,10 @@
 #include "HN_Point.h"
 #include "ENT_Types.h"
 #include "HN_Status.h"
+#include "OBJ_Types.h"
 
 class hnPlayer;
+class objBase;
 
 class entBase
 {
@@ -60,6 +62,10 @@ public:
 	virtual bool		IsValidAttack( hnDirection direction );	// Called to check to see if a move is legal.
 	virtual entBase *	GetAttackTarget( hnDirection direction );
 	virtual int		Attack( hnDirection direction );
+
+	virtual bool		IsValidTake( const objDescription &object, uint8 stackID );
+	virtual objBase *	GetTakeTarget( const objDescription &object, uint8 stackID );
+	virtual void		Take( const objDescription &object, uint8 stackID );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn
