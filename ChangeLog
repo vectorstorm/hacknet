@@ -1,3 +1,20 @@
+April 22, 2001:
+  Big changes today.  Here's the scoop:
+  
+  Added MAP_Client.cpp/.h.  This is a minimalist-implementation of mapBase
+  functionality, without dependencies on the entBase and objBase classes
+  (which the client isn't going to need).  Instead, it stores known map data
+  and an entity type and an object type for each square.  (It needs to be able
+  to store an object array for each square.. but we'll work on that later)
+
+  Here's the biggie, though..  I've moved about half of the movement code
+  into the entBase and entPlayer classes.  Once turns are properly synched
+  between nearby players, I'll be able to remove the rest of the movement
+  code, because it'll no longer be required.  (The movement code still in
+  hnGame is there to synchronise the movements of moving players with the
+  vision of non-moving players, if that makes any sense).
+  
+---
 April 21, 2001:
   Lots of renamed files, to make a more consistant file naming scheme.  Objects now
   have an OBJ prefix, Entities (players, monsters, etc) now have an ENT prefix, and

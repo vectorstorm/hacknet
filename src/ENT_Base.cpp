@@ -1,4 +1,10 @@
 #include "ENT_Base.h"
+#include "MAP_Base.h"
+#include "HN_Dungeon.h"
+
+#include "assert.h"
+
+extern hnPoint offsetVector[10];
 
 entBase::entBase( entType type, const hnPoint & pos ):
 	m_type(type),
@@ -28,6 +34,13 @@ entBase::Move( hnDirection dir )
 {
 	// By the time we're here, we've already determined that the requested
 	// move is legal.  So go ahead and do it.
+	
+	hnPoint pos = m_position + offsetVector[dir];
+	
+	mapBase *map = hnDungeon::GetLevel( pos.z );
+	assert(map != NULL);
+	
+	map->MoveEntityTo(this, pos.x, pos.y);
 
-
+	m_position = pos;
 }

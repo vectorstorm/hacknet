@@ -17,7 +17,6 @@ class entPlayer;
 struct playerData
 {
 	entPlayer	*entity;
-	hnPoint		pos;
 	//mapBase		*m_visionMap[MAX_LEVELS];
 };
 

@@ -19,7 +19,7 @@
 #define HACKNET_PORT 		(9274)
 #define MAX_DATA_SIZE		(100)	// how much data can we grab at once
 
-
+//#define __DEBUGGING_NETWORK__
 
 netClient::netClient(hnDisplay *display, char *serverAddress):
 	m_display(display), m_done(false)
@@ -67,7 +67,7 @@ netClient::StartClient( char * serverAddress )
 void
 netClient::Go()
 {
-	mapTile 	tile;				// for use in map updates
+	mapClientTile 	tile;				// for use in map updates
 	netMapTile tileData;
 	netMapEntity entityData;
 	netMapUpdateBBox bbox;
@@ -108,7 +108,7 @@ netClient::Go()
 			perror("recv");
 			cleanexit(1);
 		}
-	/*	
+#ifdef __DEBUGGING_NETWORK__	
 		char *bufferstart = buffer;
 		
 		for ( int i = 0; i < incomingBytes; i++ )	
@@ -116,7 +116,7 @@ netClient::Go()
 			printf("Value: %d\n",*(bufferstart + i));
 		}
 		while ( 1 ) {}
-	*/		
+#endif
 		netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
 		
 		while ( !packet->Done() )
@@ -145,17 +145,15 @@ netClient::Go()
 				case SPT_MapUpdateBBox:
 					//printf("Map bbox update packet\n");
 					packet->MapUpdateBBox(bbox);
-					//mapTile tile;
+					//mapClientTile tile;
 
 					for ( int i = 0; i < bbox.width; i++ )
 						for ( int j = 0; j < bbox.height; j++ )
 						{
 							tile.material = bbox.material[i+(j*bbox.width)];
 							tile.wall = bbox.wall[i+(j*bbox.width)];
-							tile.entity = NULL;
 							point.Set(bbox.loc.x+i, bbox.loc.y+j, 0);
-							if (bbox.entityType[i+(j*bbox.width)] == ENTITY_Player)
-								tile.entity = new entBase(ENTITY_Player, point);
+							tile.entity = bbox.entityType[i+(j*bbox.width)];
 							m_display->UpdateMapTile(bbox.loc.x+i, bbox.loc.y+j, tile);
 						}
 

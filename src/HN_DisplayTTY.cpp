@@ -9,13 +9,13 @@
 #include "HN_Enum.h"
 #include "HN_Consts.h"
 
-//#define DEBUGGING
+//#define __DEBUGGING_NETWORK__
 
 
 hnDisplayTTY::hnDisplayTTY():
 	m_needsRefresh(false)
 {
-#ifndef DEBUGGING
+#ifndef __DEBUGGING_NETWORK__
 	initscr();
 	keypad(stdscr,true); // enable keyboard mapping
 	nonl();
@@ -45,7 +45,7 @@ hnDisplayTTY::hnDisplayTTY():
 
 hnDisplayTTY::~hnDisplayTTY()
 {
-#ifndef DEBUGGING
+#ifndef __DEBUGGING_NETWORK__
 	refresh();
 	endwin();
 #endif
@@ -67,7 +67,7 @@ void * EventLoop(void *arg)
 {
 	netClient *client = (netClient *)arg;
 	
-#ifdef DEBUGGING
+#ifdef __DEBUGGING_NETWORK__
 	client->SendMove(DIR_West);
 #endif	
 
@@ -127,7 +127,7 @@ hnDisplayTTY::UpdateLocation( const hnPoint &point )
 {
 	hnDisplay::UpdateLocation(point);
 
-#ifndef DEBUGGING
+#ifndef __DEBUGGING_NETWORK__
 	//color_set( COLOR_WHITE,NULL);
 	//mvaddch(m_position.y,m_position.x,'@');
 	//move(m_position.y,m_position.x);
@@ -165,7 +165,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	};
 
 	// todo:  Adjust display for walls
-#ifndef DEBUGGING
+#ifndef __DEBUGGING_NETWORK__
 	
 	char theChar = ' ';
 
@@ -194,9 +194,9 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	
 	if ( x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT )
 	{
-		mapTile & tile = m_map->MapTile(x,y);
+		mapClientTile & tile = m_map->MapTile(x,y);
 
-		if ( tile.entity != NULL )		// if someone is standing here...
+		if ( tile.entity == ENTITY_Player )	// if someone is standing here...
 			theChar = '@';			// draw '@' instead of ground.  This is a HACK!
 		
 		color_set( floorTileColor[floorType],NULL);
@@ -211,7 +211,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 }
 
 void
-hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const mapTile &tile)
+hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const mapClientTile &tile)
 {
 	hnDisplay::UpdateMapTile(x,y,tile);
 	PlotSquare(x,y);
@@ -230,7 +230,7 @@ hnDisplayTTY::Refresh()
 {
 	if ( m_needsRefresh )
 	{
-#ifndef DEBUGGING
+#ifndef __DEBUGGING_NETWORK__
 		refresh();
 #endif
 		m_needsRefresh = false;

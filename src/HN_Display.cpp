@@ -7,7 +7,7 @@
 
 hnDisplay::hnDisplay()
 {
-	m_map = new mapBase(LEVEL_WIDTH, LEVEL_HEIGHT);
+	m_map = new mapClient(LEVEL_WIDTH, LEVEL_HEIGHT);
 }
 
 hnDisplay::~hnDisplay()
@@ -16,14 +16,11 @@ hnDisplay::~hnDisplay()
 }
 
 void
-hnDisplay::UpdateMapTile(sint8 x, sint8 y, const mapTile &tile)
+hnDisplay::UpdateMapTile(sint8 x, sint8 y, const mapClientTile &tile)
 {
 	m_map->MaterialAt(x,y) = tile.material;
 	m_map->WallAt(x,y) = tile.wall;
 
-	if ( m_map->MapTile(x,y).entity != NULL )
-		delete m_map->MapTile(x,y).entity;
-	
 	m_map->MapTile(x,y).entity = tile.entity;
 }
 
@@ -33,7 +30,7 @@ hnDisplay::UpdateMapCreature(sint8 x, sint8 y, entType type)
 /*	hnEntity *newEntity = NULL;
 	hnPoint where(x,y,0);
 	
-	mapTile & tile = m_map->MapTile(x,y);
+	mapClientTile & tile = m_map->MapTile(x,y);
 
 	if ( tile.entity )
 		delete tile.entity;

@@ -32,6 +32,9 @@ public:
 	virtual void		Think() {}			// Called to decide what to do each turn.
 	virtual void		Move( hnDirection direction );
 	
+	virtual void		PreTurn() {}			// Called before processing a turn
+	virtual void		PostTurn() {}			// Called after processing a turn
+	
 	//virtual void		Move( const hnPoint & offset ) {}
 	//virtual void		MoveTo( const hnPoint & position ) {}
 	

@@ -62,11 +62,11 @@ public:
 	bool		StartMetaPacket( int clientID );		// who will eventually receive this packet?
 	bool		TransmitMetaPacket();				// send the metapacket we were constructing
 	
-	void		SendClientLocation( hnPoint *loc );	// tell the client where they are.
+	void		SendClientLocation( const hnPoint &loc );	// tell the client where they are.
 //	bool		SendMapUpdate(int clientID, mapBase *map);	// server sends move update to client
-	void		SendMapTile( hnPoint *loc, const mapTile & floorType );  // new floortype
-	void		SendMapUpdateBBox( netMapUpdateBBox *bbox );
-	void		SendMapObjectList( hnPoint *loc, int numObjects, entType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
+	void		SendMapTile( const hnPoint & loc, const mapTile & floorType );  // new floortype
+	void		SendMapUpdateBBox( netMapUpdateBBox & bbox );
+	void		SendMapObjectList( const hnPoint & loc, int numObjects, entType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
 	
 	void		SendQuitConfirm( int clientID );	// doesn't require a metapacket
 	void		SendBadPacketNotice( int clientID );	// doesn't require a metapacket

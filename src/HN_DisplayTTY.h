@@ -15,7 +15,7 @@ public:
 	
 	virtual void	PlotSquare( sint8 x, sint8 y );
 	virtual void	UpdateLocation( const hnPoint &point );
-	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapTile &tile );
+	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapClientTile &tile );
 	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
 };
 

@@ -285,37 +285,48 @@ netServer::ProcessClientPacket(int clientID, const netClientPacket &packet)
 
 
 void
-netServer::SendClientLocation( hnPoint *loc )
+netServer::SendClientLocation( const hnPoint & loc )
 {
 	assert( m_metaPacket );
 	netClientLocation packet;
-	packet.loc = *loc;
+	packet.loc = loc;
 	m_metaPacket->ClientLocation(packet);
 }
 
 void
-netServer::SendMapTile( hnPoint *loc, const mapTile & tile )
+netServer::SendMapTile( const hnPoint & loc, const mapTile & tile )
 {
 	assert( m_metaPacket );
 	netMapTile packet;
-	packet.loc = *loc;
+	packet.loc = loc;
 	packet.material = tile.material;
 	packet.wall = tile.wall;
 	m_metaPacket->MapTile(packet);
 }
 
 void
-netServer::SendMapUpdateBBox( netMapUpdateBBox *bbox )
+netServer::SendMapUpdateBBox( netMapUpdateBBox & bbox )
 {
+	// note -- netMapUpdateBBox isn't 'const' here because it gets passed verbatim
+	// to the metapacket code, and the netInputMetapacket needs non-const references
+	// in order to read data out of the packet..  yes, we're using a netOutputMetaPacket
+	// here, but in order to use the same piece of code for reading data in and out
+	// of the packet, it still needs to be non-const.  Deal with it.  ;)
+	//
+	// Regardless, we do NOT want to change the contents of this structure!
+	
 	assert( m_metaPacket );
-	m_metaPacket->MapUpdateBBox(*bbox);
+	m_metaPacket->MapUpdateBBox(bbox);
 }
 
 //  remnant of old object list format -- # objects on square and type of top object
 void
-netServer::SendMapObjectList( hnPoint *loc, int numObjects, entType objecttype )
+netServer::SendMapObjectList( const hnPoint & loc, int numObjects, entType objecttype )
 {
-	/*assert(m_meatPacket);
+	/*
+	Unimplemented
+	
+	assert(m_meatPacket);
 	netMapObjectList packet;
 	packet.loc = loc;
 	packet.numObjects = numObjects;
@@ -388,7 +399,7 @@ netServer::TransmitMetaPacket()
 		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )
 			perror("send");
 		
-		/*for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
+/*		for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
 		{
 			printf("Value: %d\n", m_metaPacket->GetBuffer()[i]);
 		}*/
