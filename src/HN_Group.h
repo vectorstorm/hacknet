@@ -21,6 +21,7 @@ public:
 	void			RemovePlayer( hnPlayer * player );
 
 	int			GetPlayerCount() { return m_playerCount; }
+	int			QueuedTurnCount();			// how many players with queued turns?
 
 	void			ProcessTurn();
 };

@@ -2,6 +2,7 @@
 #include "HN_Player.h"
 #include "NET_Server.h"
 #include "HN_Dungeon.h"
+#include "HN_Group.h"
 #include "MAP_Base.h"
 
 #include "ENT_Human.h"
@@ -202,6 +203,16 @@ hnPlayer::PostTurn()
 	delete [] update.material;
 	delete [] update.wall;
 	delete [] update.entityType;
+	
+
+	if ( m_group )
+	{
+		// now we need to send some group data..  (We should always be in a group, even if it's just us!)
+		int groupMembers = m_group->GetPlayerCount();
+		int groupMembersWithTurns = m_group->QueuedTurnCount();
+		
+		netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, HasQueuedTurn() );
+	}
 	
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }

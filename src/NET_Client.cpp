@@ -81,6 +81,7 @@ netClient::Go()
 	netMapEntity entityData;
 	netMapUpdateBBox bbox;
 	netMapReset mapReset;
+	netGroupData groupData;
 	netClientLocation clientLoc;
 	hnPoint	point;
 	sint8	levelCount;
@@ -181,6 +182,10 @@ netClient::Go()
 					m_display->UpdateLocation( clientLoc.loc );
 					//printf("Client location packet\n");
 					//printf("loc: %d,%d,%d\n",clientLoc.loc.x,clientLoc.loc.y,clientLoc.loc.z);
+					break;
+				case SPT_GroupData:
+					packet->GroupData(groupData);
+					m_display->UpdateGroupData(groupData.memberCount, groupData.memberTurns, groupData.haveTurnFromClient );
 					break;
 				case SPT_MapTile:
 					//printf("Map tile packet\n");

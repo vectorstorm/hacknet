@@ -385,6 +385,16 @@ netServer::SendMapTile( const hnPoint & loc, const mapTile & tile )
 }
 
 void
+netServer::SendGroupData( int groupMemberCount, int groupMemberTurns, bool clientSubmitted )
+{
+	netGroupData packet;
+	packet.memberCount = groupMemberCount;
+	packet.memberTurns = groupMemberTurns;
+	packet.haveTurnFromClient = clientSubmitted;
+	m_metaPacket->GroupData( packet );
+}
+
+void
 netServer::SendDungeonReset( sint8 levelCount )
 {
 	m_metaPacket->DungeonReset( levelCount );

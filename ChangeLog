@@ -25,6 +25,15 @@ May 3, 2001:
   bunch of code to be removed from ClientMove() in hnGame, which is
   always a good thing!
 
+  You'd think I'd get enough programming at work!  Apparently not.  :)
+  In this update, the server now sends data to the client, detailing
+  how many members are in the player's group, how many of those have
+  submitted turns so far, and whether or not the player has submitted
+  a turn yet.  This can be displayed in whatever manner the client
+  display wishes  (The TTY client shows it on the bottom row of the
+  screen).  This line is only shown when more than one player is in
+  the client's group.
+
 May 2, 2001:
   Changed netServer and netClient in response to feedback that MSG_*
   enumerations weren't compiling successfully under FreeBSD.  As I'd

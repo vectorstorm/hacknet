@@ -149,6 +149,18 @@ netMetaPacket::MapObjectList( netMapObjectList &packet )
 }
 
 bool
+netMetaPacket::GroupData( netGroupData &packet )
+{
+	bool success = true;
+
+	sint8 type = SPT_GroupData;
+	Char( type );
+	Char( packet.memberCount );
+	Char( packet.memberTurns );
+	Char( packet.haveTurnFromClient );
+}
+
+bool
 netMetaPacket::Refresh()
 {
 	bool success = true;

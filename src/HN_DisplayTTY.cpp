@@ -339,6 +339,15 @@ hnDisplayTTY::TextMessage( char * message )
 }
 
 void
+hnDisplayTTY::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool submittedTurn )
+{
+	hnDisplay::UpdateGroupData( groupMemberCount, groupMemberTurnCount, submittedTurn );
+
+	if ( (groupMemberCount != m_groupMemberCount) || (m_groupMemberCount > 1) )
+		m_needsRefresh = true;
+}
+
+void
 hnDisplayTTY::Refresh()
 {
 	if ( m_needsRefresh )
@@ -352,18 +361,35 @@ hnDisplayTTY::Refresh()
 				PlotSquare(i,j);
 			}
 		
-		// clear prompt area.
+		// clear upper prompt area.
+		int maxy, maxx;
+		getmaxyx(stdscr, maxy, maxx);
 		for ( int j = 0; j < MAX_MESSAGE_LINES+1; j++ )
 		{
-			int maxy, maxx;
-			getmaxyx(stdscr, maxy, maxx);
+			for ( int i = 0; i < maxx; i++ )
+			{
+				mvaddch(j,i,' ');
+			}
+		}
+		// clear lower prompt area
+		for ( int j = 23; j < 24; j++ )
+		{
 			for ( int i = 0; i < maxx; i++ )
 			{
 				mvaddch(j,i,' ');
 			}
 		}
 		
-		// do prompts.
+		// do status bar
+		
+		if ( m_groupMemberCount > 1 )
+		{
+			move( 23, 0 );
+			printw("%d/%d group turns.  ", m_groupMemberTurnCount, m_groupMemberCount);
+			if ( !m_submittedTurn )
+				printw("You haven't submitted a turn.");
+		}
+		// do upper prompts.
 		
 		for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
 		{

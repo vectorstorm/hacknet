@@ -7,6 +7,7 @@
 
 class mapBase;
 class entBase;
+class hnGroup;
 
 struct queuedTurn
 {
@@ -48,12 +49,22 @@ class hnPlayer
 	
 	mapBase **	m_map;
 	int		m_mapCount;
-
+	
+	hnGroup *	m_group;				// pointer to the group we're a part of.
+	
 	queuedTurn	m_queuedTurn;
 	
 public:
 			hnPlayer( int playerID, const hnPoint & where );
 	virtual		~hnPlayer();
+	
+	void		SetName( char * name );
+	void		SetGroup( hnGroup * group ) { m_group = group; }
+	
+	const hnPoint &	GetPosition();
+	int		GetID() { return m_playerID; }
+	char *		GetName();
+
 	
 	bool		HasQueuedTurn();	// are we ready to process a turn?
 	virtual bool	IsValidMove( hnDirection dir );
@@ -61,18 +72,13 @@ public:
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
 	
-	const hnPoint &	GetPosition();
-	
 	virtual bool	CanSee( const hnPoint & position );
-	
-	void		SetName( char * name );
-	char *		GetName();
 	
 	virtual void	DoTurn();	// run our turn now.
 	virtual void	PostTurn();	// send results of our turn now.
 
 	virtual void	RefreshMap( int level );
-
+	
 	
 	//  Queued Actions Beneath This Point ------------------------------------------
 	virtual void	Move( hnDirection dir );

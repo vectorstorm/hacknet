@@ -22,7 +22,7 @@ class hnDisplayTTY : public hnDisplay
 	
 	char		m_messageBuffer[MAX_MESSAGE_LINES][MAX_MESSAGE_BYTES];
 	int		m_messageLines;
-	
+
 	bool		m_needsRefresh;
 	bool		m_done;
 	
@@ -41,6 +41,7 @@ public:
 	virtual void	UpdateLocation( const hnPoint &point );
 	virtual void	UpdateMapTile( const hnPoint &point, const mapClientTile &tile );
 	virtual void	UpdateMapCreature( const hnPoint &point, entType type );
+	virtual void	UpdateGroupData( int groupMembers, int groupMembersWithTurns, bool haveISubmitted );
 
 	virtual void	TextMessage( char * message );
 };

@@ -18,6 +18,10 @@ protected:
 	hnPoint		m_position;
 	mapClient	**m_map;	// this is our map of all the levels...
 	int		m_levelCount;
+
+	int		m_groupMemberCount;		// how many members in my group.
+	int		m_groupMemberTurnCount;		// how many members of my group have submitted turns so far.
+	bool		m_submittedTurn;		// have I submitted my turn yet?
 public:
 			hnDisplay( char * name );
 	virtual		~hnDisplay();
@@ -36,6 +40,7 @@ public:
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
 	virtual void	UpdateMapTile( const hnPoint &point, const mapClientTile & tile );
 	virtual void	UpdateMapCreature( const hnPoint &point, entType type );
+	virtual void	UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool submittedTurn );
 	virtual void	TextMessage( char * message ) {}
 
 	char *		GetName() { return m_name; }

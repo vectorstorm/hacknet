@@ -5,7 +5,10 @@
 #include "ENT_Types.h"
 
 hnDisplay::hnDisplay(char * name):
-	m_map(NULL)
+	m_map(NULL),
+	m_groupMemberCount(1),
+	m_groupMemberTurnCount(0),
+	m_submittedTurn(0)
 {
 	if ( name )
 	{
@@ -69,4 +72,12 @@ void
 hnDisplay::UpdateMapCreature(const hnPoint &point, entType type)
 {
 	// rolled into UpdateMapTile.
+}
+
+void
+hnDisplay::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool submittedTurn )
+{
+	m_groupMemberCount = groupMemberCount;
+	m_groupMemberTurnCount = groupMemberTurnCount;
+	m_submittedTurn = submittedTurn;
 }

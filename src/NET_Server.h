@@ -71,6 +71,7 @@ public:
 	bool		TransmitMetaPacket();				// send the metapacket we were constructing
 	
 	void		SendClientLocation( const hnPoint &loc );	// tell the client where they are.
+	void		SendGroupData( int groupMemberCount, int groupTurnsSubmitted, bool clientSubmittedTurn );
 //	bool		SendMapUpdate(int clientID, mapBase *map);	// server sends move update to client
 	void		SendMapTile( const hnPoint & loc, const mapTile & floorType );  // new floortype
 	void		SendMapUpdateBBox( netMapUpdateBBox & bbox );

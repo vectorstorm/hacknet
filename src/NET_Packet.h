@@ -14,6 +14,7 @@ enum{
 	SPT_MapUpdateBBox,
 	SPT_MapObjectList,
 	SPT_MapEntity,
+	SPT_GroupData,		// sending information on the player's group.
 	SPT_Message,		// message from the server
 	SPT_QuitConfirm,	// yes, you're out of the game
 	SPT_SaveConfirm,	// yes, you've been saved and are out of the game
@@ -32,6 +33,13 @@ struct netMapTile
 	hnPoint loc;
 	sint16 material;
 	sint16 wall;
+};
+
+struct netGroupData
+{
+	sint8 memberCount;
+	sint8 memberTurns;
+	sint8 haveTurnFromClient;
 };
 
 struct netMapReset		// we've moved to a new map.. init a map with this width/height.
@@ -99,6 +107,7 @@ public:
 	bool			ClientLocation( netClientLocation &packet );
 	bool			TextMessage( char * messagebuffer, sint16 & bufferlength );
 	bool			MapTile( netMapTile &packet );
+	bool			GroupData( netGroupData &packet );
 	bool			DungeonReset( sint8 & levelCount );
 	bool			MapReset( netMapReset &packet );
 	bool			MapUpdateBBox( netMapUpdateBBox &packet );

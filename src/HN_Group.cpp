@@ -44,7 +44,34 @@ hnGroup::ProcessTurn()
 				if ( m_player[i] )
 					m_player[i]->PostTurn();
 		}
+		else
+		{
+			for ( int i = 0; i < m_maxPlayerCount; i++ )
+				if ( m_player[i] )
+				{
+					int groupMembers = GetPlayerCount();
+					int groupMembersWithTurns = QueuedTurnCount();
+					
+					//printf("Updating client %d.  %d/%d, %d\n", m_player[i]->GetID(), groupMembersWithTurns, groupMembers, m_player[i]->HasQueuedTurn() );
+					
+					netServer::GetInstance()->StartMetaPacket( m_player[i]->GetID() );
+					netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, m_player[i]->HasQueuedTurn() );
+					netServer::GetInstance()->TransmitMetaPacket();
+				}
+		}
 	}
+}
+
+int
+hnGroup::QueuedTurnCount()
+{
+	int turnCount = 0;
+	
+	for ( int i = 0; i < m_maxPlayerCount; i++ )
+		if ( m_player[i] != NULL )
+			if ( m_player[i]->HasQueuedTurn() )
+				turnCount++;
+	return turnCount;
 }
 
 int
@@ -87,6 +114,7 @@ hnGroup::AddPlayer( hnPlayer * player )
 	{
 		if ( m_player[i] == NULL )
 		{
+			player->SetGroup(this);
 			m_player[i] = player;
 			m_playerCount++;
 			return;
@@ -103,6 +131,7 @@ hnGroup::RemovePlayer( hnPlayer * player )
 	{
 		if ( m_player[i] == player )
 		{
+			player->SetGroup(NULL);
 			m_player[i] = NULL;
 			m_playerCount--;
 		}
@@ -214,12 +243,6 @@ hnGroupManager::PutPlayerInGroup(int id)
 
 	if ( minDistance < GROUP_DISTANCE_LEEWAY )
 	{
-		char buffer[128];
-		sprintf(buffer, "You're sharing group %d.", minGroupID);
-		netServer::GetInstance()->StartMetaPacket( id );
-		netServer::GetInstance()->SendMessage(buffer);
-		netServer::GetInstance()->TransmitMetaPacket();
-
 		m_group[minGroupID]->AddPlayer(player);
 		return;
 	}
@@ -229,12 +252,6 @@ hnGroupManager::PutPlayerInGroup(int id)
 		{
 			if ( m_group[i]->GetPlayerCount() == 0 )
 			{
-				char buffer[128];
-		sprintf(buffer, "You're in group %d.", i);
-		netServer::GetInstance()->StartMetaPacket( id );
-		netServer::GetInstance()->SendMessage(buffer);
-		netServer::GetInstance()->TransmitMetaPacket();
-
 				m_group[i]->AddPlayer( player );
 				return;
 			}
