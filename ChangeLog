@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 30, 2001:
+  * ENT_*:  Modified entities to use static strings for entity names,
+    instead of storing the strings on each instance of the classes.
+    (This means the string "grid bug" is now only stored once in memory,
+    instead of once for each grid bug in the world).
+
 May 27, 2001:
   * Lots of adjustments to ttyclient to switch towards a NetHack style
     message display system.  (Only partly implemented so far)

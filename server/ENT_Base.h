@@ -8,8 +8,6 @@
 
 class hnPlayer;
 
-#define MAX_NAME_BYTES (128)
-
 class entBase
 {
 	entType			m_type;
@@ -19,7 +17,6 @@ class entBase
 	hnPlayer		*m_player;	// if I'm player controlled, this is my player.
 	
 protected:	
-	char 			m_name[MAX_NAME_BYTES];
 	int			m_hitPoints;
 	int			m_maxHitPoints;
 	bool			m_changedLevel;	// needs to refresh all our vision
@@ -35,8 +32,8 @@ public:
 				entBase( entType type, const hnPoint &, hnPlayer * player = NULL );
 	virtual			~entBase();
 	
-	void			SetName( char * name );
-	char *			GetName();
+//	void			SetName( char * name );
+	virtual const char *	GetName() = 0;
 
 	void			GetFullName( char * buffer, int bufferSize );
 	

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "ENT_GridBug.h"
 
+char * entGridBug::s_name = "grid bug";
 
 entGridBug::entGridBug(const hnPoint & where, hnPlayer *player):
 	entBase( ENTITY_GridBug, where, player )
@@ -9,7 +10,7 @@ entGridBug::entGridBug(const hnPoint & where, hnPlayer *player):
 	// gridbugs have 1 or 2 hit points.
 	m_hitPoints = (rand() % 1) + 1;
 
-	SetName("grid bug");
+	//SetName("grid bug");
 }
 
 entGridBug::~entGridBug()

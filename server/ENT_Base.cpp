@@ -24,27 +24,21 @@ entBase::~entBase()
 {
 }
 
-void
+/*void
 entBase::SetName( char * name )
 {
 	strncpy( m_name, name, MAX_NAME_BYTES );
 	// make sure that we've got a null at least at the end of our name, if not earlier
 	m_name[MAX_NAME_BYTES-1] = '\0';
-}
-
-char *
-entBase::GetName()
-{
-	return m_name;
-}
+}*/
 
 void
 entBase::GetFullName( char * buffer, int bufferSize )
 {
 	if ( m_player )
-		snprintf(buffer, bufferSize, "%s the %s", m_player->GetName(), m_name );
+		snprintf(buffer, bufferSize, "%s the %s", m_player->GetName(), GetName() );
 	else
-		snprintf(buffer, bufferSize, "the %s", m_name);
+		snprintf(buffer, bufferSize, "the %s", GetName());
 }
 
 const hnPoint &

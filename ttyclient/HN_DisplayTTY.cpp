@@ -136,7 +136,11 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 //----------------------------------------------------------------------
 
 	switch( commandkey )
-	{
+	{ 
+		case 'p':
+			m_messageDisplayLine = (m_messageDisplayLine==0)?0:m_messageDisplayLine-1;
+			m_needsRefresh = true;
+			break;
 		case 'q':
 			m_client->SendQuit(false);
 			m_done = true;
