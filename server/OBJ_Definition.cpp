@@ -120,8 +120,8 @@
 objPrototype g_objectPrototype[] =
 {
 /* dummy object[0] -- description [2nd arg] *must* be NULL */
-//	OBJECT(OBJ("strange object",(char *)0), BITS(1,0,0,0,0,0,0,0,0,0,0,P_NONE,0),
-//			0, ILLOBJ_CLASS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	OBJECT(OBJ("strange object",(char *)0), BITS(1,0,0,0,0,0,0,0,0,0,0,P_NONE,0),
+			0, ILLOBJ_CLASS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 /* missiles */
 PROJECTILE("arrow", (char *)0,
 		1, 55, 1, 2, 6, 6, 0, IRON, -P_BOW, HI_METAL),
@@ -354,8 +354,6 @@ HELM("helm of telepathy", "visored helmet",
  *	(2) That the order of the dragon scale mail and dragon scales is the
  *	    the same defined in monst.c.
  */
-#define DRGN_ARMR(name,power,cost,ac,color) \
-	ARMOR(name,(char *)0,1,0,1,power,0,5,40,cost,ac,0,ARM_SUIT,DRAGON_HIDE,color)
 DRGN_ARMR("gray dragon scale mail",   ANTIMAGIC,  1200, 1, CLR_GRAY),
 DRGN_ARMR("silver dragon scale mail", REFLECTING, 1200, 1, SILVER),
 #if 0	/* DEFERRED */
@@ -560,12 +558,12 @@ AMULET("amulet of change",        "square",     0,          130),
 AMULET("amulet of unchanging",    "concave",    UNCHANGING,	 45),
 AMULET("amulet of reflection",    "hexagonal",  REFLECTING,  75),
 AMULET("amulet of magical breathing", "octagonal",      MAGICAL_BREATHING, 65),
-//OBJECT(OBJ("cheap plastic imitation of the Amulet of Yendor",
-//	"Amulet of Yendor"), BITS(0,0,1,0,0,0,0,0,0,0,0,0,PLASTIC), 0,
-//	AMULET_CLASS, 0, 0, 20,    0, 0, 0, 0, 0,  1, HI_METAL),
-//OBJECT(OBJ("Amulet of Yendor",	/* note: description == name */
-//	"Amulet of Yendor"), BITS(0,0,1,0,1,0,1,1,0,0,0,0,MITHRIL), 0,
-//	AMULET_CLASS, 0, 0, 20, 30000, 0, 0, 0, 0, 20, HI_METAL),
+OBJECT(OBJ("cheap plastic imitation of the Amulet of Yendor",
+	"Amulet of Yendor"), BITS(0,0,1,0,0,0,0,0,0,0,0,0,PLASTIC), 0,
+	AMULET_CLASS, 0, 0, 20,    0, 0, 0, 0, 0,  1, HI_METAL),
+OBJECT(OBJ("Amulet of Yendor",	/* note: description == name */
+	"Amulet of Yendor"), BITS(0,0,1,0,1,0,1,1,0,0,0,0,MITHRIL), 0,
+	AMULET_CLASS, 0, 0, 20, 30000, 0, 0, 0, 0, 20, HI_METAL),
 
 /* tools ... */
 /* tools with weapon characteristics come last */
@@ -646,13 +644,13 @@ WEPTOOL("unicorn horn", (char *)0,
 	1, 1, 1,  0,  20, 100, 12, 12, PIERCE, P_UNICORN_HORN, BONE, CLR_WHITE),
 
 /* two special unique artifact "tools" */
-/*OBJECT(OBJ("Candelabrum of Invocation", "candelabrum"),
+OBJECT(OBJ("Candelabrum of Invocation", "candelabrum"),
 		BITS(0,0,1,0,1,0,1,1,0,0,0,P_NONE,GOLD), 0,
 		TOOL_CLASS, 0, 0,10, 5000, 0, 0, 0, 0, 200, HI_GOLD),
 OBJECT(OBJ("Bell of Opening", "silver bell"),
 		BITS(0,0,1,0,1,1,1,1,0,0,0,P_NONE,SILVER), 0,
 		TOOL_CLASS, 0, 0,10, 5000, 0, 0, 0, 0, 50, HI_SILVER),
-*/
+
 /* Comestibles ... */
 /* all types of food (except tins & corpses) must have a delay of at least 1. */
 /* delay on corpses is computed and is weight dependant */
@@ -672,9 +670,9 @@ FOOD("meatball",             0, 1,  1, 0, FLESH,   5, CLR_BROWN),
 FOOD("meat stick",           0, 1,  1, 0, FLESH,   5, CLR_BROWN),
 FOOD("huge chunk of meat",   0,20,400, 0, FLESH,2000, CLR_BROWN),
 /* special case because it's not mergable */
-//OBJECT(OBJ("meat ring", (char *)0),
-  //  BITS(1,0,0,0,0,0,0,0,0,0,0,0,FLESH),
-  //  0, FOOD_CLASS, 0, 1, 5, 1, 0, 0, 0, 0, 5, CLR_BROWN),
+OBJECT(OBJ("meat ring", (char *)0),
+    BITS(1,0,0,0,0,0,0,0,0,0,0,0,FLESH),
+    0, FOOD_CLASS, 0, 1, 5, 1, 0, 0, 0, 0, 5, CLR_BROWN),
 
 /* fruits & veggies */
 FOOD("kelp frond",           0, 1,  1, 0, VEGGY,  30, CLR_GREEN),
@@ -810,8 +808,8 @@ SPELL("freeze sphere",   "hardcover",   P_MATTER_SPELL, 20,  2, 1, 1, NODIR, CLR
 /* blank spellbook must come last because it retains its description */
 SPELL("blank paper",     "plain",       P_NONE, 18,  0, 0, 0, 0,         HI_PAPER),
 /* a special, one of a kind, spellbook */
-//OBJECT(OBJ("Book of the Dead", "papyrus"), BITS(0,0,1,0,1,0,1,1,0,0,0,P_NONE,PAPER), 0,
-//	SPBOOK_CLASS, 0, 0,20, 10000, 0, 0, 0, 7, 20, HI_PAPER),
+OBJECT(OBJ("Book of the Dead", "papyrus"), BITS(0,0,1,0,1,0,1,1,0,0,0,P_NONE,PAPER), 0,
+	SPBOOK_CLASS, 0, 0,20, 10000, 0, 0, 0, 7, 20, HI_PAPER),
 
 /* wands ... */
 WAND("light",          "glass",    95, 100, 1, NODIR,     GLASS,    HI_GLASS),
@@ -891,24 +889,24 @@ ROCK("rock", (char *)0,		1,100,  10,  0, 3, 3, 0, 10, 7, MINERAL, CLR_GRAY),
  * Boulders weigh more than MAX_CARR_CAP; statues use corpsenm to take
  * on a specific type and may act as containers (both affect weight).
  */
-//OBJECT(OBJ("boulder",(char *)0), BITS(1,0,0,0,0,0,0,0,1,0,0,P_NONE,MINERAL), 0,
-//		ROCK_CLASS,   100, 0, 6000,  0, 20, 20, 0, 0, 2000, HI_MINERAL),
-//OBJECT(OBJ("statue", (char *)0), BITS(1,0,0,1,0,0,0,0,0,0,0,P_NONE,MINERAL), 0,
-//		ROCK_CLASS,   900, 0, 2500,  0, 20, 20, 0, 0, 2500, CLR_WHITE),
+OBJECT(OBJ("boulder",(char *)0), BITS(1,0,0,0,0,0,0,0,1,0,0,P_NONE,MINERAL), 0,
+		ROCK_CLASS,   100, 0, 6000,  0, 20, 20, 0, 0, 2000, HI_MINERAL),
+OBJECT(OBJ("statue", (char *)0), BITS(1,0,0,1,0,0,0,0,0,0,0,P_NONE,MINERAL), 0,
+		ROCK_CLASS,   900, 0, 2500,  0, 20, 20, 0, 0, 2500, CLR_WHITE),
 
-//OBJECT(OBJ("heavy iron ball", (char *)0), BITS(1,0,0,0,0,0,0,0,0,0,WHACK,P_NONE,IRON), 0,
-//		BALL_CLASS,  1000, 0,  480, 10, 25, 25, 0, 0,  200, HI_METAL),
+OBJECT(OBJ("heavy iron ball", (char *)0), BITS(1,0,0,0,0,0,0,0,0,0,WHACK,P_NONE,IRON), 0,
+		BALL_CLASS,  1000, 0,  480, 10, 25, 25, 0, 0,  200, HI_METAL),
 						/* +d4 when "very heavy" */
-//OBJECT(OBJ("iron chain", (char *)0), BITS(1,0,0,0,0,0,0,0,0,0,WHACK,P_NONE,IRON), 0,
-//		CHAIN_CLASS, 1000, 0,  120,  0,  4,  4, 0, 0,  200, HI_METAL),
+OBJECT(OBJ("iron chain", (char *)0), BITS(1,0,0,0,0,0,0,0,0,0,WHACK,P_NONE,IRON), 0,
+		CHAIN_CLASS, 1000, 0,  120,  0,  4,  4, 0, 0,  200, HI_METAL),
 						/* +1 both l & s */
 
-//OBJECT(OBJ("blinding venom", "splash of venom"),
-//		BITS(0,1,0,0,0,0,0,1,0,0,0,P_NONE,LIQUID), 0,
-//		VENOM_CLASS,  500, 0,	 1,  0,  0,  0, 0, 0,	 0, HI_ORGANIC),
-//OBJECT(OBJ("acid venom", "splash of venom"),
-//		BITS(0,1,0,0,0,0,0,1,0,0,0,P_NONE,LIQUID), 0,
-//		VENOM_CLASS,  500, 0,	 1,  0,  6,  6, 0, 0,	 0, HI_ORGANIC),
+OBJECT(OBJ("blinding venom", "splash of venom"),
+		BITS(0,1,0,0,0,0,0,1,0,0,0,P_NONE,LIQUID), 0,
+		VENOM_CLASS,  500, 0,	 1,  0,  0,  0, 0, 0,	 0, HI_ORGANIC),
+OBJECT(OBJ("acid venom", "splash of venom"),
+		BITS(0,1,0,0,0,0,0,1,0,0,0,P_NONE,LIQUID), 0,
+		VENOM_CLASS,  500, 0,	 1,  0,  6,  6, 0, 0,	 0, HI_ORGANIC),
 		/* +d6 small or large */
 
 /* fencepost, the deadly Array Terminator -- name [1st arg] *must* be NULL */

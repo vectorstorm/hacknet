@@ -188,4 +188,23 @@
 #define OIL			PROP_Oil
 #define WATER			PROP_Water
 
+#define RANDOM_CLASS		OBJ_TYPE_Random
+#define ILLOBJ_CLASS		OBJ_TYPE_Illegal
+#define WEAPON_CLASS		OBJ_TYPE_Weapon
+#define RING_CLASS		OBJ_TYPE_Ring
+#define AMULET_CLASS		OBJ_TYPE_Amulet
+#define TOOL_CLASS		OBJ_TYPE_Tool
+#define FOOD_CLASS		OBJ_TYPE_Food
+#define POTION_CLASS		OBJ_TYPE_Potion
+#define SCROLL_CLASS		OBJ_TYPE_Scroll
+#define SPBOOK_CLASS		OBJ_TYPE_Spellbook
+#define WAND_CLASS		OBJ_TYPE_Wand
+#define GOLD_CLASS		OBJ_TYPE_Gold
+#define GEM_CLASS		OBJ_TYPE_Gem
+#define ROCK_CLASS		OBJ_TYPE_Rock
+#define BALL_CLASS		OBJ_TYPE_Ball
+#define CHAIN_CLASS		OBJ_TYPE_Chain
+#define VENOM_CLASS		OBJ_TYPE_Venom
+
+
 #endif  // OBJ_CONVERT_H

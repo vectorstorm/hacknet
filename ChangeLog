@@ -18,6 +18,12 @@ November 9, 2002:
   * HN_Display.cpp:  Fixed a bizarre client-side bug which caused 
     the client not to realise when it needed to attack instead of
     move.  I can't imagine how this bug slipped in.
+  * OBJ_Definition.cpp (later):  Sigh.  Senility comes early this
+    year.  Actually, there were no changes in object structure in the
+    update to NH3.4.0;  I had just forgotten some changes that I made
+    to the NH3.3.1 object list while integrating it into HackNet.  I've
+    fixed things up so those changes don't need to be made again --
+    future object lists should be quite easily imported.
   
 April 6, 2002:
   * HN_DisplayTTY.cpp:  Added mutex to protect 'Refresh()' function
