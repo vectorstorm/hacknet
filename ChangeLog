@@ -10,6 +10,9 @@ May 19, 2001:
   * Basic damage-dealing.  Just one point per hit at the moment, but damage
     is actually done and the stat changes are sent to and visible to the
     clients.  Not yet checking for death, though.
+  * NET_Server.cpp:  Turned off network debugging output again.  One of 
+    these days I'll stop forgetting and checking it in with that #define 
+    turned on.  :)
 
 May 18, 2001:
   * Turns split into two phases:  First actions, then movements.  This means
