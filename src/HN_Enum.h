@@ -71,25 +71,4 @@ typedef sint16 hnWallType;
 #define WALL_RoomEntrance	(WALL_Doorway | WALL_Door)
 #define WALL_Cross		(WALL_Horizontal | WALL_Vertical)
 
-enum {
-	ENTITY_None,			// a mapobjectupdate with this type means nothing's here any more.
-	
-	/***   CREATURES   ***/
-	
-	CREATURE_Monster,		// there should be one of these for every type of creature
-	CREATURE_Player,
-
-	/***   OBJECTS   ***/
-	
-	OBJECT_Weapon,			// there should be a line here for every type of item
-	OBJECT_Armour,
-	OBJECT_Potion,
-
-	/***   DONE   ***/
-	
-	ENTITY_MAX
-};
-
-typedef sint8 hnEntityType;
- 
 #endif //__HN_ENUM_H__

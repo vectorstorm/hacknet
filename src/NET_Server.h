@@ -8,6 +8,7 @@
 #include "HN_Enum.h"
 #include "NET_ServerConsts.h"
 #include "NET_Packet.h"
+#include "ENT_Base.h"
 
 class mapTile;
 class hnGame;
@@ -64,7 +65,7 @@ public:
 //	bool		SendMapUpdate(int clientID, mapBase *map);	// server sends move update to client
 	void		SendMapTile( hnPoint *loc, const mapTile & floorType );  // new floortype
 	void		SendMapUpdateBBox( netMapUpdateBBox *bbox );
-	void		SendMapObjectList( hnPoint *loc, int numObjects, hnEntityType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
+	void		SendMapObjectList( hnPoint *loc, int numObjects, entType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
 	
 	void		SendQuitConfirm( int clientID );	// doesn't require a metapacket
 	void		SendBadPacketNotice( int clientID );	// doesn't require a metapacket

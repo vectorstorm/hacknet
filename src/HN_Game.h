@@ -12,11 +12,11 @@
 
 class mapBase;
 class netServer;
-class hnEntity;
+class entBase;
 
 struct playerData
 {
-	hnEntity	*entity;
+	entBase		*entity;
 	hnPoint		pos;
 };
 

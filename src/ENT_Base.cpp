@@ -1,30 +1,30 @@
-#include "HN_Entity.h"
+#include "ENT_Base.h"
 
-hnEntity::hnEntity( hnEntityType type, const hnPoint & pos ):
+entBase::entBase( entType type, const hnPoint & pos ):
 	m_type(type),
 	m_position(pos)
 {
 	m_prev = m_next = this;
 }
 
-hnEntity::~hnEntity()
+entBase::~entBase()
 {
 }
 
 const hnPoint &
-hnEntity::GetPosition()
+entBase::GetPosition()
 {
 	return m_position;
 }
 
 void
-hnEntity::SetPosition( const hnPoint & pos )
+entBase::SetPosition( const hnPoint & pos )
 {
 	m_position = pos;
 }
 
 void
-hnEntity::AddObject( hnEntity * object )
+entBase::AddObject( entBase * object )
 {
 	object->m_prev = this;
 	object->m_next = m_next;
@@ -33,13 +33,13 @@ hnEntity::AddObject( hnEntity * object )
 }
 
 void
-hnEntity::RemoveObject( hnEntity * object )
+entBase::RemoveObject( entBase * object )
 {
 	object->Unlink();
 }
 
 void
-hnEntity::Unlink()
+entBase::Unlink()
 {
 	m_next->m_prev = m_prev;
 	m_prev->m_next = m_next;

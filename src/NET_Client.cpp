@@ -13,7 +13,7 @@
 #include "NET_Packet.h"
 #include "NET_Client.h"
 #include "HN_Display.h"
-#include "HN_Entity.h"
+#include "ENT_Base.h"
 #include "HN_Enum.h"
 
 #define HACKNET_PORT 		(9274)
@@ -154,8 +154,8 @@ netClient::Go()
 							tile.wall = bbox.wall[i+(j*bbox.width)];
 							tile.entity = NULL;
 							point.Set(bbox.loc.x+i, bbox.loc.y+j, 0);
-							if (bbox.entityType[i+(j*bbox.width)] == CREATURE_Player)
-								tile.entity = new hnEntity(CREATURE_Player, point);
+							if (bbox.entityType[i+(j*bbox.width)] == ENTITY_Player)
+								tile.entity = new entBase(ENTITY_Player, point);
 							m_display->UpdateMapTile(bbox.loc.x+i, bbox.loc.y+j, tile);
 						}
 

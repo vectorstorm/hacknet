@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "MAP_Base.h"
-#include "HN_Entity.h"
+#include "OBJ_Base.h"
+#include "ENT_Base.h"
 //#include "HN_Object.h"
 #include "HN_Point.h"
 
@@ -62,36 +63,51 @@ mapBase::MapTile(sint8 x, sint8 y)
 }
 
 void
-mapBase::RemoveObject( hnEntity *object )
+mapBase::RemoveObject( objBase *object )
 {
-	hnEntityType type = object->GetType();
 	const hnPoint & point = object->GetPosition();
 	mapTile & tile = MapTile(point.x, point.y);
 	
-	if ( type == CREATURE_Player )
-		tile.entity = NULL;	
-	else
-		tile.object->RemoveObject( object );
+	tile.object->RemoveObject( object );
 }
 
 void
-mapBase::PutObjectAt( hnEntity *object, sint8 x, sint8 y )
+mapBase::PutObjectAt( objBase *object, sint8 x, sint8 y )
 {
-	hnEntityType type = object->GetType();
 	mapTile & tile = MapTile(x,y);
-	
-	if ( type == CREATURE_Player )
-		tile.entity = object;
-	else
-		tile.object->AddObject( object );
+	tile.object->AddObject( object );
 }
 
 void
-mapBase::MoveObjectTo( hnEntity *object, sint8 x, sint8 y )
+mapBase::MoveObjectTo( objBase *object, sint8 x, sint8 y )
 {
 	RemoveObject(object);
 	PutObjectAt(object,x,y);
 }
+
+void
+mapBase::RemoveEntity( entBase *entity )
+{
+	const hnPoint & point = entity->GetPosition();
+	mapTile & tile = MapTile(point.x, point.y);
+	
+	tile.entity = NULL;
+}
+
+void
+mapBase::PutEntityAt( entBase *entity, sint8 x, sint8 y )
+{
+	mapTile & tile = MapTile(x,y);
+	tile.entity = entity;
+}
+
+void
+mapBase::MoveEntityTo( entBase *entity, sint8 x, sint8 y )
+{
+	RemoveEntity(entity);
+	PutEntityAt(entity,x,y);
+}
+
 
 void
 mapBase::Generate()
@@ -107,7 +123,7 @@ mapBase::Generate()
 
 mapTile::mapTile()
 {
-	object = new hnEntity( ENTITY_None, hnPoint(0,0,0));
+	object = new objBase( OBJECT_None, hnPoint(0,0,0));
 	entity = NULL;
 }
 

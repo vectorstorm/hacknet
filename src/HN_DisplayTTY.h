@@ -1,7 +1,6 @@
 #ifndef __HN_TTYDISPLAY_H__
 #define __HN_TTYDISPLAY_H__
 
-#include "HN_Enum.h"
 #include "HN_Display.h"
 
 class hnDisplayTTY : public hnDisplay
@@ -17,7 +16,7 @@ public:
 	virtual void	PlotSquare( sint8 x, sint8 y );
 	virtual void	UpdateLocation( const hnPoint &point );
 	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapTile &tile );
-	virtual void	UpdateMapCreature( sint8 x, sint8 y, hnEntityType type );
+	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
 };
 
 void *	EventLoop(void *);	// for use by our thread to check for keypresses

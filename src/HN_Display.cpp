@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include "HN_Display.h"
-#include "MAP_Base.h"
 #include "HN_Consts.h"
-#include "HN_Entity.h"
-#include "HN_Creature.h"
+#include "MAP_Base.h"
+#include "OBJ_Base.h"
+#include "ENT_Base.h"
 
 hnDisplay::hnDisplay()
 {
@@ -28,7 +28,7 @@ hnDisplay::UpdateMapTile(sint8 x, sint8 y, const mapTile &tile)
 }
 
 void
-hnDisplay::UpdateMapCreature(sint8 x, sint8 y, hnEntityType type)
+hnDisplay::UpdateMapCreature(sint8 x, sint8 y, entType type)
 {
 /*	hnEntity *newEntity = NULL;
 	hnPoint where(x,y,0);

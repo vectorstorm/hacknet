@@ -4,6 +4,7 @@
 #include "HN_Enum.h"
 #include "HN_Point.h"
 #include "MAP_Base.h"
+#include "ENT_Base.h"
 
 class netClient;
 
@@ -26,7 +27,7 @@ public:
 	
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
 	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapTile & tile );
-	virtual void	UpdateMapCreature( sint8 x, sint8 y, hnEntityType type );
+	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
 };
 
 #endif

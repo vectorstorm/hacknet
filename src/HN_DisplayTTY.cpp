@@ -219,7 +219,7 @@ hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const mapTile &tile)
 
 
 void
-hnDisplayTTY::UpdateMapCreature( sint8 x, sint8 y, hnEntityType type )
+hnDisplayTTY::UpdateMapCreature( sint8 x, sint8 y, entType type )
 {
 	hnDisplay::UpdateMapCreature(x,y,type);
 	PlotSquare(x,y);

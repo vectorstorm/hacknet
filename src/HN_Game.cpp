@@ -6,7 +6,7 @@
 #include "NET_Server.h"
 #include "HN_Point.h"
 #include "HN_Consts.h"
-#include "HN_Entity.h"
+#include "ENT_Base.h"
 
 static hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
@@ -91,8 +91,8 @@ hnGame::ClientJoined(int playerID)
 	m_player[playerID].pos.x = x;
 	m_player[playerID].pos.y = y;
 	m_player[playerID].pos.z = z;
-	m_player[playerID].entity = new hnEntity(CREATURE_Player, hnPoint(x,y,z));
-	m_levelMap[z]->PutObjectAt( m_player[playerID].entity, x, y );
+	m_player[playerID].entity = new entBase(ENTITY_Player, hnPoint(x,y,z));
+	m_levelMap[z]->PutEntityAt( m_player[playerID].entity, x, y );
 	
 	m_server->StartMetaPacket( playerID );
 	m_server->SendClientLocation( &m_player[playerID].pos );
@@ -113,7 +113,7 @@ hnGame::ClientJoined(int playerID)
 		{
 			update.material[i+(j*update.width)] = m_levelMap[pos.z]->MaterialAt(pos.x+i,pos.y+j);
 			update.wall[i+(j*update.width)] = m_levelMap[pos.z]->WallAt(pos.x+i,pos.y+j);
-			update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? CREATURE_Player : ENTITY_None;
+			update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? ENTITY_Player : ENTITY_None;
 		}
 	m_server->SendMapUpdateBBox( &update );
 
@@ -130,7 +130,7 @@ hnGame::ClientQuit(int playerID)
 {
 	// when a client quits, we need to remove his entity.
 	
-	m_levelMap[m_player[playerID].pos.z]->RemoveObject( m_player[playerID].entity );
+	m_levelMap[m_player[playerID].pos.z]->RemoveEntity( m_player[playerID].entity );
 	delete m_player[playerID].entity;
 }
 
@@ -169,7 +169,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			m_server->StartMetaPacket(playerID);
 			
 			// first, player moves out of his current square.
-			m_levelMap[m_player[playerID].pos.z]->RemoveObject(m_player[playerID].entity);
+			m_levelMap[m_player[playerID].pos.z]->RemoveEntity(m_player[playerID].entity);
 			// now move the player
 			hnPoint iniPos = m_player[playerID].pos;
 			m_player[playerID].pos += offsetVector[dir];
@@ -177,7 +177,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			hnPoint pos = m_player[playerID].pos;
 			// and put the player object into his new position on the map
 			m_player[playerID].entity->SetPosition(pos);
-			m_levelMap[pos.z]->PutObjectAt(m_player[playerID].entity, pos.x, pos.y);
+			m_levelMap[pos.z]->PutEntityAt(m_player[playerID].entity, pos.x, pos.y);
 			m_server->SendClientLocation( &m_player[playerID].pos );
 			
 			// now tell the player about what they can see from this new location.
@@ -196,8 +196,8 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 				{
 					update.material[i+(j*update.width)] = m_levelMap[pos.z]->MaterialAt(pos.x+i,pos.y+j);
 					update.wall[i+(j*update.width)] = m_levelMap[pos.z]->WallAt(pos.x+i,pos.y+j);
-					update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? CREATURE_Player : ENTITY_None;
-					//if ( update.entityType[i+(j*update.width)] == CREATURE_Player )
+					update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? ENTITY_Player : ENTITY_None;
+					//if ( update.entityType[i+(j*update.width)] == ENTITY_Player )
 					//	printf("Sending player location.\n");
 				}
 			m_server->SendMapUpdateBBox( &update );
@@ -227,7 +227,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.entityType = new sint8;
 						update.material[0] = m_levelMap[iniPos.z]->MaterialAt(iniPos.x,iniPos.y);
 						update.wall[0] = m_levelMap[iniPos.z]->WallAt(iniPos.x,iniPos.y);
-						update.entityType[0] = (m_levelMap[iniPos.z]->MapTile(iniPos.x,iniPos.y).entity) ? CREATURE_Player : ENTITY_None;
+						update.entityType[0] = (m_levelMap[iniPos.z]->MapTile(iniPos.x,iniPos.y).entity) ? ENTITY_Player : ENTITY_None;
 						
 						m_server->SendMapUpdateBBox( &update );
 						m_server->TransmitMetaPacket();
@@ -251,7 +251,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.entityType = new sint8;
 						update.material[0] = m_levelMap[endPos.z]->MaterialAt(endPos.x,endPos.y);
 						update.wall[0] = m_levelMap[endPos.z]->WallAt(endPos.x,endPos.y);
-						update.entityType[0] = (m_levelMap[endPos.z]->MapTile(endPos.x,endPos.y).entity) ? CREATURE_Player : ENTITY_None;
+						update.entityType[0] = (m_levelMap[endPos.z]->MapTile(endPos.x,endPos.y).entity) ? ENTITY_Player : ENTITY_None;
 						
 						m_server->SendMapUpdateBBox( &update );
 						m_server->TransmitMetaPacket();
