@@ -57,13 +57,13 @@ hnGroup::ProcessTurn()
 				m_monster[i]->Think();
 			}
 			
-			for ( int i = 0; i < m_maxPlayerCount; i++ )
+			/*for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
 				{
 					m_player[i]->UpdateVision();
 					m_player[i]->SendUpdate();
 				}
-			
+			*/
 			// now rebuild our monster list.
 			ScanForMonsters();
 		}

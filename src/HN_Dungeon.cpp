@@ -31,7 +31,7 @@ hnDungeon::GetLevel( int n )
 	
 	assert(s_instance);
 	
-	if ( s_instance && s_instance->m_levelCount > n )
+	if ( s_instance && n < s_instance->m_levelCount && n >= 0 )
 		result = s_instance->m_levelMap[n];
 	
 	return result;
@@ -50,8 +50,7 @@ hnDungeon::hnDungeon(int levelCount, int width, int height):
 		if ( i < levelCount - 1 )
 			m_levelMap[i]->GenerateStairsDown();
 
-		if ( i > 0 )
-			m_levelMap[i]->GenerateStairsUp();
+		m_levelMap[i]->GenerateStairsUp();
 	}
 }
 

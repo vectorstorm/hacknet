@@ -6,6 +6,7 @@
 entGridBug::entGridBug(const hnPoint & where, bool hasPlayer):
 	entBase( ENTITY_GridBug, where, hasPlayer )
 {
+	m_hitPoints = (rand() % 1) + 1;
 }
 
 entGridBug::~entGridBug()

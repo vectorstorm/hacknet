@@ -74,13 +74,20 @@ entBase::IsValidMove( hnDirection dir )
 		{
 			if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsUp )
 			{
-				hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
-				if ( hnDungeon::GetLevel(currentPos.z-1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
+				if ( currentPos.z-1 >= 0 )	// if we're not leaving the dungeon...
 				{
-					legalMove = true;       // nobody standing where we want to go.
+					hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
+					if ( hnDungeon::GetLevel(currentPos.z-1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
+					{
+						legalMove = true;       // nobody standing where we want to go.
+					}
+					else
+						blocked = true;
 				}
 				else
-					blocked = true;
+				{
+					legalMove = true;
+				}
 			}
 		}
 		else if ( dir == DIR_Down )
@@ -120,14 +127,16 @@ entBase::Move( hnDirection dir )
 	
 	mapBase *origMap = hnDungeon::GetLevel( m_position.z );
 	mapBase *map = hnDungeon::GetLevel( pos.z );
-	assert(map != NULL);
 	
 	if ( dir == DIR_Up )
 	{
-		hnPoint2D stairsPos = map->GetDownStairs();
-		pos.x = stairsPos.x;
-		pos.y = stairsPos.y;
-		m_changedLevel = true;
+		if ( pos.z >= 0 )
+		{
+			hnPoint2D stairsPos = map->GetDownStairs();
+			pos.x = stairsPos.x;
+			pos.y = stairsPos.y;
+			m_changedLevel = true;
+		}
 	}
 	else if ( dir == DIR_Down )
 	{
@@ -138,7 +147,8 @@ entBase::Move( hnDirection dir )
 	}
 	
 	origMap->RemoveEntity(this);
-	map->PutEntityAt(this, pos.x, pos.y);
+	if ( map )
+		map->PutEntityAt(this, pos.x, pos.y);
 	
 	m_position = pos;
 }

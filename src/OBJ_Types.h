@@ -9,6 +9,9 @@ enum
 	OBJECT_Armor,
 	OBJECT_Weapon,
 
+
+	OBJECT_AmuletOfYendor,	// the goal of the whole thing!
+
 	OBJECT_MAX
 };
 typedef uint8 objType;

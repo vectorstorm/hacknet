@@ -137,10 +137,20 @@ hnPlayer::DoTurn()
 	switch ( m_queuedTurn.type )
 	{
 		case queuedTurn::Move:
+			// this 'IsValidMove' call is not strictly necessary, since 'Move' checks
+			// whether the move is valid before executing it.  However, by explicitly
+			// checking here, we can avoid recalculating our visible set of tiles.
 			if ( IsValidMove( m_queuedTurn.move.direction ) )
 			{
 				m_entity->Move( m_queuedTurn.move.direction );
-				RecalculateVision();
+
+				if ( m_entity->GetPosition().z < 0 )
+				{
+					printf("%s left the dungeon!\n", GetName() );
+					netServer::GetInstance()->SendQuitConfirm(m_playerID);
+				}
+				else
+					RecalculateVision();
 			}
 			break;
 		case queuedTurn::Wait:
@@ -173,6 +183,8 @@ hnPlayer::RecalculateVision()
 void
 hnPlayer::UpdateVision()
 {
+	if ( GetPosition().z < 0 )
+		return;		// we've left the dungeon.  No need to do vision checks.
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
 	assert(realMap);
 
@@ -193,7 +205,8 @@ void
 hnPlayer::SendUpdate()
 {
 	// Send an update packet to our player.
-
+	if ( GetPosition().z < 0 )
+		return;
 
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
 	assert(realMap);
