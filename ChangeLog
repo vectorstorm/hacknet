@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 28, 2002:
+  * ENT_Base.cpp: More potion effects added.
+
 February 24, 2002:
   * ENT_Base.cpp: Moved potion effects into entBase::DoEffect().
   * OBJ_Potion.cpp: Now calls entBase::DoEffect() to perform

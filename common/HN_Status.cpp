@@ -171,6 +171,21 @@ hnStatus::Heal( uint32 pointsHealed, uint32 extraPoints, bool cureSick, bool cur
 	m_changedHitPoints = true;
 }
 
+void
+hnStatus::AdjustSpellPoints( uint32 points )
+{
+	m_spellPoints += points;
+
+	if ( m_spellPoints > m_spellPointMax )
+		m_spellPoints = m_spellPointMax;
+}
+
+void
+hnStatus::AdjustSpellPointMax( uint32 points )
+{
+	m_spellPointMax += points;
+}
+
 #define AVAL		(50) // tune value for attribute exercise
 
 void

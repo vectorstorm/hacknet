@@ -68,6 +68,8 @@ entBase::DoEffect( uint8 property, uint8 bc, objType type )
 	bool uncursed 	= (bc == BC_Uncursed);
 
 	int blessFactor = ((blessed)?1:0) - ((cursed)?1:0);
+
+	int points;
 	
 	char buffer[128];
 
@@ -140,8 +142,38 @@ entBase::DoEffect( uint8 property, uint8 bc, objType type )
 			GetStatus()->ExerciseStatistic( hnStatus::Constitution, true );
 			break;
 		case PROP_Gain_Level:
+			if ( cursed )
+			{
+				if ( GetPosition().z == 0 )
+				{
+					// go up a level.
+					sprintf(buffer,"You rise up through the ceiling! (Not really)");
+				}
+				else
+				{
+					sprintf(buffer,"It tasted bad.");
+				}
+			}
+			else
+			{
+				sprintf(buffer,"Gain a level...");
+			}
 			break;
 		case PROP_Gain_Energy:
+			if ( cursed )
+				sprintf(buffer,"You feel lackluster.");
+			else
+				sprintf(buffer,"Magical energies course through your body.");
+			
+			// gain some spell points.
+			points = hnRandom::GetInstance()->GetAndAdd(5,blessed?6:1);
+			if ( cursed )
+				points = -points;
+			GetStatus()->AdjustSpellPointMax(points);
+			GetStatus()->AdjustSpellPoints(points);
+
+			GetStatus()->ExerciseStatistic(hnStatus::Wisdom, true);
+
 			break;
 		case PROP_Enlightenment:
 			break;
