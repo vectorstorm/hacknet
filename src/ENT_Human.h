@@ -6,7 +6,7 @@
 class entHuman : public entBase
 {
 public:
-				entHuman( const hnPoint & );
+				entHuman( const hnPoint &, bool playerControlled = false );
 	virtual			~entHuman();
 	
 	virtual void		Think(); 			// Called to decide what to do each turn.

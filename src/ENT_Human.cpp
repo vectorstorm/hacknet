@@ -1,8 +1,8 @@
 #include "ENT_Human.h"
 
 
-entHuman::entHuman(const hnPoint & where):
-	entBase( ENTITY_Human, where )
+entHuman::entHuman(const hnPoint & where, bool hasPlayer):
+	entBase( ENTITY_Human, where, hasPlayer )
 {
 }
 

@@ -7,9 +7,10 @@
 
 extern hnPoint offsetVector[10];
 
-entBase::entBase( entType type, const hnPoint & pos ):
+entBase::entBase( entType type, const hnPoint & pos, bool playerControlled ):
 	m_type(type),
 	m_position(pos),
+	m_playerControlled(playerControlled),
 	m_changedLevel(false)
 {
 	//m_prev = m_next = this;
@@ -111,8 +112,9 @@ entBase::IsValidMove( hnDirection dir )
 void
 entBase::Move( hnDirection dir )
 {
-	// By the time we're here, we've already determined that the requested
-	// move is legal.  So go ahead and do it.
+	// final check for legality...
+	if ( !IsValidMove(dir) )
+		return;
 	
 	hnPoint pos = m_position + offsetVector[dir];
 	

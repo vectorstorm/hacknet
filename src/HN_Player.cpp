@@ -18,12 +18,12 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_mapCount = hnDungeon::GetInstance()->GetLevelCount();
 	m_map = new (mapBase *)[m_mapCount];
 
-	m_entity = new entHuman( where );
+	m_entity = new entHuman( where, true );
 //	Ever want to play as a Grid Bug?  Comment the line above and 
 //	uncomment the next line, and you will!  Yes, we already
 //	support non-human players!  Hooray!
 //	------------------------------------------------------------
-//	m_entity = new entGridBug( where );	
+//	m_entity = new entGridBug( where, true );	
 	
 	hnDungeon::GetInstance()->GetLevel(where.z)->PutEntityAt( m_entity, where.x, where.y );
 	

@@ -3,11 +3,18 @@
 
 //  Group of players and monsters that are 'synched' together.
 
+#include "HN_Point.h"
+
 class hnPlayer;
+class entBase;
+
+#define MAX_MONSTERS_IN_GROUP	(64)
 
 class hnGroup
 {
 	hnPlayer **		m_player;
+	entBase *		m_monster[MAX_MONSTERS_IN_GROUP];
+	int			m_monsterCount;
 	int			m_playerCount;
 	int			m_maxPlayerCount;
 
@@ -17,12 +24,16 @@ public:
 	
 	int			DistanceFromGroup( hnPlayer * player );	// returns distance from player to this group,
 									// not including the player as part of the group.
+	int			DistanceFromGroup( const hnPoint & where );	// distance from this point to group.
+	
 	void			AddPlayer( hnPlayer * player );
 	void			RemovePlayer( hnPlayer * player );
 
+	void			ScanForMonsters();			// search the map for nearby monsters to join us.
+	
 	int			GetPlayerCount() { return m_playerCount; }
 	int			QueuedTurnCount();			// how many players with queued turns?
-
+	
 	bool			ProcessTurn();				// returns true if we actually ran a turn.
 };
 

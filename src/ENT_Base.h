@@ -12,17 +12,20 @@ class entBase
 	entType			m_type;
 	hnPoint			m_position;
 	
+	bool			m_playerControlled;
 	
 protected:	
 	char 			m_name[MAX_NAME_BYTES];
 	bool			m_changedLevel;	// needs to refresh all our vision
 	
 public:
-				entBase( entType type, const hnPoint & );
+				entBase( entType type, const hnPoint &, bool playerControlled = false );
 	virtual			~entBase();
 	
 	void			SetName( char * name );
 	char *			GetName();
+
+	bool			IsAPlayer() { return m_playerControlled; }
 	
 	const hnPoint &		GetPosition();
 	entType			GetType() { return m_type; }

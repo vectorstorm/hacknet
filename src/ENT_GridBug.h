@@ -6,7 +6,7 @@
 class entGridBug : public entBase
 {
 public:
-				entGridBug( const hnPoint & );
+				entGridBug( const hnPoint &, bool playerControlled = false );
 	virtual			~entGridBug();
 	
 	virtual void		Think(); 			// Called to decide what to do each turn.

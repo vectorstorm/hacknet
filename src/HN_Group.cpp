@@ -1,8 +1,11 @@
 #include <assert.h>
 #include <stdio.h>
 #include "HN_Group.h"
+#include "HN_Dungeon.h"
 #include "HN_Player.h"
 #include "NET_Server.h"
+#include "ENT_Base.h"
+#include "MAP_Base.h"
 
 #define GROUP_DISTANCE_LEEWAY 		(15)
 #define GROUP_DISTANCE_LEEWAY_SQ 	(GROUP_DISTANCE_LEEWAY * GROUP_DISTANCE_LEEWAY)
@@ -48,12 +51,21 @@ hnGroup::ProcessTurn()
 				if ( m_player[i] )
 					m_player[i]->DoTurn();
 			
+			// now our monsters get to move.
+			for ( int i = 0; i < m_monsterCount; i++ )
+			{
+				m_monster[i]->Think();
+			}
+			
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
 				{
 					m_player[i]->UpdateVision();
 					m_player[i]->SendUpdate();
 				}
+			
+			// now rebuild our monster list.
+			ScanForMonsters();
 		}
 		else
 		{
@@ -72,6 +84,47 @@ hnGroup::ProcessTurn()
 		}
 	}
 	return didATurn;
+}
+
+void
+hnGroup::ScanForMonsters()
+{
+	int level = -1;
+	
+	for ( int i = 0; i < m_maxPlayerCount; i++ )
+	{
+		if ( m_player[i] )
+		{
+			level = m_player[i]->GetPosition().z;
+			break;
+		}
+	}
+
+	if ( level != -1 )
+	{
+		mapBase *map = hnDungeon::GetLevel( level );
+		assert(map);
+
+		// now we grab all the monsters within 'x' units of our group.
+
+		m_monsterCount = 0;
+
+		for ( int y = 0; y < map->GetHeight(); y++ )
+			for ( int x = 0; x < map->GetWidth(); x++ )
+			{
+#define MONSTER_ATTRACT_DISTANCE (15)
+#define MONSTER_ATTRACT_DISTANCE_SQ (MONSTER_ATTRACT_DISTANCE*MONSTER_ATTRACT_DISTANCE)
+				if ( DistanceFromGroup( hnPoint(x,y,level) ) <= MONSTER_ATTRACT_DISTANCE_SQ )
+				{
+					entBase *entity = map->MapTile(x,y).entity;
+				
+					if ( entity && !entity->IsAPlayer() )
+					{
+						m_monster[m_monsterCount++] = entity;
+					}
+				}
+			}
+	}
 }
 
 int
@@ -109,6 +162,28 @@ hnGroup::DistanceFromGroup( hnPlayer * player )
 	return distance;
 }
 
+int
+hnGroup::DistanceFromGroup( const hnPoint & where )
+{
+	int distance = 0;	// return -1 if not eligible to enter group.
+	bool firstTest = true;
+	
+	for ( int i = 0; i < m_maxPlayerCount; i++ )
+	{
+		if ( m_player[i] != NULL )
+		{
+			hnPoint offset = m_player[i]->GetPosition() - where;
+			
+			if ( firstTest && offset.z != 0 )	// if we're not on the same level as the first guy
+				return -1;			// in this group, we're not allowed in this group.
+			
+			firstTest = false;
+			distance += (offset.x*offset.x) + (offset.y*offset.y);	// this isn't correct, technically.
+		}
+	}
+	
+	return distance;
+}
 
 void
 hnGroup::AddPlayer( hnPlayer * player )

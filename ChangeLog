@@ -29,6 +29,16 @@ May 5, 2001:
   the keyboard can be used for repeat-counts, as is done in NetHack,
   but..  Baby steps, baby steps.  ;)
 
+  Monsters are now put into groups, along with players.  Whenever
+  a group moves, all monsters within (currently) 15 squares of
+  the group also get a move.  Currently, the grid bugs just move
+  randomly, but they could do anything simply by overriding their
+  'Think()' function.  Looks like I might have to do some more
+  network optimising.  A roomful of moving grid bugs can cause
+  nearly the whole room to be updated every frame..  Mind you, it's
+  a bit silly of me to worry about sending *gasp* 200-300 bytes for
+  a turn, isn't it?  ;)
+
 May 4, 2001:
   Late update today.. that's because I've had to implement today's new
   feature twice.  I wanted to make creatures vanish from the map

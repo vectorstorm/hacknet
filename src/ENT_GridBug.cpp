@@ -1,8 +1,10 @@
+#include <assert.h>
+#include <stdlib.h>
 #include "ENT_GridBug.h"
 
 
-entGridBug::entGridBug(const hnPoint & where):
-	entBase( ENTITY_GridBug, where )
+entGridBug::entGridBug(const hnPoint & where, bool hasPlayer):
+	entBase( ENTITY_GridBug, where, hasPlayer )
 {
 }
 
@@ -13,6 +15,31 @@ entGridBug::~entGridBug()
 void
 entGridBug::Think()
 {
+	// by 'think', we're actually just going to move in a random
+	// direction, for now.
+	
+	hnDirection dir;
+	
+	switch( rand() % 4 )
+	{
+		case 0:
+			dir = DIR_North;
+			break;
+		case 1:
+			dir = DIR_West;
+			break;
+		case 2:
+			dir = DIR_East;
+			break;
+		case 3:
+			dir = DIR_South;
+			break;
+		default:
+			assert(0);
+			break;
+	}
+
+	Move(dir);
 }
 
 

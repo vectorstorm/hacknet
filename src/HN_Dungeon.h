@@ -1,6 +1,7 @@
 #ifndef __HN_DUNGEON_H__
 #define __HN_DUNGEON_H__
 
+class mapBase;
 
 class hnDungeon
 {

@@ -216,7 +216,6 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase * sourceMap )
 		for ( int j = -1; j <= 1; j++ )
 			for ( int i = -1; i <= 1; i++ )
 			{
-				printf("Wall at relative %d, %d has type %d.\n", i, j, sourceMap->WallAt(pos.x+i,pos.y+j));
 				if ( !(sourceMap->WallAt(pos.x+i,pos.y+j) & WALL_Any) )
 					MapTile(pos.x+i,pos.y+j).visible = true;
 			}
