@@ -8,7 +8,4 @@ be achieved!  (ie: we must have monsters before we can write monster AI)
 
  - UI work.  (Integrate existing NetHack client code to make our own clients?)
  - Proper character creation (race, class, alignment, etc)
- - Objects
-   - Populate initial maps with objects
- - Monsters
-   - Monster AI
+ - Real Monster AI

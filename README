@@ -1,4 +1,4 @@
-HackNet - version 0.0.5
+HackNet - version 0.0.6
 
 Trevor Powell:  whiterabbit@users.sourceforge.net
 -------
@@ -17,6 +17,9 @@ docs/instructions.txt for playing instructions.
 What's New?   (See ChangeLog for details)
 -------
 
+New since 0.0.5:  Integrated NetHack 3.4.0 object database, object
+  quaff, eat, wear, take-off, etc.  Lots of other neat stuff.
+
 New since 0.0.4:  Combat, Status, Object take/drop/wield, Inventory,
   Defaults to no-groups (since that's my preferred mode), Player stats
   now randomly generated, Status line, and of course, lots of
@@ -29,13 +32,15 @@ Platforms Supported
 
 HackNet has been successfully compiled on:
 
-x86 	- Debian GNU/Linux 2.1, 2.2, & current 'unstable'.
-x86	- Redhat 7.1 and Mandrake 8.0
-x86 	- FreeBSD 4.2-stable
+x86 	- Debian GNU/Linux 2.1, 2.2, 3.0, and current 'unstable'.
+x86	- Redhat 7.1 and 7.3 
+x86     - Mandrake 8.0
+x86 	- FreeBSD 4.2-stable and 4.7-RC
 x86 	- Cygwin (under Windows)
 Alpha 	- RedHat Linux 7.0
+Alpha   - Debian Linux 3.0
 PPC 	- Debian GNU/Linux 2.2
-Sparc	- Debian GNU/Linux 2.2
+Sparc	- Debian GNU/Linux 2.2, 3.0
 Sparc   - Sun Solaris (8)
 
 ...and more, as they're reported to me!  If you get it to compile on something
@@ -53,7 +58,9 @@ Sun Solaris:  You need to install the usual GNU utilities for a compile to
   ar, and you probably need a number of other utilities.. and they all need
   to be in your PATH.  Once this is done, the configure script should
   autodetect everything else and let you make the sources.
-
+MacOSX:  I haven't managed to get HackNet to compile under OSX, yet..
+  but I haven't really given it much of an attempt, since I have very
+  limited access to this OS. 
 
 
 
@@ -104,6 +111,31 @@ name 'Foo', use the following command line:
 
 If you don't specify a server address, it will default to localhost.
 If you don't specify a name, it will assume your login name.
+
+
+Commands:
+--------
+
+In-game, the implemented commands are just like those from NetHack,
+with a few additions.  Here is a brief discussion of available
+commands:
+
+h,j,k,l:  move west, south, north, and east, respectively.  (VI-keys)
+y,u,b,n:  move northwest, northeast, southwest, and southeast, respectively
+,:  pick up an object
+d:  drop an object
+e:  eat an object
+q:  quaff  (drink) a potion
+w:  wield a weapon
+W:  wear a piece of armour
+T:  take off a piece of armour
+i:  display inventory
+
+Q:  quit game
+
+To attack an enemy, just walk into it.  (The client software automatically
+detects that you're walking into a square with an enemy, and sends an 'attack'
+command to the server, instead of a 'move' command)
 
 Caveats:
 --------

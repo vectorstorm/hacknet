@@ -59,12 +59,12 @@ code style consistant:
   -  Code blocks are tabbed one further in than their enclosing braces
   (yes, I'd have thought this was obvious, but some people seem to like
   to tab the enclosing braces in as well.)
-  -  Classes have a two-letter prefix denoting which system they belong
+  -  Classes have a short prefix denoting which system they belong
   to.  'hn' stands for 'hacknet', and denotes a core game system.  'net'
   denotes a networking class.  'io' denotes an input/output class.  io
   classes should not talk over the network, net classes should not check
   for keyboard input, and hn classes shouldn't do either.  This is just
-  to maintain clean code.
+  to maintain clean code.  (As yet, no 'io' classes have been created)
   -  A class's member variables should all be named as m_<variable name>
   where <variable name> contains no underscores.  The first word in
   <variable name> should be lowercase, and all subsequent words should
