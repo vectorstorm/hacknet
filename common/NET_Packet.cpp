@@ -68,12 +68,12 @@ netMetaPacket::ClientStatistics( netClientStatistics &packet )
 
 	sint8 type = SPT_ClientStatistics;
 	Sint8( type );
-	Sint8( packet.strength );
-	Sint8( packet.dexterity );
-	Sint8( packet.constitution );
-	Sint8( packet.intelligence );
-	Sint8( packet.wisdom );
-	Sint8( packet.charisma );
+	Uint8( packet.strength );
+	Uint8( packet.dexterity );
+	Uint8( packet.constitution );
+	Uint8( packet.intelligence );
+	Uint8( packet.wisdom );
+	Uint8( packet.charisma );
 
 	return (!m_error);
 }
@@ -111,8 +111,8 @@ netMetaPacket::ClientExperience( netClientExperience &packet )
 
 	sint8 type = SPT_ClientExperience;
 	Sint8( type );
-	Sint16( packet.experiencePoints );
-	Sint8( packet.level );
+	Uint16( packet.experiencePoints );
+	Uint8( packet.level );
 
 	return (!m_error);
 }

@@ -371,6 +371,13 @@ netServer::SendClientLocation( const hnPoint & loc )
 }
 
 void
+netServer::SendStatus( hnStatus * status )
+{
+	assert( m_metaPacket );
+	status->SendChanges( m_metaPacket );
+}
+
+void
 netServer::SendMapTile( const hnPoint & loc, const mapTile & tile )
 {
 	assert( m_metaPacket );

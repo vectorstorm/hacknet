@@ -8,6 +8,9 @@
 
 May 17, 2001:
   * Bug #424181:  Missing #include in HN_Game.cpp
+  * Player stats now randomly generated.
+  * Player stats now transmitted to client whenever they change.
+  * Player stats now display on client, similar to NetHack's display.
 
 May 16, 2001:
   * HN_Main_Server.cpp:  Server now accepts --nogroups as well as --no-groups.

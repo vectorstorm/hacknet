@@ -405,14 +405,26 @@ hnDisplayTTY::Refresh()
 		}
 		
 		// do status bar
+
+		move( 22, 0 );
+		printw("%s     St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d", m_name,
+			m_status->Strength(), m_status->Dexterity(), 
+			m_status->Constitution(), m_status->Intelligence(),
+			m_status->Wisdom(), m_status->Charisma() );
+		move( 23, 0 );
+		printw("Dlvl: %d  $:%d  HP:%d(%d) Pw:%d(%d) AC:%d Xp:%d/%d",
+			m_position.z, 0, m_status->HitPoints(),
+			m_status->HitPointMax(), m_status->SpellPoints(),
+			m_status->SpellPointMax(), 10, 
+			m_status->ExperiencePoints(), m_status->Level() );
 		
 		if ( m_groupMemberCount > 1 )
 		{
-			move( 23, 0 );
-			printw("%d/%d group turns.  ", m_groupMemberTurnCount, m_groupMemberCount);
+			printw("  Group Turns: %d/%d", m_groupMemberTurnCount, m_groupMemberCount);
 			if ( !m_submittedTurn && m_groupMemberTurnCount > 0 )	// if somebody's entered a turn and I haven't..
-				printw("You haven't submitted a turn.");
+				printw("  (Waiting for you)");
 		}
+
 		// do upper prompts.
 		
 		for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )

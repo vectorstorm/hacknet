@@ -34,6 +34,7 @@ public:
 	
 	const hnPoint &		GetPosition();
 	entType			GetType() { return m_type; }
+	hnStatus *		GetStatus() { return m_status; }
 	
 	void			SetPosition( const hnPoint & );
 	

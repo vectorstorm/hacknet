@@ -35,12 +35,12 @@ struct netClientLocation
 
 struct netClientStatistics
 {
-	sint8 strength;
-	sint8 dexterity;
-	sint8 constitution;
-	sint8 intelligence;
-	sint8 wisdom;
-	sint8 charisma;
+	uint8 strength;
+	uint8 dexterity;
+	uint8 constitution;
+	uint8 intelligence;
+	uint8 wisdom;
+	uint8 charisma;
 };
 
 struct netClientHitPoints
@@ -57,8 +57,8 @@ struct netClientSpellPoints
 	
 struct netClientExperience
 {
-	sint16 experiencePoints;
-	sint8 level;
+	uint16 experiencePoints;
+	uint8 level;
 };
 
 struct netMapTile

@@ -2,6 +2,10 @@
 
 #include "HN_Types.h"
 
+class netMetaPacket;
+class netMetaPacketInput;
+class netMetaPacketOutput;
+
 class hnStatus
 {
 	uint8	m_strength;
@@ -17,8 +21,8 @@ class hnStatus
 	sint16	m_spellPointMax;
 	sint16	m_spellPoints;
 
-	uint8	m_level;
 	uint16	m_experiencePoints;
+	uint8	m_level;
 	
 	sint16	m_hunger;
 	
@@ -31,6 +35,7 @@ class hnStatus
 	bool	m_changedStatistics;
 	bool	m_changedHitPoints;
 	bool	m_changedSpellPoints;
+	bool	m_changedExperiencePoints;
 
 	void		Initialise();
 
@@ -66,14 +71,11 @@ public:
 	bool		Hallucinating() { return m_hallucinating; }
 	bool		Paralyzed() { return m_paralyzed; }
 
-	bool		ChangedStatistics() { return m_changedStatistics; }
-	bool		ChangedHitPoints() { return m_changedHitPoints; }
-	bool		ChangedSpellPoints() { return m_changedSpellPoints; }
-	
 	void		TakeDamage( sint16 points );
 	void		TurnPassed();	// a turn has passed.  Do whatever needs to be done.
 	
-	void		ResetChanged();	// reset our 'changed' flags.
+	void		SendChanges( netMetaPacketOutput *packet );
+	void		ReceiveChanges( netMetaPacketInput *packet );
 };
 
 

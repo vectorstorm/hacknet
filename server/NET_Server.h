@@ -16,7 +16,6 @@ class hnGame;
 class mapBase;
 class hnPoint;
 struct sockaddr_in;
-struct netClientPacket;
 
 
 #define MAX_META_PACKET_SIZE (65536)
@@ -45,7 +44,7 @@ class netServer
 	clientData		m_client[MAX_CLIENTS];				// socket fds for all our clients
 	int			m_clientCount;					// how many clients have we got?
 	
-	netMetaPacket *		m_metaPacket;
+	netMetaPacketOutput *	m_metaPacket;
 	char			m_buffer[MAX_META_PACKET_SIZE];
 	int			m_packetClientID;				// client we're currently making a metapacket for
 	
@@ -71,6 +70,7 @@ public:
 	bool		TransmitMetaPacket();				// send the metapacket we were constructing
 	
 	void		SendClientLocation( const hnPoint &loc );	// tell the client where they are.
+	void		SendStatus( hnStatus *status );
 	void		SendGroupData( int groupMemberCount, int groupTurnsSubmitted, bool clientSubmittedTurn );
 //	bool		SendMapUpdate(int clientID, mapBase *map);	// server sends move update to client
 	void		SendMapTile( const hnPoint & loc, const mapTile & floorType );  // new floortype

@@ -325,6 +325,15 @@ hnPlayer::SendUpdate()
 			m_lastSentGroupPlayerQueuedTurns = groupMembersWithTurns;
 		}
 	}
+
+	if ( m_entity->GetStatus() )
+	{
+		//----------------------------------------------------------
+		//  Send data on any updates to our health, stats, etc.
+		//----------------------------------------------------------
+
+		netServer::GetInstance()->SendStatus( m_entity->GetStatus() );
+	}
 	
 	//----------------------------------------------------------------
 	// Send the metapacket now.  The server will recognize if there's

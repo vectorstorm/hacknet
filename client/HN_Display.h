@@ -47,6 +47,8 @@ public:
 	virtual void	TextMessage( char * message ) {}
 
 	char *		GetName() { return m_name; }
+
+	hnStatus *	GetStatus() { return m_status; }
 };
 
 #endif

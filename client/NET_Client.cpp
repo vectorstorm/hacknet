@@ -186,6 +186,12 @@ netClient::Go()
 					packet->GroupData(groupData);
 					m_display->UpdateGroupData(groupData.memberCount, groupData.memberTurns, groupData.haveTurnFromClient );
 					break;
+				case SPT_ClientStatistics:
+				case SPT_ClientHitPoints:
+				case SPT_ClientSpellPoints:
+				case SPT_ClientExperience:
+					m_display->GetStatus()->ReceiveChanges( packet );
+					break;
 				case SPT_MapTile:
 					packet->MapTile(tileData);
 					if ( m_display->isMapReady( tileData.loc.z ) )
