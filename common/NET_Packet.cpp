@@ -54,7 +54,7 @@ netMetaPacket::~netMetaPacket()
 bool
 netMetaPacket::ClientLocation( netClientLocation &packet )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_ClientLocation;
 	Char( type );
@@ -62,25 +62,82 @@ netMetaPacket::ClientLocation( netClientLocation &packet )
 	Char( packet.loc.y );
 	Char( packet.loc.z );
 
-	return success;
+	return (!m_error);
 }
+
+bool
+netMetaPacket::ClientStatistics( netClientStatistics &packet )
+{
+	m_error = false;
+
+	sint8 type = SPT_ClientStatistics;
+	Char( type );
+	Char( packet.strength );
+	Char( packet.dexterity );
+	Char( packet.constitution );
+	Char( packet.intelligence );
+	Char( packet.wisdom );
+	Char( packet.charisma );
+
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientHitPoints( netClientHitPoints &packet )
+{
+	m_error = false;
+
+	sint8 type = SPT_ClientHitPoints;
+	Char( type );
+	Short( packet.maxHitPoints );
+	Short( packet.hitPoints );
+
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientSpellPoints( netClientSpellPoints &packet )
+{
+	m_error = false;
+
+	sint8 type = SPT_ClientSpellPoints;
+	Char( type );
+	Short( packet.maxSpellPoints );
+	Short( packet.spellPoints );
+
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientExperience( netClientExperience &packet )
+{
+	m_error = false;
+
+	sint8 type = SPT_ClientExperience;
+	Char( type );
+	Short( packet.experiencePoints );
+	Char( packet.level );
+
+	return (!m_error);
+}
+
 
 bool
 netMetaPacket::TextMessage( char * buffer, sint16 & bufferlength )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_Message;
 	Char(type);
 	String( buffer, bufferlength );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::MapTile( netMapTile &packet )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_MapTile;
 	Char( type );
@@ -90,25 +147,25 @@ netMetaPacket::MapTile( netMapTile &packet )
 	Short( packet.material );
 	Short( packet.wall );
 
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::DungeonReset( sint8 & levelCount )
 {
-	bool success = true;
+	m_error = false;
 
 	sint8 type = SPT_DungeonReset;
 	Char(type);
 	Char( levelCount );
 
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::MapReset( netMapReset &packet )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_MapReset;
 	Char( type );
@@ -116,7 +173,7 @@ netMetaPacket::MapReset( netMapReset &packet )
 	Char( packet.height );
 	Char( packet.depth );
 	
-	return success;
+	return (!m_error);
 }
 
 
@@ -134,7 +191,7 @@ netMetaPacket::MapReset( netMapReset &packet )
 bool
 netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 {
-	bool success = true;
+	m_error = false;
 
 	sint8 type = SPT_MapUpdateBBox;
 	Char( type );
@@ -160,13 +217,13 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 	for ( int i = 0; i < nTiles; i++ )
 		Char( packet.entityType[i] );
 
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::MapEntity( netMapEntity &packet )
 {
-	bool success = true;
+	m_error = false;
 
 	sint8 type = SPT_MapEntity;
 	Char(type);
@@ -175,24 +232,24 @@ netMetaPacket::MapEntity( netMapEntity &packet )
 	Char(packet.loc.z);
 	Char(packet.objectType);
 
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::MapObjectList( netMapObjectList &packet )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_MapObjectList;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::GroupData( netGroupData &packet )
 {
-	bool success = true;
+	m_error = false;
 
 	sint8 type = SPT_GroupData;
 	Char( type );
@@ -200,146 +257,157 @@ netMetaPacket::GroupData( netGroupData &packet )
 	Char( packet.memberTurns );
 	Char( packet.haveTurnFromClient );
 
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::Refresh()
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_Refresh;
 	Char( type );
 	
-	return success;
+	return (!m_error);
+}
+
+bool
+netMetaPacket::JoinOK()
+{
+	m_error = false;
+
+	sint8 type = SPT_JoinOk;
+	Char( type );
+
+	return (!m_error);
 }
 
 bool
 netMetaPacket::QuitConfirm()
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_QuitConfirm;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::SaveConfirm()
 {	
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_SaveConfirm;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::BadPacketNotice()
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = SPT_BadPacketNotice;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 
 bool
 netMetaPacket::ClientMove( sint8 & direction )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Move;
 	Char( type );
 	Char( direction );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::ClientAttack( sint8 & direction )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Attack;
 	Char( type );
 	Char( direction );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::ClientWait( )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Wait;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 
 bool
 netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Name;
 	Char(type);
 	String( namebuffer, bufferlength );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::ClientTalk( char * talkbuffer, sint16 & bufferlength )
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Talk;
 	Char(type);
 	String( talkbuffer, bufferlength );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::ClientRequestRefresh( sint8 & level )
 {
-	bool success = true;
+	m_error = false;
 
 	sint8 type = CPT_RequestRefresh;
 	Char(type);
 	Char(level);
 
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::ClientQuit()
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Quit;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 bool
 netMetaPacket::ClientSave()
 {
-	bool success = true;
+	m_error = false;
 	
 	sint8 type = CPT_Save;
 	Char( type );
 	
-	return success;
+	return (!m_error);
 }
 
 //------------------------------------------------------------------------------------
@@ -368,8 +436,11 @@ netMetaPacketInput::Char( sint8 & result )
 		m_bufferDistance += 1;
 		success = true;
 	}
-
-	return success;
+	
+	if ( !success )
+		m_error = true;
+	
+	return (!m_error);
 }
 	
 bool
@@ -384,8 +455,11 @@ netMetaPacketInput::Short( sint16 & result )
 		m_bufferDistance += sizeof(sint16);
 		success = true;
 	}
+	
+	if ( !success )
+		m_error = true;
 
-	return success;
+	return (!m_error);
 }
 
 bool
@@ -401,13 +475,21 @@ netMetaPacketInput::Long( sint32 & result )
 		success = true;
 	}
 
-	return success;
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
 }
 
 bool
 netMetaPacketInput::String( char * string, sint16 & stringLength )
 {	
-	bool success = true;
+	bool success = true;		// we always succeed, because this
+					// code was written to be fault-tolerant.
+					// if there's an error, one of the
+					// functions we call will flag it (but
+					// this should never happen, because
+					// we're supposed to be fault-tolerant!)
 	
 	sint16 length;			// how much we're going to read
 	sint16 packetStringLength;	// how much is actually stored in the packet
@@ -438,9 +520,11 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 		
 	// if we're reading a packet, be sure we stick a null on the end, for safety.
 	string[stringLength-1] = '\0';
-	
-	return success;
 
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
 }
 
 sint8
@@ -510,7 +594,10 @@ netMetaPacketOutput::Char( sint8 & result )
 		success = true;
 	}
 
-	return success;
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
 }
 	
 bool
@@ -526,7 +613,10 @@ netMetaPacketOutput::Short( sint16 & result )
 		success = true;
 	}
 
-	return success;
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
 }
 
 bool
@@ -542,13 +632,16 @@ netMetaPacketOutput::Long( sint32 & result )
 		success = true;
 	}
 
-	return success;
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
 }
 
 bool
 netMetaPacketOutput::String( char * string, sint16 & stringLength )
 {
-	bool success = true;
+	bool success = true;		// we always succeed!
 	sint16 length = strlen(string);
 	
 	if ( length > stringLength )	// this can never happen, right?  Unless the string isn't null terminated.
@@ -564,5 +657,9 @@ netMetaPacketOutput::String( char * string, sint16 & stringLength )
 		sint8 thebyte = string[i];
 		Char(thebyte);
 	}
-	return success;
+	
+	if ( !success )
+		m_error = true;
+	
+	return (!m_error);
 }

@@ -291,8 +291,7 @@ netServer::Go()
 bool
 netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 {
-	bool okay = false;
-	bool abort = false;
+	bool okay = true;
 
 #define MAX_NAME_BYTES (128)
 	char localbuffer[MAX_NAME_BYTES];
@@ -309,53 +308,51 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 #endif
 	netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
 	
-	while ( !packet->Done() && !abort )
+	while ( !packet->Done() && okay )
 	{
 		sint8 type = packet->PeekChar();
 		sint8 direction;
 		sint8 level;
-		okay = true;
 		
 		switch(type)
 		{
 			case CPT_Move:
-				packet->ClientMove(direction);
+				okay = packet->ClientMove(direction);
 				m_game->ClientMove(clientID, (hnDirection)direction);
 				break;
 			case CPT_Wait:
-				packet->ClientWait();
+				okay = packet->ClientWait();
 				m_game->ClientWait(clientID);
 				break;
 			case CPT_Talk:
-				packet->ClientTalk(localbuffer, bufferSize);
+				okay = packet->ClientTalk(localbuffer, bufferSize);
 				m_game->ClientTalk(clientID, localbuffer);
 				printf("%s says, \"%s\"\n", m_game->GetPlayerName(clientID), localbuffer);
 				break;
 			case CPT_Name:
-				packet->ClientName(localbuffer, bufferSize);
+				okay = packet->ClientName(localbuffer, bufferSize);
 				m_game->ClientName(clientID, localbuffer);
 				printf("Client %d calls himself %s\n", clientID, localbuffer);
 				break;
 			case CPT_RequestRefresh:
-				packet->ClientRequestRefresh(level);
+				okay = packet->ClientRequestRefresh(level);
 				printf("Client %d requests refresh of level %d.\n", clientID, level );
 				m_game->ClientRequestRefresh(clientID, level);
 				break;
 			case CPT_Save:	// no saving code yet -- just quit.
-				packet->ClientSave();
+				okay = packet->ClientSave();
 				SendQuitConfirm(clientID);
 				DisconnectClientID(clientID);
 				printf("Disconnected client %d.\n", clientID);
 				break;
 			case CPT_Quit:
-				packet->ClientQuit();
+				okay = packet->ClientQuit();
 				SendQuitConfirm(clientID);
 				DisconnectClientID(clientID);
 				printf("Disconnected client %d.\n", clientID);
 				break;
 			default:
 				okay = false;
-				abort = true;
 				printf("Received unknown packet type %d from %s (id %d).\n", type, m_game->GetPlayerName(clientID), clientID);
 				break;
 		}

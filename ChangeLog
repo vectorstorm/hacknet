@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 13, 2001:
+  * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.
+  * NET_Server.cpp/NET_Packet.cpp: Added better detection of bad packets.
+
 May 12, 2001:
   * Coding on a new computer now.  Back to work!
   * NET_Packet.h/.cpp:  Added a few new packet types for upcoming combat.

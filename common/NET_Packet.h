@@ -7,8 +7,14 @@
 
 
 enum{
+	SPT_Message,		// message from the server -- THIS MUST ALWAYS BE TYPE 0, SO WE CAN SEND VERSION ERROR MESSAGES TO CLIENT
+	SPT_BadPacketNotice,	// ALWAYS ID 1.  -- You just sent me a bad packet, and are being disconnected.  Version mismatch?
+	SPT_JoinOk,		// you've been accepted.
 	SPT_ClientLocation,
-	SPT_ClientStatus,	// send client details about himself.  (Stats, etc)
+	SPT_ClientStatistics,	// send client strength, dex, etc.
+	SPT_ClientHitPoints,	// send client hit point info
+	SPT_ClientSpellPoints,	// send client spell point info
+	SPT_ClientExperience,	// send client experience point info
 	SPT_MapTile,
 	SPT_DungeonReset,
 	SPT_MapReset,
@@ -16,10 +22,8 @@ enum{
 	SPT_MapObjectList,
 	SPT_MapEntity,
 	SPT_GroupData,		// sending information on the player's group.
-	SPT_Message,		// message from the server
 	SPT_QuitConfirm,	// yes, you're out of the game
 	SPT_SaveConfirm,	// yes, you've been saved and are out of the game
-	SPT_BadPacketNotice,	// you just sent me a bad packet, and are being disconnected.  Version mismatch?
 	SPT_Refresh,		// we just finished sending a set of events.  Go ahead and refresh the screen now.
 	SPT_MAX
 };
@@ -29,30 +33,32 @@ struct netClientLocation
 	hnPoint loc;
 };
 
-// ---------------------------------------------------
-//   Gads.  Look at this struct.  We're never going to
-//   actually change this much stuff all at once.
-//   I should split this up into bunches of separate
-//   packets....
-// ---------------------------------------------------
-struct netClientStatus
+struct netClientStatistics
 {
-	uint8 strength;
-	uint8 dexterity;
-	uint8 constitution;
-	uint8 intelligence;
-	uint8 wisdom;
-	uint8 charisma;
+	sint8 strength;
+	sint8 dexterity;
+	sint8 constitution;
+	sint8 intelligence;
+	sint8 wisdom;
+	sint8 charisma;
+};
+
+struct netClientHitPoints
+{
+	sint16 maxHitPoints;
+	sint16 hitPoints;
+};
+
+struct netClientSpellPoints
+{
+	sint16 maxSpellPoints;
+	sint16 spellPoints;
+};
 	
-	uint16 maxHitPoints;
-	uint16 hitPoints;
-
-	uint16 maxSpellPoints;
-	uint16 spellPoints;
-
-	uint8 level;
-
-	uint16 experiencePoints;
+struct netClientExperience
+{
+	sint16 experiencePoints;
+	sint8 level;
 };
 
 struct netMapTile
@@ -103,6 +109,7 @@ struct netMapEntity
 
 enum 
 {
+	CPT_Version,	// must always be ID zero so we can communicate with server regardless of version number!
 	CPT_Move,
 	CPT_Wait,
 	CPT_Attack,	// an attack is actually different from a move, so we don't attack people by accident.
@@ -123,6 +130,8 @@ protected:
 	unsigned long		m_bufferLength;			// how long the buffer actually is.
 	unsigned long   	m_bufferDistance;		// how much we've read/written to the buffer already
 
+	bool			m_error;			// set true if we have a read/write error.
+
 public:
 				netMetaPacket(char *buffer, uint32 bufferLength);
 	virtual			~netMetaPacket();
@@ -134,6 +143,10 @@ public:
 	
 	/*****************   Server Packets  ******************/
 	bool			ClientLocation( netClientLocation &packet );
+	bool			ClientStatistics( netClientStatistics &packet );
+	bool			ClientExperience( netClientExperience &packet );
+	bool			ClientHitPoints( netClientHitPoints &packet );
+	bool			ClientSpellPoints( netClientSpellPoints &packet );
 	bool			TextMessage( char * messagebuffer, sint16 & bufferlength );
 	bool			MapTile( netMapTile &packet );
 	bool			GroupData( netGroupData &packet );
@@ -142,6 +155,7 @@ public:
 	bool			MapUpdateBBox( netMapUpdateBBox &packet );
 	bool			MapEntity( netMapEntity &packet );
 	bool			MapObjectList( netMapObjectList &packet );
+	bool			JoinOK();
 	bool			QuitConfirm();
 	bool			SaveConfirm();
 	bool			Refresh();
