@@ -74,6 +74,18 @@ hnGame::GetPlayerName(int playerID)
 }
 
 void
+hnGame::SeenEvent( hnPlayer *player, char * message )
+{
+	hnPoint pos = player->GetPosition();
+
+	for ( int i = 0; i < MAX_CLIENTS; i++ )
+	{
+		if ( m_player[i] )
+			m_player[i]->See(pos, player, message);
+	}
+}
+
+void
 hnGame::ClientJoined(int playerID)
 {
 	// a client has joined, so try to find a place to put him/her.

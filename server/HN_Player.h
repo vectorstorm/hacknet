@@ -80,6 +80,9 @@ public:
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
 	
+	virtual void	See( const hnPoint & position, char * message );
+	virtual void	See( const hnPoint & position, hnPlayer * who, char * message );
+	
 	virtual bool	CanSee( const hnPoint & position );
 	
 	virtual void	DoAction();		// process our turn.

@@ -25,6 +25,9 @@ public:
 	
 	char *			GetPlayerName(int clientID);	// utility function for server
 
+	void			SeenEvent( hnPlayer * player, char * message );
+	void			SeenEvent( const hnPoint & where, char * message );
+
 	void			ClientTurn();
 	void			ClientJoined(int clientID);
 	void			ClientName(int clientID, char * name);

@@ -6,6 +6,14 @@
 ---  most recent checkins at the bottom.
 ---
 
+June 10, 2001:
+  * Found more problems in object model system which would have bitten us
+    a few months down the road.  Rethinking the object system now.
+  * Adjusted calls so that all players within view receive messages when
+    each player attacks things, instead of only seeing their own attacks.
+    This needs to be fixed up a bit to be more grammatical, and to properly
+    substitute 'you' for player names when players attack each other.
+
 June 2, 2001:
   * Large infrastructure change -- hnPlayers now store their local copies
     of map data in the same format as the clients (that is, as mapClient

@@ -7,6 +7,7 @@
 #include "HN_Group.h"
 #include "MAP_Base.h"
 #include "MAP_Client.h"
+#include "HN_Game.h"
 
 #include "ENT_Human.h"
 #include "ENT_GridBug.h"
@@ -159,6 +160,45 @@ hnPlayer::Listen( char * message )
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }
 
+void
+hnPlayer::See( const hnPoint & where, hnPlayer * who, char * message )
+{
+	if ( CanSee( where ) )
+	{
+		// make ourselves a proper message by taking the
+		// name of 'who', and concatonating the message
+		// onto the end.
+		
+		char buffer[256];
+		char nameBuffer[128];
+		
+		if ( who == this )
+			sprintf(nameBuffer,"You");
+		else
+			who->GetFullName(nameBuffer,128);
+		
+		snprintf(buffer,256,"%s %s", nameBuffer, message);
+		buffer[255] = '\0';
+		
+		netServer::GetInstance()->StartMetaPacket(m_playerID);
+		netServer::GetInstance()->SendMessage(buffer);
+		netServer::GetInstance()->TransmitMetaPacket();
+	}
+}
+
+void
+hnPlayer::See( const hnPoint & where, char * message )
+{
+	if ( CanSee( where ) )
+	{
+		// if we can see the point, send the text message
+		//  "'who' 'message'" to our client.
+		netServer::GetInstance()->StartMetaPacket(m_playerID);
+		netServer::GetInstance()->SendMessage(message);
+		netServer::GetInstance()->TransmitMetaPacket();
+	}
+}
+
 bool
 hnPlayer::CanSee( const hnPoint & where )
 {
@@ -222,15 +262,17 @@ hnPlayer::DoAction()
 			result = m_entity->Attack( m_queuedTurn.attack.direction );
 			
 			if ( result == entBase::AT_Hit )
-				sprintf(buffer,"You hit %s!", name);
+				sprintf(buffer,"hit %s!", name);
 			else if ( result == entBase::AT_Kill )
-				sprintf(buffer,"You destroyed %s!", name);
+				sprintf(buffer,"destroyed %s!", name);
 			else
-				sprintf(buffer,"You missed %s!", name);
-
-			netServer::GetInstance()->StartMetaPacket(m_playerID);
-			netServer::GetInstance()->SendMessage(buffer);
-			netServer::GetInstance()->TransmitMetaPacket();
+				sprintf(buffer,"missed %s!", name);
+			
+			hnGame::GetInstance()->SeenEvent(this,buffer);
+			
+			//netServer::GetInstance()->StartMetaPacket(m_playerID);
+			//netServer::GetInstance()->SendMessage(buffer);
+			//netServer::GetInstance()->TransmitMetaPacket();
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
