@@ -6,7 +6,7 @@
 #include "NET_Server.h"
 #include "HN_Point.h"
 #include "HN_Consts.h"
-#include "ENT_Base.h"
+#include "ENT_Player.h"
 
 static hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
@@ -91,7 +91,7 @@ hnGame::ClientJoined(int playerID)
 	m_player[playerID].pos.x = x;
 	m_player[playerID].pos.y = y;
 	m_player[playerID].pos.z = z;
-	m_player[playerID].entity = new entBase(ENTITY_Player, hnPoint(x,y,z));
+	m_player[playerID].entity = new entPlayer(hnPoint(x,y,z));
 	m_levelMap[z]->PutEntityAt( m_player[playerID].entity, x, y );
 	
 	m_server->StartMetaPacket( playerID );

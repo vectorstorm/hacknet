@@ -12,12 +12,13 @@
 
 class mapBase;
 class netServer;
-class entBase;
+class entPlayer;
 
 struct playerData
 {
-	entBase		*entity;
+	entPlayer	*entity;
 	hnPoint		pos;
+	mapBase		*m_visionMap[MAX_LEVELS];
 };
 
 // hnGame is a singleton.
