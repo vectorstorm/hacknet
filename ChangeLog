@@ -10,6 +10,9 @@ May 6, 2001:
   Added up-stairs to top level of dungeon.  Going up those top-level
   up-stairs is equivalent to quitting the game, at the moment.
 
+  Should now support curses-based systems.  (Rather than ncurses).
+  Closer to Solaris support..
+
 May 5, 2001:
   Spent the morning working at compiling hacknet on the various
   machines in the SourceForge compile farm.  I think I've worked

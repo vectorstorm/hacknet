@@ -1,4 +1,5 @@
-hacknet_LDADD = $(CURSESLIB) $(THREADLIB)
+hacknet_LDADD = $(CURSESLIB) $(THREADLIB) $(SOCKETLIB) $(NSLLIB)
+hacknetd_LDADD = $(SOCKETLIB) $(NSLLIB)
 
 bin_PROGRAMS= hacknet hacknetd
 hacknet_SOURCES = HN_Display.cpp HN_DisplayTTY.cpp MAP_Client.cpp HN_Point.cpp \

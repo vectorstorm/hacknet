@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <signal.h>
 #include <string.h> 
+#include <strings.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/types.h> 

@@ -3,6 +3,7 @@
 #include <errno.h> 
 #include <assert.h>
 #include <string.h> 
+#include <strings.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/types.h> 
@@ -48,7 +49,9 @@ netClient::StartClient( char * serverAddress )
 	//printf("Doing host lookup...\n");
 	if ( ( he = gethostbyname(serverAddress) ) == NULL ) // getting host information...
 	{
+#if HAS_HERROR
 		herror("gethostbyname");
+#endif
 		cleanexit(1);
 	}
 	

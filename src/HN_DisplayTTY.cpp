@@ -1,7 +1,11 @@
-#ifndef CURSESINC
-#include <ncurses.h>
+#if HAS_CURSES
+  #include <curses.h>
 #else
-#include CURSESINC
+  #if HAS_NCURSES
+    #include <ncurses.h>
+  #else
+    #error "No curses library found!"
+  #endif
 #endif
 #include <pthread.h>
 #include <string.h>
@@ -10,6 +14,13 @@
 #include "HN_Enum.h"
 
 //#define __DEBUGGING_NETWORK__
+
+#if HAS_COLOR_SET
+#else
+	// if we don't have a 'color_set' function in curses, provide something for the source code's calls
+	// to bind to.
+	int color_set(short,void * ){}
+#endif
 
 
 hnDisplayTTY::hnDisplayTTY( char * name ):

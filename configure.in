@@ -33,23 +33,46 @@ case "$target" in
         ;;
 esac
 
-dnl Checks for header files.
+dnl Checks for curses headers and functions.  (Does generic 'curses' ever have a color_set function?)
 AC_CHECK_LIB(ncurses, initscr, 
-             [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncurses'; ], [ 
+             [ AC_DEFINE(HAS_NCURSES) 
+	     AC_CHECK_LIB( ncurses, color_set, AC_DEFINE(HAS_COLOR_SET) )
+	     CURSESLIB='-lncurses'; ], [ 
         AC_CHECK_LIB(curses, initscr, 
-                     [ CURSESINC='<curses.h>'; CURSESLIB='-lcurses'; ])
+                     [ AC_DEFINE(HAS_CURSES) 
+		     AC_CHECK_LIB( curses, color_set, AC_DEFINE(HAS_COLOR_SET) )
+		     CURSESLIB='-lcurses'; ])
 ])
 
-AC_SUBST(CURSESINC)
+dnl AC_SUBST(CURSESINC)
+
 AC_SUBST(CURSESLIB)
 
-AC_HEADER_STDC
+dnl *BSD puts threads into libc_r.  We can tell gcc/c++/g++/etc. to link
+dnl libc_r instead of libc by passing the argument -pthread.
 AC_CHECK_LIB(c_r, pthread_create,THREADLIB='-pthread', [
 	AC_CHECK_LIB(pthread, pthread_create,THREADLIB='-lpthread')
 	])
 		
 AC_SUBST(THREADLIB)
 
+dnl Solaris (and others?) put socket code into libsocket instead of in
+dnl libc.  So if it's not in libc, check libsocket.
+AC_CHECK_LIB(c, socket,, [
+	AC_CHECK_LIB(socket,socket,SOCKETLIB='-lsocket')
+	])
+ AC_SUBST(SOCKETLIB)
+
+dnl Solaris (and others?) put hostname lookup into libnsl instead of
+dnl libc.  So if it's not in libc, check nsl.
+AC_CHECK_LIB(c, gethostbyname,
+	AC_CHECK_LIB(c,herror,AC_DEFINE(HAS_HERROR)), [
+	AC_CHECK_LIB(nsl,gethostbyname,NSLLIB='-lnsl')
+	])
+ AC_SUBST(NSLLIB)
+
+
+AC_HEADER_STDC
 dnl AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h unistd.h netinet/in.h)
 
 # Bleah.  If we don't have a socklen_t, switch it to an int for the sake of
@@ -65,7 +88,18 @@ AC_TRY_COMPILE(
 ,
 [
 socklen_t sin_size = sizeof(int);
-],AC_MSG_RESULT(yes), AC_MSG_RESULT(no) AC_DEFINE(socklen_t=int))
+],AC_MSG_RESULT(yes), AC_DEFINE(socklen_t,int) AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING(whether we use u_int or uint)
+AC_TRY_COMPILE(
+
+#include <sys/types.h>
+,
+[
+u_int8_t size = sizeof(int);
+],[AC_MSG_RESULT(u_int)], [ AC_DEFINE(NO_U_INT_T) AC_MSG_RESULT(uint)])
+
+
 
 # Finally create all the generated files
 # The configure script takes "file.in" and substitutes variables to produce

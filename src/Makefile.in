@@ -59,15 +59,17 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
-CURSESINC = @CURSESINC@
 CURSESLIB = @CURSESLIB@
 CXX = @CXX@
 MAKEINFO = @MAKEINFO@
+NSLLIB = @NSLLIB@
 PACKAGE = @PACKAGE@
+SOCKETLIB = @SOCKETLIB@
 THREADLIB = @THREADLIB@
 VERSION = @VERSION@
 
-hacknet_LDADD = $(CURSESLIB) $(THREADLIB)
+hacknet_LDADD = $(CURSESLIB) $(THREADLIB) $(SOCKETLIB) $(NSLLIB)
+hacknetd_LDADD = $(SOCKETLIB) $(NSLLIB)
 
 bin_PROGRAMS = hacknet hacknetd
 hacknet_SOURCES = HN_Display.cpp HN_DisplayTTY.cpp MAP_Client.cpp HN_Point.cpp 		HN_Version.cpp HN_Main_Client.cpp NET_Client.cpp NET_Packet.cpp
@@ -92,7 +94,6 @@ hacknetd_OBJECTS =  HN_Main_Server.o ENT_Base.o ENT_GridBug.o \
 ENT_Human.o OBJ_Base.o HN_Group.o HN_Game.o HN_Player.o HN_Dungeon.o \
 MAP_Base.o MAP_Client.o MAP_Hack.o MAP_Cavern.o HN_Version.o \
 NET_Server.o HN_Point.o NET_Packet.o
-hacknetd_LDADD = $(LDADD)
 hacknetd_DEPENDENCIES = 
 hacknetd_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
