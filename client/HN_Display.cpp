@@ -108,30 +108,34 @@ hnDisplay::Refresh()
 		m_moved = false;
 		// check to see if there's an object under us.  If so,
 		// print a message about it.
+		DisplayItems();
+	}
+}
 
-		if ( m_map[m_position.z] )
+void
+hnDisplay::DisplayItems()
+{
+	if ( m_map[m_position.z] )
+	{
+		int objCount = m_map[m_position.z]->MapTile(m_position.x, m_position.y).objectCount;
+		
+		if ( objCount > 0 )
 		{
-			int objCount = m_map[m_position.z]->MapTile(m_position.x, m_position.y).objectCount;
-			
-			if ( objCount > 0 )
+			char buffer[256];
+		
+			objDescription topObject = m_map[m_position.z]->MapTile(m_position.x, m_position.y).object[0];
+
+			if ( objCount > 1 )
+				snprintf(buffer, 256, "There are several objects here.");
+			else
 			{
-				// hardcode to long sword, since that's all we have right now.
-				char buffer[256];
-			
-				objDescription topObject = m_map[m_position.z]->MapTile(m_position.x, m_position.y).object[0];
-
-				if ( objCount > 1 )
-					snprintf(buffer, 256, "There are several objects here.");
-				else
-				{
-					char objectDesc[256];
-					GetObjectDescriptionText(topObject,objectDesc,256);
-					snprintf(buffer, 256, "You see here %s.", objectDesc );
-				}
-				TextMessage(buffer);
-
-				Refresh();
+				char objectDesc[256];
+				GetObjectDescriptionText(topObject,objectDesc,256);
+				snprintf(buffer, 256, "You see here %s.", objectDesc );
 			}
+			TextMessage(buffer);
+
+			Refresh();
 		}
 	}
 }

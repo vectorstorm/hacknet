@@ -124,8 +124,10 @@ hnDisplayTTY::EventLoop()
 					HandleKeypressNormal( commandkey );
 				break;
 			case MODE_InventoryDisplay:
+			case MODE_FloorObjectDisplay:
 				HandleKeypressInventoryDisplay( commandkey );
 				break;
+			case MODE_FloorObjectSelect:
 			case MODE_InventorySelect:
 				HandleKeypressInventorySelect( commandkey );
 				break;
@@ -283,12 +285,26 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 
 	if ( inventorySelected != -1 )
 	{
-		if ( m_inventory[inventorySelected].count > 0 )
+		if ( m_inventoryMode != ISM_Take )
 		{
-			m_mode = MODE_Normal;
-			m_needsRefresh = true;
+			if ( m_inventory[inventorySelected].count > 0 )
+			{
+				m_mode = MODE_Normal;
+				m_needsRefresh = true;
+			
+				DropCommand(inventorySelected);
+			}
+		}
+		else	// we're in take mode, so check against objects on floor.
+		{
+			mapClientTile &tile = m_map[m_position.z]->MapTile(m_position.x,m_position.y);
+			if ( inventorySelected < tile.objectCount )
+			{
+				m_mode = MODE_Normal;
+				m_needsRefresh = true;
 
-			DropCommand(inventorySelected);
+				TakeCommand(&tile.object[inventorySelected], inventorySelected);
+			}
 		}
 	}
 	
@@ -353,8 +369,16 @@ hnDisplayTTY::HandleTake()
 	{
 		mapClientTile myTile = myMap->MapTile(m_position.x, m_position.y);
 
-		if ( myTile.objectCount > 0 )
+		if ( myTile.objectCount == 0 )
+			TextMessage("There is nothing here to pick up.");
+		else if ( myTile.objectCount == 1 )
 			TakeCommand( myTile.object, 0 );
+		else
+		{
+			m_mode = MODE_FloorObjectSelect;
+			m_inventoryMode = ISM_Take;
+			m_needsRefresh = true;
+		}
 	}
 }
 
@@ -573,6 +597,7 @@ hnDisplayTTY::Refresh()
 {
 	if ( m_needsRefresh )
 	{
+		hnDisplay::Refresh();
 #ifndef __DEBUGGING_NETWORK__
 		// redraw screen -- this is hackish.. TODO: Make a single function that does a full redraw,
 		// instead of repeatedly calling a single function for every point on the screen.
@@ -656,18 +681,59 @@ hnDisplayTTY::Refresh()
 		if ( m_mode == MODE_InventoryDisplay ||
 			m_mode == MODE_InventorySelect )
 		{
-			DrawInventory();
+			DrawObjectArray(m_inventory,m_inventoryCount);
+		}
+		else if ( m_mode == MODE_FloorObjectDisplay ||
+			m_mode == MODE_FloorObjectSelect )
+		{
+			mapClientTile &tile = m_map[m_position.z]->MapTile(m_position.x,m_position.y);
+			DrawObjectArray(tile.object, tile.objectCount);
 		}
 	
 		refresh();
 #endif
 		m_needsRefresh = false;
 	}
-	hnDisplay::Refresh();
 }
 
 void
-hnDisplayTTY::DrawInventory()
+hnDisplayTTY::DisplayItems()
+{
+        if ( m_map[m_position.z] )
+        {
+                int objCount = m_map[m_position.z]->MapTile(m_position.x, m_position.y).objectCount;
+
+                if ( objCount > 0 )
+                {
+                        char buffer[256];
+                        
+                        objDescription topObject = m_map[m_position.z]->MapTile(m_position.x, m_position.y).object[0];
+
+                        if ( objCount > 3 )
+			{
+                                snprintf(buffer, 256, "There are several objects here." );
+                        	TextMessage(buffer);
+			}
+                        else if ( objCount > 1 )
+			{
+				m_mode = MODE_FloorObjectDisplay;
+				m_needsRefresh = true;
+			}
+			else
+                        {
+                                char objectDesc[256];
+                                GetObjectDescriptionText(topObject,objectDesc,256);
+                                snprintf(buffer, 256, "You see here %s.", objectDesc );
+                        	TextMessage(buffer);
+                        }
+
+                        Refresh();
+                }
+        }
+}
+
+void
+hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount)
 {
 	const char inventoryLetters[56] =
 	{
@@ -679,6 +745,8 @@ hnDisplayTTY::DrawInventory()
 	int x = 24;
 	int y = 0;
 	char buffer[256];
+	bool drawheaders = true;
+	bool drawletters = true;
 
 #define CATEGORY_COUNT (4)
 
@@ -698,6 +766,7 @@ hnDisplayTTY::DrawInventory()
 		POTION_MIN
 	};
 
+
 	const int categoryEnd[CATEGORY_COUNT] =
 	{
 		AMULET_MAX,
@@ -706,15 +775,23 @@ hnDisplayTTY::DrawInventory()
 		POTION_MAX
 	};
 	
+	if ( m_mode == MODE_FloorObjectDisplay )
+	{
+		move(y++,x);
+		printw("On the ground here:");
+		drawheaders = false;
+		drawletters = false;
+	}
+	
 	for ( int j = 0; j < CATEGORY_COUNT; j++ )
 	{
 		bool somethingInThisCategory = false;
 		
-		for ( int i = 0; i < min(56,m_inventoryCount); i++ )
+		for ( int i = 0; i < objectCount; i++ )
 		{
-			if ( m_inventory[i].count > 0 && m_inventory[i].type > categoryStart[j] && m_inventory[i].type < categoryEnd[j] )
+			if ( objects[i].count > 0 && objects[i].type > categoryStart[j] && objects[i].type < categoryEnd[j] )
 			{
-				if ( !somethingInThisCategory )
+				if ( !somethingInThisCategory && drawheaders )
 				{
 					move(y++,x);
 					color_set( COLOR_INVERSE, NULL );
@@ -722,9 +799,12 @@ hnDisplayTTY::DrawInventory()
 					color_set( COLOR_WHITE, NULL );
 					somethingInThisCategory = true;
 				}
+				GetObjectDescriptionText(objects[i],buffer,256);
 				move(y++,x);
-				GetObjectDescriptionText(m_inventory[i],buffer,256);
-				printw("%c - %s", inventoryLetters[i], buffer);
+				if ( drawletters )
+					printw("%c - %s", inventoryLetters[i], buffer);
+				else
+					printw("%s", buffer);
 			}
 		}
 	}

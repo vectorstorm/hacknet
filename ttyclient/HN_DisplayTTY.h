@@ -7,12 +7,15 @@ class hnDisplayTTY : public hnDisplay
 {
 	enum inputMode{
 		MODE_Normal,		// business as usual
+		MODE_FloorObjectDisplay,// displaying the objects on the floor
+		MODE_FloorObjectSelect,// displaying the objects on the floor
 		MODE_InventoryDisplay,	// looking at our inventory
 		MODE_InventorySelect,	// selecting something from our inventory
 		MODE_Talking		// we're in the middle of trying to speak.
 	};
 	enum inventorySelectMode{
 		ISM_None,
+		ISM_Take,
 		ISM_Drop,
 		ISM_Wield
 	};
@@ -56,11 +59,12 @@ public:
 	void		HandleDrop();
 	void		HandleInventory();
 
-	void		DrawInventory();
+	void		DrawObjectArray(objDescription *array, uint8 count);
 	
 	virtual void	PostTurnSubmit();
 	
 	virtual void	Refresh();
+	virtual void	DisplayItems();
 	
 	virtual void	PlotSquare( sint8 x, sint8 y );
 	virtual void	UpdateLocation( const hnPoint &point );

@@ -49,6 +49,7 @@ public:
 	virtual void	PostTurnSubmit() {}		// called after submittting a turn.
 
 	virtual void	Refresh();
+	virtual void	DisplayItems();
 	
 	virtual void	DungeonReset( sint8 levelCount );
 	virtual void	MapReset( sint8 width, sint8 height, sint8 depth );

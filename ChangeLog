@@ -10,6 +10,11 @@ July 13, 2001:
   * Converted Take command to the newly modified system, so entBase
     should now only use objBase, not objDescription.  (This also
     means that monster AI won't have to know about objDescriptions)
+  * 'Take' menu implemented, when there is more than one object
+    available to be taken, and objects are now listed if you walk
+    over a small pile, rather than just generating a "there are many
+    objects here" message.  (I find this annoying, but it mimicks 
+    NetHack's behaviour.. I may change this in the future)
     
 July 12, 2001:
   * Finally fixed inventory slot non-sorting issues.  TODO: Convert
