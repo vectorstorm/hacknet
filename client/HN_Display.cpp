@@ -10,7 +10,6 @@
 hnDisplay::hnDisplay(char * name):
 	m_map(NULL),
 	m_inventoryCount(0),
-	m_wieldedItem(-1),
 	m_groupMemberCount(1),
 	m_groupMemberTurnCount(0),
 	m_submittedTurn(false),
@@ -184,20 +183,27 @@ hnDisplay::UpdateInventory( int objectCount, objDescription *objectArray )
 }
 
 void
+hnDisplay::UpdateInventoryItem( objDescription &desc, int inventoryID )
+{
+	if ( inventoryID+1 > m_inventoryCount )
+		m_inventoryCount = inventoryID+1;
+	
+	m_inventory[inventoryID] = desc;
+}
+
+/*
+void
+hnDisplay::UpdateInventoryItem( const objDescription &desc, int inventoryID )
+{
+	m_inventory[inventoryID] = desc;
+}
+*/
+
+void
 hnDisplay::TakenItem( const objDescription &desc, int inventoryID )
 {
-        const char inventoryLetters[56] =
-        {
-                'a','b','c','d','e','f','g','h','i','j','k','l','m',
-                'n','o','p','q','r','s','t','u','v','w','x','y','z',
-                'A','B','C','D','E','F','G','H','I','J','K','L','M',
-                'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-        };
-
 	char buffer[256];
-	char nameBuffer[128];
-	objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
-	snprintf(buffer,256,"%c - %s.", inventoryLetters[inventoryID], nameBuffer);
+	GetInventoryItemText(inventoryID, buffer, 256);
 	TextMessage(buffer);
 }
 
@@ -208,39 +214,69 @@ hnDisplay::DroppedItem( const objDescription &desc )
 	char nameBuffer[128];
 	objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
 	snprintf(buffer,256,"You drop %s.", nameBuffer);
-	TextMessage(buffer);
 }
 
 void
 hnDisplay::WieldedItem( const objDescription &desc, int inventoryID )
 {
-        const char inventoryLetters[56] =
+	if (desc.type != OBJ_TYPE_Illegal )
+	{
+		m_inventory[inventoryID] = desc;
+
+		char buffer[256];
+		GetInventoryItemText(inventoryID, buffer, 256);
+		TextMessage(buffer);
+	}
+	else
+	{
+		TextMessage("You are now empty-handed.\n");
+	}
+}
+
+void
+hnDisplay::WornItem( const objDescription &desc, int inventoryID )
+{
+	if (desc.type != OBJ_TYPE_Illegal )
+	{
+		char buffer[256];
+		GetInventoryItemText(inventoryID, buffer, 256);
+		TextMessage(buffer);
+	}
+	else
+	{
+		TextMessage("You are now empty-handed.\n");
+	}
+}
+
+void
+hnDisplay::GetInventoryItemText(int inventoryItem, char*buffer, int bufferLength)
+{
+	const char inventoryLetters[56] =
         {
                 'a','b','c','d','e','f','g','h','i','j','k','l','m',
                 'n','o','p','q','r','s','t','u','v','w','x','y','z',
                 'A','B','C','D','E','F','G','H','I','J','K','L','M',
                 'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
         };
+	objDescription &desc = m_inventory[inventoryItem];
 
-	if (desc.type != OBJ_TYPE_Illegal )
+	if (desc.type != OBJ_TYPE_Illegal && desc.count > 0 )
 	{
-		char buffer[256];
 		char nameBuffer[128];
+		char extraText[128] = "\0";
+		
 		objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
-		snprintf(buffer,256,"%c - %s (weapon in hands).", inventoryLetters[inventoryID], nameBuffer);
-		TextMessage(buffer);
-	
-		m_wieldedItem = inventoryID;
-	}
-	else
-	{
-		TextMessage("You are now empty-handed.\n");
-		m_wieldedItem = -1;
+		
+		if ( desc.flags & FLAG_Worn )
+			snprintf(extraText,128," (being worn)");
+		else if ( desc.flags & FLAG_WieldedPrimary )
+			snprintf(extraText,128," (weapon in hand)");
+		else if ( desc.flags & FLAG_WieldedSecondary )
+			snprintf(extraText,128," (alternate weapon; not wielded)");
+		
+		snprintf(buffer,bufferLength,"%c - %s%s", inventoryLetters[inventoryItem], nameBuffer, extraText);
 	}
 }
-
-
-
 
 void
 hnDisplay::MoveCommand( hnDirection dir )

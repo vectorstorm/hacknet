@@ -267,6 +267,9 @@ netClient::Go()
 					m_display->UpdateInventory(inven.GetObjectCount(), objList);
 					delete [] objList;
 					break;
+				case SPT_InventoryItem:
+					packet->InventoryItem(item);
+					m_display->UpdateInventoryItem(item.object, item.inventorySlot);
 				case SPT_TakenItem:
 					packet->TakenItem(item);
 					m_display->TakenItem(item.object, item.inventorySlot);

@@ -6,6 +6,14 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 7, 2002:
+  * Switched objects to use flags to store wielded/worn status, instead
+    of having clients store a 'wielded' item id number.
+  * HN_Client.cpp: Added function to return inventory-style item text.
+  * Moving toward capability of sending individual inventory item
+    updates, instead of having to resend the whole inventory every time
+    something changes.
+
 February 4, 2002:
   * Proper line-of-sight code, at last!  Using shadowcasting code,
     adapted from Greg McIntyre's SDL FOV demo, who in turn took
