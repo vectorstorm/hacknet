@@ -27,7 +27,7 @@ public:
 	
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
 	virtual void	UpdateMapTile( sint8 x, sint8 y, const hnMapTile & tile );
-	virtual void	UpdateMapEntity( sint8 x, sint8 y, hnObjectType type );
+	virtual void	UpdateMapCreature( sint8 x, sint8 y, hnEntityType type );
 };
 
 #endif

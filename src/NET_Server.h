@@ -64,7 +64,7 @@ public:
 //	bool		SendMapUpdate(int clientID, hnMap *map);	// server sends move update to client
 	void		SendMapTile( hnPoint *loc, const hnMapTile & floorType );  // new floortype
 	void		SendMapUpdateBBox( netMapUpdateBBox *bbox );
-	void		SendMapObjectList( hnPoint *loc, int numObjects, hnObjectType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
+	void		SendMapObjectList( hnPoint *loc, int numObjects, hnEntityType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
 	
 	void		SendQuitConfirm( int clientID );	// doesn't require a metapacket
 	void		SendBadPacketNotice( int clientID );	// doesn't require a metapacket

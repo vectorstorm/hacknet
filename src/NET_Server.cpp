@@ -315,7 +315,7 @@ netServer::SendMapUpdateBBox( netMapUpdateBBox *bbox )
 
 //  remnant of old object list format -- # objects on square and type of top object
 void
-netServer::SendMapObjectList( hnPoint *loc, int numObjects, hnObjectType objecttype )
+netServer::SendMapObjectList( hnPoint *loc, int numObjects, hnEntityType objecttype )
 {
 	/*assert(m_meatPacket);
 	netMapObjectList packet;

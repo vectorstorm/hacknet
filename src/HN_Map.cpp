@@ -1,9 +1,10 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "HN_Map.h"
-#include "HN_Object.h"
+#include "HN_Entity.h"
+//#include "HN_Object.h"
 #include "HN_Point.h"
 
-#include <stdio.h>
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
@@ -61,32 +62,32 @@ hnMap::MapTile(sint8 x, sint8 y)
 }
 
 void
-hnMap::RemoveObject( hnObject *object )
+hnMap::RemoveObject( hnEntity *object )
 {
-	hnObjectType type = object->GetType();
+	hnEntityType type = object->GetType();
 	const hnPoint & point = object->GetPosition();
 	hnMapTile & tile = MapTile(point.x, point.y);
 	
-	if ( type == OBJECT_Player )
+	if ( type == CREATURE_Player )
 		tile.entity = NULL;	
 	else
 		tile.object->RemoveObject( object );
 }
 
 void
-hnMap::PutObjectAt( hnObject *object, sint8 x, sint8 y )
+hnMap::PutObjectAt( hnEntity *object, sint8 x, sint8 y )
 {
-	hnObjectType type = object->GetType();
+	hnEntityType type = object->GetType();
 	hnMapTile & tile = MapTile(x,y);
 	
-	if ( type == OBJECT_Player )
+	if ( type == CREATURE_Player )
 		tile.entity = object;
 	else
 		tile.object->AddObject( object );
 }
 
 void
-hnMap::MoveObjectTo( hnObject *object, sint8 x, sint8 y )
+hnMap::MoveObjectTo( hnEntity *object, sint8 x, sint8 y )
 {
 	RemoveObject(object);
 	PutObjectAt(object,x,y);
@@ -106,7 +107,7 @@ hnMap::Generate()
 
 hnMapTile::hnMapTile()
 {
-	object = new hnObject( OBJECT_None, hnPoint(0,0,0));
+	object = new hnEntity( ENTITY_None, hnPoint(0,0,0));
 	entity = NULL;
 }
 

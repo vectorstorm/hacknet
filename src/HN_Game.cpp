@@ -91,7 +91,7 @@ hnGame::ClientJoined(int playerID)
 	m_player[playerID].pos.x = x;
 	m_player[playerID].pos.y = y;
 	m_player[playerID].pos.z = z;
-	m_player[playerID].entity = new hnEntity(OBJECT_Player, hnPoint(x,y,z));
+	m_player[playerID].entity = new hnEntity(CREATURE_Player, hnPoint(x,y,z));
 	m_levelMap[z]->PutObjectAt( m_player[playerID].entity, x, y );
 	
 	m_server->StartMetaPacket( playerID );
@@ -113,7 +113,7 @@ hnGame::ClientJoined(int playerID)
 		{
 			update.material[i+(j*update.width)] = m_levelMap[pos.z]->MaterialAt(pos.x+i,pos.y+j);
 			update.wall[i+(j*update.width)] = m_levelMap[pos.z]->WallAt(pos.x+i,pos.y+j);
-			update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? OBJECT_Player : OBJECT_None;
+			update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? CREATURE_Player : ENTITY_None;
 		}
 	m_server->SendMapUpdateBBox( &update );
 
@@ -196,8 +196,8 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 				{
 					update.material[i+(j*update.width)] = m_levelMap[pos.z]->MaterialAt(pos.x+i,pos.y+j);
 					update.wall[i+(j*update.width)] = m_levelMap[pos.z]->WallAt(pos.x+i,pos.y+j);
-					update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? OBJECT_Player : OBJECT_None;
-					//if ( update.entityType[i+(j*update.width)] == OBJECT_Player )
+					update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? CREATURE_Player : ENTITY_None;
+					//if ( update.entityType[i+(j*update.width)] == CREATURE_Player )
 					//	printf("Sending player location.\n");
 				}
 			m_server->SendMapUpdateBBox( &update );
@@ -227,7 +227,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.entityType = new sint8;
 						update.material[0] = m_levelMap[iniPos.z]->MaterialAt(iniPos.x,iniPos.y);
 						update.wall[0] = m_levelMap[iniPos.z]->WallAt(iniPos.x,iniPos.y);
-						update.entityType[0] = (m_levelMap[iniPos.z]->MapTile(iniPos.x,iniPos.y).entity) ? OBJECT_Player : OBJECT_None;
+						update.entityType[0] = (m_levelMap[iniPos.z]->MapTile(iniPos.x,iniPos.y).entity) ? CREATURE_Player : ENTITY_None;
 						
 						m_server->SendMapUpdateBBox( &update );
 						m_server->TransmitMetaPacket();
@@ -251,7 +251,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.entityType = new sint8;
 						update.material[0] = m_levelMap[endPos.z]->MaterialAt(endPos.x,endPos.y);
 						update.wall[0] = m_levelMap[endPos.z]->WallAt(endPos.x,endPos.y);
-						update.entityType[0] = (m_levelMap[endPos.z]->MapTile(endPos.x,endPos.y).entity) ? OBJECT_Player : OBJECT_None;
+						update.entityType[0] = (m_levelMap[endPos.z]->MapTile(endPos.x,endPos.y).entity) ? CREATURE_Player : ENTITY_None;
 						
 						m_server->SendMapUpdateBBox( &update );
 						m_server->TransmitMetaPacket();

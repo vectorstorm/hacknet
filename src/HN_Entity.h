@@ -1,17 +1,40 @@
 #ifndef __HN_ENTITY_H__
 #define __HN_ENTITY_H__
 
-#include "HN_Object.h"
+#include "HN_Enum.h"
+#include "HN_Point.h"
 
-// an entity is an object that's alive.  (ie: a player, a monster, an NPC, etc).  No more than one
-// entity may be in a single square at any one time.
-
-class hnEntity: public hnObject
+class hnEntity
 {
+	sint32		m_id;					// unique object ID number
+	sint8		m_revision;				// revision counter.  Each time this object is visibly
+								// changed (ie: polymorphed, destroyed, etc.), this value 
+								// is incremented by one.
+	hnEntityType	m_type;
+	hnPoint		m_position;
+	
+	hnEntity	*m_next;
+	hnEntity	*m_prev;
+
 public:
-			hnEntity( hnObjectType, const hnPoint & );
-	virtual		~hnEntity();
+				hnEntity( hnEntityType type, const hnPoint & );
+	virtual			~hnEntity();
+	
+	const hnPoint &		GetPosition();
+	void			SetPosition( const hnPoint & );
+	hnEntityType		GetType() { return m_type; }
+	
+	void			AddObject(hnEntity *object);	// add us into our circular linked list
+	void			RemoveObject(hnEntity *object);	// find this object in our circular linked list and remove it
+
+	virtual void		Move( const hnPoint & offset ) {}
+	virtual void		MoveTo( const hnPoint & position ) {}
+	
+protected:
+	
+	void			Unlink();
+	
+	
 };
 
-
-#endif // __HN_ENTITY_H__
+#endif

@@ -1,36 +1,26 @@
 #ifndef __HN_OBJECT_H__
 #define __HN_OBJECT_H__
 
-#include "HN_Enum.h"
-#include "HN_Point.h"
+#include "HN_Entity.h"
+#include "HN_Types.h"
 
-class hnObject
+class hnObject: public hnEntity
 {
-	hnObjectType	m_type;
-	hnPoint		m_position;
-
-	hnObject	*m_next;
-	hnObject	*m_prev;
-
+	enum {
+		BC_Uncursed,
+		BC_Blessed,
+		BC_Cursed
+	};
+	uint8		m_blesscurse;
+	
 public:
-				hnObject( hnObjectType type, const hnPoint & );
-	virtual			~hnObject();
-	
-	const hnPoint &		GetPosition();
-	void			SetPosition( const hnPoint & );
-	hnObjectType		GetType() { return m_type; }
-	
-	void			AddObject(hnObject *object);	// add us into our circular linked list
-	void			RemoveObject(hnObject *object);	// find this object in our circular linked list and remove it
+			hnObject( hnEntityType type, const hnPoint & where );
+	virtual 	~hnObject();
 
-	virtual void		Move( const hnPoint & offset ) {}
-	virtual void		MoveTo( const hnPoint & position ) {}
-	
-protected:
-	
-	void			Unlink();
-	
-	
+	bool		Blessed() { return (m_blesscurse == BC_Blessed); }
+	bool		Cursed() { return (m_blesscurse == BC_Cursed); }
 };
 
-#endif
+
+
+#endif //__HN_OBJECT_H__

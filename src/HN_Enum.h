@@ -3,6 +3,8 @@
 
 #include "HN_Types.h"
 
+/***  MAP TILE MATERIAL ***/
+
 enum hnDirection{
 	DIR_North = 0,
 	DIR_NorthEast = 1,
@@ -29,6 +31,24 @@ enum {
 
 typedef sint16 hnMaterialType;
 
+
+/**   MAP TILE WALL STATUS  **/
+
+//
+//  This has GOT to be the wrong way to do this.
+//
+//  TODO:  Figure out the following issues:
+//
+//  Do we need a 'horizontal' and 'vertical' wall type, or is that an element
+//  of a TTY-based client that is meaningless for other client types?  ie:
+//  should it be replaced by just 'WALL_None' and 'WALL_Present', or somesuch,
+//  and let the client figure out how to draw the wall based upon nearby open
+//  space.
+//
+//  Also, doors should probably be an external bitflag, not a part of the
+//  wall type.  Or should they be an object?
+//
+
 enum {	// actually, 'vertical structure' type stuff goes here.
 	
 	WALL_Invalid 	= 	0,
@@ -52,15 +72,24 @@ typedef sint16 hnWallType;
 #define WALL_Cross		(WALL_Horizontal | WALL_Vertical)
 
 enum {
-	OBJECT_None,	// a mapobjectupdate with this type means nothing's here any more.
-	OBJECT_Monster,
-	OBJECT_Player,
-	OBJECT_Weapon,
+	ENTITY_None,			// a mapobjectupdate with this type means nothing's here any more.
+	
+	/***   CREATURES   ***/
+	
+	CREATURE_Monster,		// there should be one of these for every type of creature
+	CREATURE_Player,
+
+	/***   OBJECTS   ***/
+	
+	OBJECT_Weapon,			// there should be a line here for every type of item
 	OBJECT_Armour,
 	OBJECT_Potion,
-	OBJECT_MAX
+
+	/***   DONE   ***/
+	
+	ENTITY_MAX
 };
 
-typedef sint8 hnObjectType;
+typedef sint8 hnEntityType;
  
 #endif //__HN_ENUM_H__

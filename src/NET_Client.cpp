@@ -140,7 +140,7 @@ netClient::Go()
 					break;
 				case SPT_MapEntity:
 					packet->MapEntity(entityData);
-					m_display->UpdateMapEntity(entityData.loc.x, entityData.loc.y, entityData.objectType);
+					m_display->UpdateMapCreature(entityData.loc.x, entityData.loc.y, entityData.objectType);
 					break;
 				case SPT_MapUpdateBBox:
 					//printf("Map bbox update packet\n");
@@ -154,8 +154,8 @@ netClient::Go()
 							tile.wall = bbox.wall[i+(j*bbox.width)];
 							tile.entity = NULL;
 							point.Set(bbox.loc.x+i, bbox.loc.y+j, 0);
-							if (bbox.entityType[i+(j*bbox.width)] == OBJECT_Player)
-								tile.entity = new hnEntity(OBJECT_Player, point);
+							if (bbox.entityType[i+(j*bbox.width)] == CREATURE_Player)
+								tile.entity = new hnEntity(CREATURE_Player, point);
 							m_display->UpdateMapTile(bbox.loc.x+i, bbox.loc.y+j, tile);
 						}
 

@@ -3,6 +3,7 @@
 #include "HN_Map.h"
 #include "HN_Consts.h"
 #include "HN_Entity.h"
+#include "HN_Creature.h"
 
 hnDisplay::hnDisplay()
 {
@@ -27,9 +28,9 @@ hnDisplay::UpdateMapTile(sint8 x, sint8 y, const hnMapTile &tile)
 }
 
 void
-hnDisplay::UpdateMapEntity(sint8 x, sint8 y, hnObjectType type)
+hnDisplay::UpdateMapCreature(sint8 x, sint8 y, hnEntityType type)
 {
-/*	hnObject *newEntity = NULL;
+/*	hnEntity *newEntity = NULL;
 	hnPoint where(x,y,0);
 	
 	hnMapTile & tile = m_map->MapTile(x,y);

@@ -7,7 +7,7 @@
 
 #define MAX_ROOMS (8)
 
-class hnObject;
+class hnEntity;
 
 class hnMapTile
 {
@@ -15,8 +15,8 @@ public:
 				hnMapTile();
 	virtual 		~hnMapTile();
 	
-	hnObject *		object;			// linked list of objects lying on the floor here.
-	hnObject *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
+	hnEntity *		object;			// linked list of objects lying on the floor here.
+	hnEntity *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
 	
 	hnMaterialType		material;		// what type of material makes up this tile?
 	hnWallType		wall;			// am I a wall?
@@ -52,9 +52,9 @@ public:
 
 	virtual void		Generate();
 	
-	void			RemoveObject( hnObject *object );					// remove object from map
-	void			PutObjectAt( hnObject *object, sint8 x, sint8 y );			// put object at given coords
-	void			MoveObjectTo( hnObject *object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
+	void			RemoveObject( hnEntity *object );					// remove object from map
+	void			PutObjectAt( hnEntity *object, sint8 x, sint8 y );			// put object at given coords
+	void			MoveObjectTo( hnEntity *object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
 	
 	hnMaterialType &	MaterialAt( sint8 x, sint8 y );
 	hnWallType &  		WallAt( sint8 x, sint8 y );

@@ -1,3 +1,9 @@
+April 1, 2001:
+  Continued discussions about timing issues.
+  Adjusted object class hierarchy -- 'hnEntity' is now at the top of the hierarchy,
+  with 'hnObject' and 'hnCreature' derived from it.  Players and monsters will be
+  derived from hnCreature, while inanimate objects will be derived from hnObject.
+---
 March 11, 2001:
   Development kicks into gear and first code entered into SourceForge CVS repository
 ---
