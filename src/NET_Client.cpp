@@ -15,7 +15,6 @@
 #include "NET_Packet.h"
 #include "NET_Client.h"
 #include "HN_Display.h"
-#include "ENT_Base.h"
 #include "HN_Enum.h"
 
 #define HACKNET_PORT 		(9274)

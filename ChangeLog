@@ -16,6 +16,9 @@ May 6, 2001:
   More configure script adjustments.  Removed HN_Version.cpp/.h,
   since it wasn't being used and was redundant anyway.
 
+  Removed #include "ENT_Base.h" from NET_Client.cpp.  Not sure why
+  it was there in the first place.
+
 May 5, 2001:
   Spent the morning working at compiling hacknet on the various
   machines in the SourceForge compile farm.  I think I've worked
