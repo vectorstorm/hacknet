@@ -82,7 +82,7 @@ mapHack::GenerateStairsDown()
 }
 
 void
-mapHack::MakeMonsters()
+mapHack::GenerateMonsters()
 {
 	for ( int i = 0; i < 10; i++ )
 	{
@@ -689,7 +689,7 @@ mapHack::Generate()
 	SortRooms();
 	MakeCorridors();
 	Wallify();
-	MakeMonsters();
+	GenerateMonsters();
 
 	PrepareVisibility();
 }

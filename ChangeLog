@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 26, 2001:
+  * MAP_Hack.cpp:  Adjusted function names.
+
 May 20, 2001:
   * More name adjustments, so new names show up in talk messages and
     elsewhere.
