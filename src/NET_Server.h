@@ -6,6 +6,7 @@
 //  (Game) -> (netServer) -> [internet] -> (netClient) -> (Client)
 
 #include "HN_Enum.h"
+#include "HN_Types.h"
 #include "HN_Config_Server.h"
 #include "NET_Packet.h"
 #include "ENT_Base.h"
@@ -26,8 +27,11 @@ struct clientData {
 	int		socket;
 	char 		packet[MAX_CLIENT_PACKET_SIZE];	// construction area for incoming packets
 	char *		packetRecv;			// pointer into 'packet' member above, where incoming packet data should be appended.
-	int		incomingPacketSize;		// how many more bytes of packet data to read before packet is finished
-	short		packetFullSize;			// how many total bytes in packet data when finished.
+	sint16		incomingPacketSize;		// how many more bytes of packet data to read before packet is finished
+	sint16		packetFullSize;			// how many total bytes in packet data when finished.
+	
+	sint16		incomingPacketSizeBuffer;	// assemble packet length here
+	sint16		incomingPacketSizeSize;		// how many more bytes of packet data to read before we know how big our incoming packet will be.
 };
 
 

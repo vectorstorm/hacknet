@@ -20,6 +20,7 @@
 #define MAX_DATA_SIZE		(100)	// how much data can we grab at once
 
 //#define __DEBUGGING_NETWORK__
+//#define __DISPLAY_PACKET_CONTENT__
 
 netClient::netClient(hnDisplay *display, char *serverAddress):
 	m_display(display), 
@@ -64,6 +65,12 @@ netClient::StartClient( char * serverAddress )
 	bzero(&(m_serverAddress->sin_zero),8);				// zero out the rest of the struct
 
 	// okay, we're all ready to go now!  (But we haven't yet connected)
+
+	if ( signal( SIGPIPE, SIG_IGN ) == SIG_ERR )
+	{
+		perror("signal");
+		exit(1);
+	}
 }
 
 void
@@ -98,26 +105,55 @@ netClient::Go()
 	while(!m_done){
 		// do stuff here until we quit.
 		
-		//netServerPacket packet;
-		short incomingBytes;
-
-		if ( recv( m_socket, &incomingBytes, sizeof(sint16), MSG_WAITALL ) == -1 )
+		short 	readSizeBytesLeft = sizeof(sint16);
+		short 	incomingBytes;
+		char *	incomingBuffer = (char *)&incomingBytes;
+		
+		//  Emulate functionality of MSG_WAITALL, 'cause some architectures don't support it.
+		while ( readSizeBytesLeft > 0 )
 		{
-			perror("recv");
-			cleanexit(1);
+#ifdef __DEBUGGING_NETWORK__
+			printf("Waiting for %d bytes of packet size data..\n", readSizeBytesLeft);
+#endif
+			int bytesRead = recv( m_socket, incomingBuffer, readSizeBytesLeft, 0 );
+#ifdef __DEBUGGING_NETWORK__
+			printf("Received %d bytes.\n",bytesRead);
+#endif
+			if ( bytesRead == -1 )
+			{
+				perror("recv");
+				cleanexit(1);
+			}
+			
+			incomingBuffer += bytesRead;
+			readSizeBytesLeft -= bytesRead;
 		}
 		incomingBytes = ntohs(incomingBytes);
-
+		int  remainingBytes = incomingBytes;
 		//printf("Receiving %d bytes...\n", incomingBytes);
 		char buffer[incomingBytes];
+		char *bufferPointer = buffer;
 		
-		if ( recv( m_socket, buffer, incomingBytes, MSG_WAITALL ) == -1 )
+		//  Emulate functionality of MSG_WAITALL, 'cause some architectures don't support it.
+		while ( remainingBytes > 0 )
 		{
-			perror("recv");
-			cleanexit(1);
+#ifdef __DEBUGGING_NETWORK__
+			printf("Waiting for %d bytes of packet data..\n", remainingBytes );
+#endif
+			int bytesRead = recv( m_socket, bufferPointer, remainingBytes, 0 );
+#ifdef __DEBUGGING_NETWORK__
+			printf("Received %d bytes.\n", bytesRead);
+#endif
+			if ( bytesRead == -1 )
+			{
+				perror("recv");
+				cleanexit(1);
+			}
+			bufferPointer += bytesRead;
+			remainingBytes -= bytesRead;
 		}
-#ifdef __DEBUGGING_NETWORK__	
-		printf("Packet of %d bytes:\n", incomingBytes);
+#ifdef __DISPLAY_PACKET_CONTENT__	
+		printf("Packet of %d bytes:\n", incomingBytes );
 		char *bufferstart = buffer;
 		
 		for ( int i = 0; i < incomingBytes; i++ )	
@@ -234,10 +270,10 @@ netClient::TransmitMetaPacket()
 
 	short metapacketdatalength = htons(m_packet->GetBufferLength());
 	
-	if ( send(m_socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )
+	if ( send(m_socket, &metapacketdatalength, sizeof(sint16), 0 ) == -1 )
 		perror("send");
 
-	if ( send(m_socket, m_packet->GetBuffer(), m_packet->GetBufferLength(), MSG_NOSIGNAL ) == -1 )
+	if ( send(m_socket, m_packet->GetBuffer(), m_packet->GetBufferLength(), 0 ) == -1 )
 		perror("send");
 
 	delete m_packet;

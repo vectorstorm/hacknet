@@ -19,7 +19,8 @@
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
 
-#define __DEBUG_NETWORKING__
+//#define __DEBUG_NETWORKING__
+//#define __DETAIL_DEBUG_NETWORKING__
 //#define __DISPLAY_PACKET_CONTENT__
 
 netServer * netServer::s_instance = NULL;
@@ -57,6 +58,7 @@ netServer::netServer():
 		m_client[i].socket = -1;
 		m_client[i].packetRecv = (char *)&m_client[i].packet;
 		m_client[i].incomingPacketSize = 0;
+		m_client[i].incomingPacketSizeSize = 0;
 	}
 	
 	m_localAddress = new sockaddr_in;
@@ -99,6 +101,12 @@ netServer::StartServer()
 	if ( listen( m_socket, MAX_CONNECTIONS ) == -1 )
 	{
 		perror("listen");
+		exit(1);
+	}
+
+	if ( signal( SIGPIPE, SIG_IGN ) == SIG_ERR)
+	{
+		perror("signal");
 		exit(1);
 	}
 }
@@ -195,34 +203,55 @@ netServer::Go()
 				
 				if ( m_client[i].incomingPacketSize == 0 )	// new incoming packet
 				{
-					short packetSize;
-					// TODO:  Fix this code so the server doesn't stall if a malicious user sends
-					// us a single byte.
-					recv(m_client[i].socket, &packetSize, sizeof(sint16), MSG_WAITALL);	// first a short saying how many bytes of data are coming..
+					if ( m_client[i].incomingPacketSizeSize == 0 )
+						m_client[i].incomingPacketSizeSize = sizeof(sint16);
 					
-					packetSize = ntohs( packetSize );
+					char * packetSizeBufferPointer = (char *)&m_client[i].incomingPacketSizeBuffer;
+
+#ifdef __DETAIL_DEBUG_NETWORKING__
+					printf("Waiting for %d bytes of packet size data.\n", m_client[i].incomingPacketSizeSize);
+#endif
+
+					int bytesRead = recv(m_client[i].socket, packetSizeBufferPointer, m_client[i].incomingPacketSizeSize, 0);	// first a short saying how many bytes of data are coming..
 					
-				//	printf("  Next packet will have size %d.\n", packetSize);
-				//	printf("  Max legal packet size is: %d.\n", sizeof(netServerPacket) );
-					if (packetSize > MAX_CLIENT_PACKET_SIZE )
+#ifdef __DETAIL_DEBUG_NETWORKING__
+					printf("Received %d bytes of packet size data.\n", bytesRead);
+#endif
+					packetSizeBufferPointer += bytesRead;
+					m_client[i].incomingPacketSizeSize -= bytesRead;
+
+					if ( m_client[i].incomingPacketSizeSize <= 0 )
 					{
-						// aiee!  Illegally large packet!  Kill the client!
-						printf("  Packet size data illegal!  Killing client.\n");
-						SendBadPacketNotice(i);
-						m_game->ClientQuit(i);
-						DisconnectClientID(i);
-					}
-					else
-					{
-						m_client[i].incomingPacketSize = m_client[i].packetFullSize = packetSize;
+						m_client[i].packetFullSize = m_client[i].incomingPacketSize = ntohs( m_client[i].incomingPacketSizeBuffer );
+#ifdef __DETAIL_DEBUG_NETWORKING__						
+						printf("We're going to wait for %d bytes of data in total.\n",m_client[i].incomingPacketSize);
+#endif		
+						m_client[i].incomingPacketSizeSize = 0;
+					
+					
+					//	printf("  Next packet will have size %d.\n", packetSize);
+					//	printf("  Max legal packet size is: %d.\n", sizeof(netServerPacket) );
+						if ( m_client[i].incomingPacketSize > MAX_CLIENT_PACKET_SIZE )
+						{
+							// aiee!  Illegally large packet!  Kill the client!
+							printf("  Packet size data illegal!  Killing client.\n");
+							SendBadPacketNotice(i);
+							m_game->ClientQuit(i);
+							DisconnectClientID(i);
+						}
 					}
 				}
 				else
 				{
+
+#ifdef __DETAIL_DEBUG_NETWORKING__
+					printf("Waiting for %d bytes of packet data.\n", m_client[i].incomingPacketSize);
+#endif
 					int numBytesReceived = recv(m_client[i].socket, m_client[i].packetRecv, m_client[i].incomingPacketSize, 0);
 					
 					if ( numBytesReceived <= 0 )
 					{
+						printf("  Error:  recv returned %d!\n", numBytesReceived);
 						// aiee!  Illegal packet!  Kill the client!
 						printf("  Error receiving packet!  Killing client.\n");
 						SendBadPacketNotice(i);
@@ -271,14 +300,14 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	sint16 bufferSize = MAX_NAME_BYTES;
 	
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
-#if 0	
+#ifdef __DISPLAY_PACKET_CONTENT__
 	printf("Received %d bytes.\n", incomingBytes );
 
 	for ( int i = 0; i < incomingBytes; i++ )
 	{
 		printf("Byte %d: %d\n", i, buffer[i] );
 	}
-#endif	
+#endif
 	netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
 	
 	while ( !packet->Done() && !abort )
@@ -471,7 +500,7 @@ netServer::TransmitMetaPacket()
 									m_game->GetPlayerName(m_packetClientID), m_packetClientID);
 #endif
 		
-		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )
+		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), 0 ) == -1 )
 			perror("send");
 
 #ifdef __DISPLAY_PACKET_CONTENT__
@@ -481,7 +510,7 @@ netServer::TransmitMetaPacket()
 		}
 #endif
 		
-		if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), MSG_NOSIGNAL) == -1 )
+		if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), 0 ) == -1 )
 			perror("send");
 		
 		delete m_metaPacket;

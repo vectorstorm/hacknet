@@ -21,6 +21,21 @@ New since 0.0.1, communication between players, rudimentary line-of-sight
 clients on different servers.
 
 
+Platforms Supported
+-------
+
+HackNet has been successfully compiled on:
+
+Debian GNU/Linux 2.1 & current 'unstable'.
+
+... more, as they're reported to me!  If you get it to compile on something
+else (something more interesting, I hope!), let me know!  And if doing so
+requires patches, please submit them to me at:  
+whiterabbit@users.sourceforge.net
+
+
+
+
 Installing from a source package:
 -------
 
