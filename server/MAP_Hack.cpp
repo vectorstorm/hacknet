@@ -1,16 +1,13 @@
-#include <stdlib.h>
 #include "MAP_Hack.h"
 #include "HN_Point.h"
+#include "HN_Random.h"
 
 #include "ENT_GridBug.h"
 #include "OBJ_Manager.h"
 #include "OBJ_Base.h"
-//#include "OBJ_LongSword.h"
-//#include "OBJ_Dagger.h"
 
 #include <stdio.h>
 
-#define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 #define max(x,y) ( (x<y)?y:x )
 
@@ -54,8 +51,8 @@ mapHack::GenerateStairsUp()
 
 	while ( !didit )
 	{
-		int x = rand() % GetWidth();
-		int y = rand() % GetHeight();
+		int x = hnRandom::GetInstance()->Get( GetWidth() );
+		int y = hnRandom::GetInstance()->Get( GetHeight() );
 
 		if ( WallAt(x,y) == WALL_Room )
 		{
@@ -73,8 +70,8 @@ mapHack::GenerateStairsDown()
 
 	while ( !didit )
 	{
-		int x = rand() % GetWidth();
-		int y = rand() % GetHeight();
+		int x = hnRandom::GetInstance()->Get( GetWidth() );
+		int y = hnRandom::GetInstance()->Get( GetHeight() );
 
 		if ( WallAt(x,y) == WALL_Room )
 		{
@@ -94,8 +91,8 @@ mapHack::GenerateMonsters()
 
 		while ( !didit )
 		{
-			int x = rand() % GetWidth();
-			int y = rand() % GetHeight();
+			int x = hnRandom::GetInstance()->Get( GetWidth() );
+			int y = hnRandom::GetInstance()->Get( GetHeight() );
 
 			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
 			{
@@ -116,8 +113,8 @@ mapHack::GenerateObjects()
 
 		while ( !didit )
 		{
-			int x = rand() % GetWidth();
-			int y = rand() % GetHeight();
+			int x = hnRandom::GetInstance()->Get( GetWidth() );
+			int y = hnRandom::GetInstance()->Get( GetHeight() );
 
 			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
 			{
@@ -159,7 +156,7 @@ mapHack::MakeCorridors()
 	for ( int i = 0; i < m_roomCount-1; i++ )
 	{
 		Join(i, i+1, false);
-		if ( (rand() % 50) == 0 )	// randomly stop generating corridors
+		if ( (hnRandom::GetInstance()->Get( 50 )) == 0 )	// randomly stop generating corridors
 			break;
 	}
 	// Connect each room to the room two to the right, if not already connected.
@@ -188,10 +185,10 @@ mapHack::MakeCorridors()
 	{
 		// just for fun, add some more corridors at random.
 
-		for (int i = (rand() % m_roomCount) + 2; i > 0; i--)
+		for (int i = (hnRandom::GetInstance()->Get( m_roomCount )) + 2; i > 0; i--)
 		{
-			int a = rand() % m_roomCount;
-			int b = rand() % (m_roomCount-2);
+			int a = hnRandom::GetInstance()->Get( m_roomCount );
+			int b = hnRandom::GetInstance()->Get(m_roomCount-2);
 			if ( b >= a ) b += 2;
 			Join(a,b,true);
 		}
@@ -438,8 +435,8 @@ mapHack::FindEntranceInRect( hnPoint2D *result, const hnPoint2D & topLeft, const
 {
 	sint8 x, y;
 
-	x = (topLeft.x == bottomRight.x) ? topLeft.x : (rand() % (bottomRight.x - topLeft.x)) + topLeft.x;
-	y = (topLeft.y == bottomRight.y) ? topLeft.y : (rand() % (bottomRight.y - topLeft.y)) + topLeft.y;
+	x = (topLeft.x == bottomRight.x) ? topLeft.x : (hnRandom::GetInstance()->Get(bottomRight.x - topLeft.x)) + topLeft.x;
+	y = (topLeft.y == bottomRight.y) ? topLeft.y : (hnRandom::GetInstance()->Get(bottomRight.y - topLeft.y)) + topLeft.y;
 
 	if ( OkayForDoor(x,y) )
 	{
@@ -525,18 +522,18 @@ mapHack::CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yali
 		
 		if ( xtmp < 0 || ytmp < 0 )
 		{
-			xtmp = rand() % 5;
-			ytmp = rand() % 5;
+			xtmp = hnRandom::GetInstance()->Get(5);
+			ytmp = hnRandom::GetInstance()->Get(5);
 		}
 		if ( wtmp < 0 || htmp < 0 )
 		{
-			wtmp = (rand()%15)+3;
-			htmp = (rand()%8)+2;
+			wtmp = hnRandom::GetInstance()->GetAndAdd(15,3);
+			htmp = hnRandom::GetInstance()->GetAndAdd(8,2);
 		}
 		if ( xaltmp < 0 )
-			xaltmp = rand()%3;
+			xaltmp = hnRandom::GetInstance()->Get(3);
 		if ( yaltmp < 0 )
-			yaltmp = rand()%3;
+			yaltmp = hnRandom::GetInstance()->Get(3);
 
 		xabs = (((xtmp) * m_width) / 5) + 1;
 		yabs = (((ytmp) * m_height) / 5) + 1;

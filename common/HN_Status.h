@@ -1,4 +1,6 @@
-#ifndef __HN_STATUS_H__
+#ifndef HN_STATUS_H
+#define HN_STATUS_H
+
 
 #include "HN_Types.h"
 
@@ -8,12 +10,20 @@ class netMetaPacketOutput;
 
 class hnStatus
 {
-	uint8	m_strength;
-	uint8	m_dexterity;
-	uint8	m_constitution;
-	uint8	m_intelligence;
-	uint8	m_wisdom;
-	uint8	m_charisma;
+public:
+	
+	enum{
+		Strength,
+		Dexterity,
+		Constitution,
+		Intelligence,
+		Wisdom,
+		Charisma,
+		MAX_STATISTICS
+	};
+	typedef int statisticType;
+private:
+	uint8	m_statistic[MAX_STATISTICS];
 
 	sint16	m_hitPointMax;
 	sint16	m_hitPoints;
@@ -25,10 +35,13 @@ class hnStatus
 	uint8	m_level;
 	
 	sint16	m_hunger;
+
+	uint16	m_sick;
+	uint16	m_blind;
+	uint16	m_hallucinating;
 	
 	bool	m_confused;
 	bool	m_stunned;
-	bool	m_hallucinating;
 	bool	m_paralyzed;
 	bool	m_undead;	// are we a ghost/zombie/etc?
 
@@ -45,12 +58,13 @@ public:
 	virtual		~hnStatus();
 	
 	
-	uint8		Strength() { return m_strength; }
-	uint8		Dexterity() { return m_dexterity; }
-	uint8		Constitution() { return m_constitution; }
-	uint8		Intelligence() { return m_intelligence; }
-	uint8		Wisdom() { return m_wisdom; }
-	uint8		Charisma() { return m_charisma; }
+	uint8		GetStrength() { return m_statistic[Strength]; }
+	uint8		GetDexterity() { return m_statistic[Dexterity]; }
+	uint8		GetConstitution() { return m_statistic[Constitution]; }
+	uint8		GetIntelligence() { return m_statistic[Intelligence]; }
+	uint8		GetWisdom() { return m_statistic[Wisdom]; }
+	uint8		GetCharisma() { return m_statistic[Charisma]; }
+	uint8		GetStatistic(statisticType type) { return m_statistic[type]; }
 	
 	sint16		HitPointMax() { return m_hitPointMax; }
 	sint16		HitPoints() { return m_hitPoints; }
@@ -69,16 +83,20 @@ public:
 	bool		Hungry();
 	bool		Weak();
 	bool		Fainting();
-	bool		Hallucinating() { return m_hallucinating; }
 	bool		Paralyzed() { return m_paralyzed; }
+	
+	uint16		Hallucinating() { return m_hallucinating; }
 
 	void		TakeDamage( sint16 points );
-	void		HealDamage( sint16 points );
+	void		Heal( uint32 points, uint32 extraPoints, bool cureSick, bool cureBlind );
+	uint16		HallucinatingTime( uint16 timer ) { m_hallucinating = timer; }
+	
 	void		TurnPassed();	// a turn has passed.  Do whatever needs to be done.
+
 	
 	void		SendChanges( netMetaPacketOutput *packet );
 	void		ReceiveChanges( netMetaPacketInput *packet );
 };
 
 
-#endif
+#endif  // HN_STATUS_H

@@ -1,15 +1,12 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include "MAP_Base.h"
 #include "MAP_Client.h"
 #include "OBJ_Base.h"
 #include "ENT_Base.h"
-//#include "HN_Object.h"
 #include "HN_Point.h"
 
 
-#define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 #define max(x,y) ( (x<y)?y:x )
 

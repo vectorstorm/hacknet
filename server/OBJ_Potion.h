@@ -5,6 +5,8 @@
 
 class objPotion : public objBase
 {	
+	bool		m_diluted;
+	
 public:
 			objPotion(uint32 id);
 	virtual		~objPotion();

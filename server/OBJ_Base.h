@@ -66,6 +66,8 @@ public:
 	
 	bool			Blessed() { return (m_blesscurse == BC_Blessed); }
 	bool			Cursed() { return (m_blesscurse == BC_Cursed); }
+
+	signed char		BlessCurseSign();	// Blessed == +1.  Uncursed == 0.  Cursed == -1.
 };
 
 

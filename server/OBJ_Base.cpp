@@ -323,6 +323,17 @@ objBase::GetObjectID(objBase * object)
 	return result;
 }
 
+signed char
+objBase::BlessCurseSign()
+{
+	signed char a, b;
+
+	a = (Blessed())?1:0;
+	b = (Cursed())?1:0;
+
+	return a - b;
+}
+
 void
 objBase::GetDescription(objDescription &result, int id)
 {

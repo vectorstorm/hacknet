@@ -1,6 +1,7 @@
+#include "HN_Random.h"
+
 #include "OBJ_Manager.h"
 #include "OBJ_Definition.h"
-#include <stdio.h>
 
 #include "OBJ_Weapon.h"
 #include "OBJ_Armour.h"
@@ -8,11 +9,7 @@
 #include "OBJ_Potion.h"
 #include "OBJ_Ring.h"
 
-//---------  Temporary #includes while setting up new object system
-//#include "OBJ_LongSword.h"
-//#include "OBJ_Dagger.h"
-
-#include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
 objManager * objManager::s_instance = NULL;
@@ -114,7 +111,7 @@ objManager::RandomItem(uint8 level, objType type)
 	
 	if ( type == OBJ_TYPE_Random )
 	{
-		int prob = rand() % 100;
+		int prob = hnRandom::GetInstance()->Get( 100 );
 		int entry = 0;
 		bool done = false;
 
@@ -131,7 +128,7 @@ objManager::RandomItem(uint8 level, objType type)
 
 	type = OBJ_TYPE_Potion;//temp -- generate only rings.
 
-	int value = rand() % m_objectTotalProbability[type];
+	int value = hnRandom::GetInstance()->Get( m_objectTotalProbability[type] );
 	
 	// walk through our list of objects until we find the one referred to by 'value'.
 

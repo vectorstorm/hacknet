@@ -1,7 +1,7 @@
 bin_PROGRAMS= hacknetd
 
 hacknetd_LDADD = ../common/libpacket.a ../common/libpoint.a ../common/libstatus.a \
-		../common/libmapclient.a
+		../common/libmapclient.a ../common/librandom.a
 hacknetd_SOURCES =  						\
 								\
 		HN_Main_Server.cpp				\

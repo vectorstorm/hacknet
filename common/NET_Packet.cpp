@@ -86,12 +86,8 @@ netMetaPacket::ClientStatistics( netClientStatistics &packet )
 
 	sint8 type = SPT_ClientStatistics;
 	Sint8( type );
-	Uint8( packet.strength );
-	Uint8( packet.dexterity );
-	Uint8( packet.constitution );
-	Uint8( packet.intelligence );
-	Uint8( packet.wisdom );
-	Uint8( packet.charisma );
+	for ( int i = 0; i < hnStatus::MAX_STATISTICS; i++ )
+		Uint8( packet.statistic[i] );
 
 	return (!m_error);
 }

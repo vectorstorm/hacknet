@@ -69,6 +69,25 @@ enum props{
 	PROP_Infravision,
 	PROP_Warn_Of_Monsters,
 	PROP_Detect_Monsters,
+	
+	PROP_Gain_Ability,
+	PROP_Restore_Ability,
+	PROP_Paralyse,
+	PROP_Heal,
+	PROP_Extra_Heal,
+	PROP_Full_Heal,
+	PROP_Gain_Level,
+	PROP_Gain_Energy,
+	PROP_Enlightenment,
+	PROP_Detect_Objects,
+	PROP_Sleep,
+	PROP_Booze,
+	PROP_Sickness,
+	PROP_Juice,
+	PROP_Oil,
+	PROP_Acid,
+	PROP_Water,
+	
 	PROP_MAX
 };
 

@@ -837,9 +837,9 @@ hnDisplayTTY::Refresh()
 
 		move( 22, 0 );
 		printw("%s     St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d", m_name,
-			m_status->Strength(), m_status->Dexterity(), 
-			m_status->Constitution(), m_status->Intelligence(),
-			m_status->Wisdom(), m_status->Charisma() );
+			m_status->GetStrength(), m_status->GetDexterity(), 
+			m_status->GetConstitution(), m_status->GetIntelligence(),
+			m_status->GetWisdom(), m_status->GetCharisma() );
 		move( 23, 0 );
 		printw("Dlvl: %d  $:%d  HP:%d(%d) Pw:%d(%d) AC:%d Xp:%d/%d",
 			m_position.z, 0, m_status->HitPoints(),

@@ -6,6 +6,18 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 14, 2002:
+  * Added hnRandom to common directory, to abstract out random number
+    generation.
+  * Added 'properties' for all potion types (will eventually need to
+    do this for scrolls and some other object types), so we don't need
+    to use a massive set of #defines to match object types to their
+    position in the master object definition table.
+  * More minor modifications to quaff support.
+  * HN_Status.cpp:  Now stores all statistics in an array, instead
+    of as separate member variables.  Need to do something similar
+    for hit points and spell points.
+
 February 12, 2002:
   * Added objRing and objAmulet classes.
   * Makefile.am: Reorganized for easy maintenance.

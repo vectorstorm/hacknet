@@ -5,6 +5,7 @@
 #include "HN_Point.h"
 #include "HN_Enum.h"
 #include "OBJ_Types.h"
+#include "HN_Status.h"
 
 
 enum{
@@ -43,12 +44,7 @@ struct netClientLocation
 
 struct netClientStatistics
 {
-	uint8 strength;
-	uint8 dexterity;
-	uint8 constitution;
-	uint8 intelligence;
-	uint8 wisdom;
-	uint8 charisma;
+	uint8 statistic[hnStatus::MAX_STATISTICS];
 };
 
 struct netClientHitPoints

@@ -1,5 +1,6 @@
 
 #include "HN_Status.h"
+#include "HN_Random.h"
 #include "NET_Packet.h"
 #include <stdlib.h>
 
@@ -14,17 +15,14 @@ hnStatus::hnStatus( uint8 level )
 	m_level = level;
 
 	// generate stats here based upon level..  and other info?
-	m_strength = ((rand() % 6) + 1) + ((rand() % 6) + 1) + ((rand() % 6) + 1);
-	m_dexterity = ((rand() % 6) + 1) + ((rand() % 6) + 1) + ((rand() % 6) + 1);
-	m_intelligence = ((rand() % 6) + 1) + ((rand() % 6) + 1) + ((rand() % 6) + 1);
-	m_constitution = ((rand() % 6) + 1) + ((rand() % 6) + 1) + ((rand() % 6) + 1);
-	m_wisdom = ((rand() % 6) + 1) + ((rand() % 6) + 1) + ((rand() % 6) + 1);
-	m_charisma = ((rand() % 6) + 1) + ((rand() % 6) + 1) + ((rand() % 6) + 1);
+	
+	for ( int i = 0; i < MAX_STATISTICS; i++ )
+		m_statistic[i] = hnRandom::GetInstance()->Dice(3,6);
 
-	m_hitPoints = level * ((rand() % 6) + 6);
+	m_hitPoints = level * hnRandom::GetInstance()->GetRange(7,13);
 	m_hitPointMax = m_hitPoints;
 
-	m_spellPoints = level * ((rand() % 6) + 6);
+	m_spellPoints = level * hnRandom::GetInstance()->GetRange(7,13);
 	m_spellPointMax = m_spellPoints;
 }
 
@@ -35,12 +33,8 @@ hnStatus::~hnStatus()
 void
 hnStatus::Initialise()
 {
-	m_strength = 3;
-	m_dexterity = 3;
-	m_constitution = 3;
-	m_intelligence = 3;
-	m_wisdom = 3;
-	m_charisma = 3;
+	for ( int i = 0; i < MAX_STATISTICS; i++ )
+		m_statistic[i] = 3;
 
 	m_hitPointMax = 1;
 	m_hitPoints = 1;
@@ -92,9 +86,9 @@ hnStatus::Destroyed()
 {	
 	if ( m_hitPoints <= 0 )
 		return true;
-	if ( m_strength < 3 )
+	if ( GetStrength() < 3 )
 		return true;
-	if ( m_intelligence < 3 )
+	if ( GetIntelligence() < 3 )
 		return true;
 	if ( m_hunger >= HUNGER_STARVED )
 		return true;
@@ -147,11 +141,21 @@ hnStatus::TakeDamage( sint16 pointsDamage )
 }
 
 void
-hnStatus::HealDamage( sint16 pointsDamage )
+hnStatus::Heal( uint32 pointsHealed, uint32 extraPoints, bool cureSick, bool cureBlind )
 {
-	m_hitPoints += pointsDamage;
-
-	if ( m_hitPoints > m_hitPointMax )
+	if ( pointsHealed )
+	{
+		m_hitPoints += pointsHealed;
+		if ( m_hitPoints > m_hitPointMax )	// if we're over max...
+			m_hitPointMax += extraPoints;	// then add a few points to max hit points
+	}
+	
+	if ( cureBlind )
+		m_blind = 0;
+	if ( cureSick )
+		m_sick = 0;
+	
+	if ( m_hitPoints > m_hitPointMax )		// clamp our health to our max health.
 		m_hitPoints = m_hitPointMax;
 	
 	m_changedHitPoints = true;
@@ -171,13 +175,9 @@ hnStatus::SendChanges( netMetaPacketOutput * packet )
 	if ( m_changedStatistics )
 	{
 		netClientStatistics stats;
-
-		stats.strength = Strength();
-		stats.dexterity = Dexterity();
-		stats.intelligence = Intelligence();
-		stats.constitution = Constitution();
-		stats.wisdom = Wisdom();
-		stats.charisma = Charisma();
+		
+		for ( int i = 0; i < MAX_STATISTICS; i++ )
+			stats.statistic[i] = GetStatistic(i);
 		
 		packet->ClientStatistics(stats);
 		
@@ -227,17 +227,14 @@ hnStatus::ReceiveChanges( netMetaPacketInput * packet )
 	netClientHitPoints hp;
 	netClientSpellPoints sp;
 	netClientExperience ep;
+	int i;
 	
 	switch( type )
 	{
 		case SPT_ClientStatistics:
 			packet->ClientStatistics(stat);
-			m_strength = stat.strength;
-			m_dexterity = stat.dexterity;
-			m_intelligence = stat.intelligence;
-			m_constitution = stat.constitution;
-			m_wisdom = stat.wisdom;
-			m_charisma = stat.charisma;
+			for ( i = 0; i < MAX_STATISTICS; i++ )
+				m_statistic[i] = stat.statistic[i];
 			break;
 		case SPT_ClientHitPoints:
 			packet->ClientHitPoints(hp);

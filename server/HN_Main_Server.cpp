@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "HN_Game.h"
+#include "HN_Random.h"
 #include "NET_Server.h"
 #include "HN_Group.h"
 
@@ -40,8 +41,8 @@ int main( int argc, char *argv[] )
 	
 	printf("HackNet version %s starting up...\n", VERSION );
 	
-	printf("Initialising random number generator...\n");
-	srand((int)time(NULL));
+	printf("Initialising random number system...\n");
+	hnRandom::Startup( time(NULL) );
 	
 	printf("Initialising game...\n");
 	hnGame::Startup();

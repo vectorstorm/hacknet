@@ -169,6 +169,23 @@
 #define CONFUSION		PROP_Confusion
 #define BLINDED			PROP_Blinded
 #define HALLUC			PROP_Hallucination
-
+#define GAIN_ABIL		PROP_Gain_Ability
+#define REST_ABIL		PROP_Restore_Ability
+#define PARALYSE		PROP_Paralyse
+#define HEAL			PROP_Heal
+#define EXTRA_HEAL		PROP_Extra_Heal
+#define FULL_HEAL		PROP_Full_Heal
+#define GAIN_LEVEL		PROP_Gain_Level
+#define ENLIGHTEN		PROP_Enlightenment
+#define MONST_DET		PROP_Detect_Monsters
+#define OBJ_DET			PROP_Detect_Objects
+#define GAIN_ENERGY		PROP_Gain_Energy
+#define SLEEP			PROP_Sleep
+#define BOOZE			PROP_Booze
+#define SICKNESS		PROP_Sickness
+#define JUICE			PROP_Juice
+#define ACID			PROP_Acid
+#define OIL			PROP_Oil
+#define WATER			PROP_Water
 
 #endif  // OBJ_CONVERT_H
