@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 8, 2001:
+  * HN_Group.cpp: Fixed bug so monsters get assigned to groups correctly.
+
 May 7, 2001:
   * Updated documentation.
   * Released version 0.0.4.

@@ -109,7 +109,7 @@ hnGroup::ScanForMonsters()
 	//   players in this group make a move.
 	// -------------------------------------------------
 
-	if ( m_playerCount > 0 )	// early out
+	if ( m_playerCount <= 0 )	// early out
 		return;
 
 	// -------------------------------------------------
