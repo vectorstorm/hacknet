@@ -18,6 +18,10 @@ April 23, 2001:
   with a set of visibility information, regardless of whether the player
   has visited that map before.
 
+  Fixed minor bugs in MAP_Hack.cpp.  Rooms are no longer generated touching
+  bottom border of the screen so frequently (silly case of using width when
+  I ought to have been using height).  Other minor issues fixed, too.
+
 ---
 April 22, 2001:
   Big changes today.  Here's the scoop:

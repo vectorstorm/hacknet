@@ -395,7 +395,7 @@ mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, ch
 			yaltmp = rand()%3;
 
 		xabs = (((xtmp) * m_width) / 5) + 1;
-		yabs = (((ytmp) * m_width) / 5) + 1;
+		yabs = (((ytmp) * m_height) / 5) + 1;
 
 		switch( xaltmp )
 		{
@@ -530,9 +530,15 @@ mapHack::CheckTileOkayForRoom( unsigned int x, unsigned int y )
 	
 	mapTile &tile = MapTile(x,y);
 	
+	if ( x <= 0 || x >= (m_width-1) )	// make sure we don't generate rooms
+		tileOkay = false;		// with open space on left or right border
+	
+	if ( y <= 0 || y >= (m_height-1) )	// make sure we don't generate rooms
+		tileOkay = false;		// with open space on top or bottom border
+	
 	if ( (!(tile.wall & WALL_Any)) || tile.border )
-		tileOkay = false;
-
+		tileOkay = false;		// not an okay tile if there's no wall here yet, or if we're
+						// in the border zone of another room.
 	return tileOkay;
 }
 
