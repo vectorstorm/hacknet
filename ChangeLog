@@ -1,3 +1,18 @@
+April 26, 2001:
+  Adjusted client to use the (relatively) new netMetaPacket code that
+  was originally written for the server.  Better code reusability, and
+  easier to add new packet types.  (Particularly when sending strings
+  over the net!)  WARNING:  The switch to the MetaPacket results in the
+  requirement of accepting 16 bits worth of packet 'size' data, which
+  means that in the current implementation, a malicious client could
+  freeze up the server by connecting and sending a single byte of data --
+  the server will block until it receives a second byte of data!  This
+  is a high-priority fix for me.  I deserve to be slapped around for
+  even thinking about knowingly checking the code with this sort of
+  security flaw present..  but I'm doing it anyway.  Expect a fix for
+  this issue within the next day or two.  :)
+
+---
 April 25, 2001:
   How sad is this -- I even put in a change on ANZAC day.  I ought to get
   my priorities straight!  ;)

@@ -166,6 +166,41 @@ netMetaPacket::BadPacketNotice()
 	return success;
 }
 
+
+bool
+netMetaPacket::ClientMove( sint8 & direction )
+{
+	bool success = true;
+	
+	sint8 type = CPT_Move;
+	Char( type );
+	Char( direction );
+	
+	return success;
+}
+
+bool
+netMetaPacket::ClientQuit()
+{
+	bool success = true;
+	
+	sint8 type = CPT_Quit;
+	Char( type );
+	
+	return success;
+}
+
+bool
+netMetaPacket::ClientSave()
+{
+	bool success = true;
+	
+	sint8 type = CPT_Save;
+	Char( type );
+	
+	return success;
+}
+
 //------------------------------------------------------------------------------------
 
 netMetaPacketInput::netMetaPacketInput( char *packet, uint32 packetSize ):

@@ -17,15 +17,19 @@ class hnPoint;
 struct sockaddr_in;
 struct netClientPacket;
 
+
+#define MAX_META_PACKET_SIZE (512)
+#define MAX_CLIENT_PACKET_SIZE (128)
+
 struct clientData {
 	
 	int		socket;
-	netClientPacket	packet;			// construction area for incoming packets
-	char *		packetRecv;		// pointer into 'packet' member above, where incoming packet data should be appended.
-	int		incomingPacketSize;	// how many more bytes of packet data to read before packet is finished
+	char 		packet[MAX_CLIENT_PACKET_SIZE];	// construction area for incoming packets
+	char *		packetRecv;			// pointer into 'packet' member above, where incoming packet data should be appended.
+	int		incomingPacketSize;		// how many more bytes of packet data to read before packet is finished
+	short		packetFullSize;			// how many total bytes in packet data when finished.
 };
 
-#define MAX_META_PACKET_SIZE (512)
 
 class netServer
 {
@@ -48,7 +52,7 @@ protected:
 				netServer();					// constructs and starts listening on our port..
 	virtual			~netServer();
 	void		StartServer();
-	bool		ProcessClientPacket(int clientID, const netClientPacket &packet); // false == invalid packet, so kill the connection.
+	bool		ProcessClientPacket(int clientID, char *buffer, short bufferLength); // false == invalid packet, so kill the connection.
 public:
 	static void		Startup();
 	static void		Shutdown();

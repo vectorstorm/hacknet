@@ -193,13 +193,18 @@ netServer::Go()
 				
 				if ( m_client[i].incomingPacketSize == 0 )	// new incoming packet
 				{
-					char packetSize;
-					recv(m_client[i].socket, &packetSize, 1, 0);	// first a byte saying how many bytes of data are coming..
+					short packetSize;
+					// TODO:  Fix this code so the server doesn't stall if a malicious user sends
+					// us a single byte.
+					recv(m_client[i].socket, &packetSize, sizeof(sint16), MSG_WAITALL);	// first a short saying how many bytes of data are coming..
+					
+					packetSize = ntohs( packetSize );
+					
 				//	printf("  Next packet will have size %d.\n", packetSize);
 				//	printf("  Max legal packet size is: %d.\n", sizeof(netServerPacket) );
-					if (packetSize > sizeof(netClientPacket))
+					if (packetSize > MAX_CLIENT_PACKET_SIZE )
 					{
-						// aiee!  Illegal packet!  Kill the client!
+						// aiee!  Illegally large packet!  Kill the client!
 						printf("  Packet size data illegal!  Killing client.\n");
 						SendBadPacketNotice(i);
 						m_game->ClientQuit(i);
@@ -207,7 +212,7 @@ netServer::Go()
 					}
 					else
 					{
-						m_client[i].incomingPacketSize = packetSize;
+						m_client[i].incomingPacketSize = m_client[i].packetFullSize = packetSize;
 					}
 				}
 				else
@@ -225,27 +230,27 @@ netServer::Go()
 					else
 					{
 					
-					m_client[i].packetRecv += numBytesReceived;
-					m_client[i].incomingPacketSize -= numBytesReceived;
-					// we've gotten a packet from one of our clients...
+						m_client[i].packetRecv += numBytesReceived;
+						m_client[i].incomingPacketSize -= numBytesReceived;
+						// we've gotten a packet from one of our clients...
 					
-				//	printf("  Received %d bytes of data.  %d bytes remain to be received.\n", numBytesReceived, m_client[i].incomingPacketSize );
-					
-					if ( m_client[i].incomingPacketSize <= 0 )
-					{
-						assert(m_client[i].incomingPacketSize == 0);
-						m_client[i].incomingPacketSize = 0;
-						m_client[i].packetRecv = (char *)&m_client[i].packet;
-				//		printf("  Processing packet.\n");
-						if ( !ProcessClientPacket(i, m_client[i].packet) )
+					//	printf("  Received %d bytes of data.  %d bytes remain to be received.\n", numBytesReceived, m_client[i].incomingPacketSize );
+						
+						if ( m_client[i].incomingPacketSize <= 0 )
 						{
-							// aiee!  Illegal packet!  Kill the client!
-							printf("  Packet data illegal!  Killing client.\n");
-							SendBadPacketNotice(i);
-							m_game->ClientQuit(i);
-							DisconnectClientID(i);
+							assert(m_client[i].incomingPacketSize == 0);
+							m_client[i].incomingPacketSize = 0;
+							m_client[i].packetRecv = m_client[i].packet;
+					//		printf("  Processing packet.\n");
+							if ( !ProcessClientPacket(i, m_client[i].packet, m_client[i].packetFullSize) )
+							{
+								// aiee!  Illegal packet!  Kill the client!
+								printf("  Packet data illegal!  Killing client.\n");
+								SendBadPacketNotice(i);
+								m_game->ClientQuit(i);
+								DisconnectClientID(i);
+							}
 						}
-					}
 					}
 				}
 			}
@@ -254,30 +259,55 @@ netServer::Go()
 }
 
 bool
-netServer::ProcessClientPacket(int clientID, const netClientPacket &packet)
+netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 {
 	bool okay = false;
+	bool abort = false;
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
-	
-	sint8 type = packet.type;
-	
-	switch(type)
+#if 0	
+	printf("Received %d bytes.\n", incomingBytes );
+
+	for ( int i = 0; i < incomingBytes; i++ )
 	{
-		case CPT_Move:
-			m_game->ClientMove(clientID, (hnDirection)packet.data.move.direction);
-			okay = true;
-			break;
-		case CPT_Save:	// no saving code yet -- just quit.
-		case CPT_Quit:
-			SendQuitConfirm(clientID);
-			m_game->ClientQuit(clientID);
-			DisconnectClientID(clientID);
-			printf("Disconnected client %d\n",clientID);
-			okay = true;
-			break;
-		default:
-			printf("Received unknown packet type %d from client %d.\n", type, clientID);
-			break;
+		printf("Byte %d: %d\n", i, buffer[i] );
+	}
+#endif	
+	netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
+	
+	while ( !packet->Done() && !abort )
+	{
+		sint8 type = packet->PeekChar();
+		sint8 direction;
+		
+		switch(type)
+		{
+			case CPT_Move:
+				packet->ClientMove(direction);
+				m_game->ClientMove(clientID, (hnDirection)direction);
+				okay = true;
+				break;
+			case CPT_Save:	// no saving code yet -- just quit.
+				packet->ClientSave();
+				SendQuitConfirm(clientID);
+				m_game->ClientQuit(clientID);
+				DisconnectClientID(clientID);
+				printf("Disconnected client %d\n",clientID);
+				okay = true;
+				break;
+			case CPT_Quit:
+				packet->ClientQuit();
+				SendQuitConfirm(clientID);
+				m_game->ClientQuit(clientID);
+				DisconnectClientID(clientID);
+				printf("Disconnected client %d\n",clientID);
+				okay = true;
+				break;
+			default:
+				okay = false;
+				abort = true;
+				printf("Received unknown packet type %d from client %d.\n", type, clientID);
+				break;
+		}
 	}
 
 	return okay;

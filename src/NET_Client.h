@@ -8,13 +8,20 @@
 #include "HN_Enum.h"
 
 class hnDisplay;
+class netMetaPacket;
 struct sockaddr_in;
+
+#define MAX_BUFFER_SIZE (128)
 
 class netClient
 {
-	hnDisplay	*m_display;
+	hnDisplay *	m_display;
 	int		m_socket;
-	sockaddr_in	*m_serverAddress;
+	sockaddr_in *	m_serverAddress;
+	
+	netMetaPacket *	m_packet;
+	char		m_buffer[MAX_BUFFER_SIZE];
+	
 	bool		m_done;
 protected:
 	
@@ -26,7 +33,10 @@ public:
 			~netClient();
 	
 	void		Disconnect();
-			
+	
+	void		StartMetaPacket();
+	void		TransmitMetaPacket();
+	
 	void		Go();
 	void		SendMove( hnDirection whichWay );
 	void		SendQuit( bool save );

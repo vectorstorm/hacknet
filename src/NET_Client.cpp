@@ -22,7 +22,7 @@
 //#define __DEBUGGING_NETWORK__
 
 netClient::netClient(hnDisplay *display, char *serverAddress):
-	m_display(display), m_done(false)
+	m_display(display), m_done(false), m_packet(NULL)
 {
 	m_serverAddress = new sockaddr_in;
 	m_display->SetClient(this);
@@ -192,45 +192,44 @@ netClient::Go()
 }
 
 void
-netClient::SendQuit( bool save )
+netClient::StartMetaPacket()
 {
-	netClientPacket packet;
-	packet.type = (save) ? CPT_Save : CPT_Quit;
+	assert( m_packet == NULL );
+	m_packet = new netMetaPacketOutput( m_buffer, MAX_BUFFER_SIZE );
+}
 
-	char packetSize = sizeof( netClientPacket );
+void
+netClient::TransmitMetaPacket()
+{
+	assert( m_packet );
 
-	if ( send( m_socket, &packetSize, 1, 0 ) == -1 )
-	{
+	short metapacketdatalength = htons(m_packet->GetBufferLength());
+	
+	if ( send(m_socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )
 		perror("send");
-		cleanexit(1);
-	}
-	if ( send( m_socket, &packet, packetSize, 0 ) == -1 )
-	{
+
+	if ( send(m_socket, m_packet->GetBuffer(), m_packet->GetBufferLength(), MSG_NOSIGNAL ) == -1 )
 		perror("send");
-		cleanexit(1);
-	}
+
+	delete m_packet;
+	m_packet = NULL;
+}
+
+void
+netClient::SendQuit( bool save )
+{	
+	StartMetaPacket();
+	m_packet->ClientQuit();
+	TransmitMetaPacket();
 }
 
 void
 netClient::SendMove(hnDirection dir)
 {
-	//printf("Sending move packet...\n");
-	netClientPacket packet;
-	packet.type = CPT_Move;
-	packet.data.move.direction = dir;
-
-	char packetSize = sizeof( packet.data.move ) + sizeof( packet.type );
-	
-	if ( send( m_socket, &packetSize, 1, 0 ) == -1 )
-	{
-		perror("send");
-		cleanexit(1);
-	}
-	if ( send( m_socket, &packet, packetSize, 0 ) == -1 )
-	{
-		perror("send");
-		cleanexit(1);
-	}
+	sint8 direction = dir;
+	StartMetaPacket();
+	m_packet->ClientMove(direction);
+	TransmitMetaPacket();
 }
 
 void

@@ -262,7 +262,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			}
 		}
 	}else{
-		printf("Tried to move in an illegal direction.\n");
+		printf("Tried to move in an illegal direction: %d.\n", dir);
 	}
 
 }

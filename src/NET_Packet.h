@@ -78,19 +78,6 @@ enum
 	CPT_MAX
 };
 
-typedef sint8 netClientPacketType;
-
-struct netClientPacket
-{
-	netClientPacketType type;
-	union{
-		struct{
-			sint8 	direction;
-		}move;
-	}data;
-};
-
-
 class netMetaPacket
 {
 protected:
@@ -109,6 +96,7 @@ public:
 
 	bool			Done() { return m_bufferDistance >= m_bufferLength; }
 	
+	/*****************   Server Packets  ******************/
 	bool			ClientLocation( netClientLocation &packet );
 	bool			MapTile( netMapTile &packet );
 	bool			MapReset( netMapReset &packet );
@@ -119,6 +107,12 @@ public:
 	bool			SaveConfirm();
 	bool			Refresh();
 	bool			BadPacketNotice();
+	
+	/*****************   Client Packets  ******************/
+	bool			ClientMove( sint8 & direction );
+	bool			ClientSave();
+	bool			ClientQuit();
+
 	
 	virtual bool 		Char( sint8 & ) = 0;
 	virtual bool 		Short( sint16 & ) = 0;
