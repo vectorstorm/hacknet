@@ -14,9 +14,7 @@ entBase::entBase( entType type, const hnPoint & pos, hnPlayer *player ):
 	m_type(type),
 	m_position(pos),
 	m_wieldedObject(NULL),
-	m_player(player),
-	m_hitPoints(1),		// set some minimum number of hitpoints so we don't die before somebody sets
-	m_maxHitPoints(1)	// the proper amount on us.
+	m_player(player)
 {
 	m_status = new hnStatus(1);
 	m_inventory = new objBase(OBJ_TYPE_Illegal);

@@ -17,6 +17,11 @@ February 14, 2002:
   * HN_Status.cpp:  Now stores all statistics in an array, instead
     of as separate member variables.  Need to do something similar
     for hit points and spell points.
+  * ENT_Base.h: Removed hit point member variables -- that's what
+    the hnStatus was for.
+  * ENT_GridBug.cpp:  Sets initial health on hnStatus, instead of
+    in unused hit point member variables.
+  * Beginning support for exercising statistics.
 
 February 12, 2002:
   * Added objRing and objAmulet classes.

@@ -56,6 +56,7 @@ objPotion::Quaff(entBase *entity, hnPlayer *player)
 				!Cursed() ? 1 : 0, 	// extra points to raise max
 				!Blessed(), !Cursed() 
 				);
+			status->ExerciseStatistic( hnStatus::Constitution, true );
 			break;
 		case PROP_Extra_Heal:
 			sprintf(buffer,"You feel much better.");
@@ -64,6 +65,9 @@ objPotion::Quaff(entBase *entity, hnPlayer *player)
 				Blessed() ? 5 : (!Cursed() ? 2 : 0), 	// extra points to raise max
 				!Blessed(), !Cursed() 
 				);
+			status->HallucinatingTime(0.0f);
+			status->ExerciseStatistic( hnStatus::Strength, true );
+			status->ExerciseStatistic( hnStatus::Constitution, true );
 			break;
 		case PROP_Full_Heal:
 			sprintf(buffer,"You feel completely healed.");
@@ -74,9 +78,10 @@ objPotion::Quaff(entBase *entity, hnPlayer *player)
 				true					// heal blindness
 				);
 			if ( Blessed() )
-		//		status->RegainLevel();
+				status->RegainLevel();
 			status->HallucinatingTime(0.0f);
-			//status->Exercise
+			status->ExerciseStatistic( hnStatus::Strength, true );
+			status->ExerciseStatistic( hnStatus::Constitution, true );
 			break;
 		case PROP_Gain_Level:
 			break;

@@ -24,8 +24,6 @@ class entBase
 	hnPlayer		*m_player;	// if I'm player controlled, this is my player.
 	
 protected:	
-	int			m_hitPoints;
-	int			m_maxHitPoints;
 	bool			m_changedLevel;	// needs to refresh all our vision
 	
 public:

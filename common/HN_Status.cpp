@@ -34,8 +34,10 @@ void
 hnStatus::Initialise()
 {
 	for ( int i = 0; i < MAX_STATISTICS; i++ )
+	{
 		m_statistic[i] = 3;
-
+		m_exercise[i] = 0;
+	}
 	m_hitPointMax = 1;
 	m_hitPoints = 1;
 
@@ -134,6 +136,14 @@ hnStatus::Fainting()
 }
 
 void
+hnStatus::InitialiseHitPoints( uint16 points )
+{
+	m_hitPoints = points;
+	m_hitPointMax = points;
+	m_changedHitPoints = true;
+}
+
+void
 hnStatus::TakeDamage( sint16 pointsDamage )
 {
 	m_hitPoints -= pointsDamage;
@@ -159,6 +169,33 @@ hnStatus::Heal( uint32 pointsHealed, uint32 extraPoints, bool cureSick, bool cur
 		m_hitPoints = m_hitPointMax;
 	
 	m_changedHitPoints = true;
+}
+
+#define AVAL		(50) // tune value for attribute exercise
+
+void
+hnStatus::ExerciseStatistic( statisticType type, bool up )
+{
+	// can't exercise intelligence or charisma.
+	if ( type == Intelligence || type == Charisma )
+		return;
+	
+	// don't exercise physical stats if we're polymorphed.
+	if ( Polymorphed() && type != Wisdom )
+		return;
+
+	if ( abs( m_exercise[type] ) < AVAL )
+	{
+		if ( up && hnRandom::GetInstance()->Get(19) > m_statistic[type] )
+			m_exercise[type] ++;
+		else if ( !up )
+			m_exercise[type] -= hnRandom::GetInstance()->Get(2);
+	}
+}
+
+void
+hnStatus::RegainLevel()
+{
 }
 
 void

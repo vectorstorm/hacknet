@@ -1,7 +1,7 @@
+#include "HN_Random.h"
 #include "OBJ_Manager.h"
 #include "OBJ_Definition.h"
 #include "OBJ_Base.h"
-#include <stdlib.h>
 #include <stdio.h>
 
 objBase::objBase( uint32 itemID ):
@@ -36,13 +36,13 @@ objBase::RollDamage( entBase *foe )
         if ( 0 )        // if the monster is big...
         {       
                 if ( proto.largeDamage )
-                        damage = (rand() % proto.largeDamage) + 1;
+                        damage = hnRandom::GetInstance()->GetAndAdd( proto.largeDamage, 1 );
                 damage += proto.largeDamageExtra;
         }
         else            // if the monster is small...
         {
                 if ( proto.smallDamage )
-                        damage = (rand() % proto.smallDamage) + 1;
+                        damage = hnRandom::GetInstance()->GetAndAdd( proto.smallDamage, 1 );
                 damage += proto.smallDamageExtra;
         }
 

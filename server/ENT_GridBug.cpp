@@ -1,6 +1,6 @@
-#include <assert.h>
-#include <stdlib.h>
+#include "HN_Random.h"
 #include "ENT_GridBug.h"
+#include <assert.h>
 
 char * entGridBug::s_name = "grid bug";
 
@@ -8,8 +8,10 @@ entGridBug::entGridBug(const hnPoint & where, hnPlayer *player):
 	entBase( ENTITY_GridBug, where, player )
 {
 	// gridbugs have 1 or 2 hit points.
-	m_hitPoints = (rand() % 2) + 1;
-
+	int points = hnRandom::GetInstance()->GetAndAdd( 2,  1 );
+	
+	GetStatus()->InitialiseHitPoints(points);
+	
 	//SetName("grid bug");
 }
 
@@ -25,7 +27,7 @@ entGridBug::Think()
 	
 	hnDirection dir;
 	
-	switch( rand() % 4 )
+	switch( hnRandom::GetInstance()->Get(4) )
 	{
 		case 0:
 			dir = DIR_North;

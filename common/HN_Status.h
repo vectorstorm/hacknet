@@ -24,6 +24,7 @@ public:
 	typedef int statisticType;
 private:
 	uint8	m_statistic[MAX_STATISTICS];
+	uint8	m_exercise[MAX_STATISTICS];
 
 	sint16	m_hitPointMax;
 	sint16	m_hitPoints;
@@ -43,6 +44,7 @@ private:
 	bool	m_confused;
 	bool	m_stunned;
 	bool	m_paralyzed;
+	bool	m_polymorphed;
 	bool	m_undead;	// are we a ghost/zombie/etc?
 
 	bool	m_changedStatistics;
@@ -66,9 +68,11 @@ public:
 	uint8		GetCharisma() { return m_statistic[Charisma]; }
 	uint8		GetStatistic(statisticType type) { return m_statistic[type]; }
 	
+	void		InitialiseHitPoints( uint16 points );
 	sint16		HitPointMax() { return m_hitPointMax; }
 	sint16		HitPoints() { return m_hitPoints; }
 
+	void		InitialiseSpellPoints( uint16 points );
 	sint16		SpellPointMax() { return m_spellPoints; }
 	sint16		SpellPoints() { return m_spellPoints; }
 	
@@ -83,13 +87,16 @@ public:
 	bool		Hungry();
 	bool		Weak();
 	bool		Fainting();
+	bool		Polymorphed() { return m_polymorphed; }
 	bool		Paralyzed() { return m_paralyzed; }
 	
 	uint16		Hallucinating() { return m_hallucinating; }
 
 	void		TakeDamage( sint16 points );
 	void		Heal( uint32 points, uint32 extraPoints, bool cureSick, bool cureBlind );
+	void		ExerciseStatistic( statisticType type, bool up );
 	uint16		HallucinatingTime( uint16 timer ) { m_hallucinating = timer; }
+	void		RegainLevel();
 	
 	void		TurnPassed();	// a turn has passed.  Do whatever needs to be done.
 
