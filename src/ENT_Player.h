@@ -35,6 +35,9 @@ public:
 	virtual void	Move( hnDirection dir );
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
+
+	virtual bool	CanSee( const hnPoint & position );
+	
 	virtual void	PostTurn();
 };
 

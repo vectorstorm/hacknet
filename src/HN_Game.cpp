@@ -117,10 +117,8 @@ hnGame::ClientJoined(int playerID)
 	
 	netServer::GetInstance()->StartMetaPacket( playerID );
 	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
-	
 	mapBase *map = hnDungeon::GetLevel(z);
 	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight() );
-	
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 	
 	m_player[playerID]->PostTurn();
@@ -267,66 +265,8 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			{
 				if ( i != playerID && m_player[i] != NULL )
 				{
-					if ( abs(m_player[i]->GetPosition().x - iniPos.x) <= 1 && 
-						abs(m_player[i]->GetPosition().y - iniPos.y) <= 1 &&
-						m_player[i]->GetPosition().z == iniPos.z )
-					{
-						// if we have a connected nearby player who isn't the one we've just sent an update to...
-						netServer::GetInstance()->StartMetaPacket(i);
-						update.loc = iniPos;
-						update.width = 1;
-						update.height = 1;
-						update.material = new sint16;
-						update.wall = new sint16;
-						update.entityType = new sint8;
-						update.material[0] = hnDungeon::GetLevel(iniPos.z)->MaterialAt(iniPos.x,iniPos.y);
-						update.wall[0] = hnDungeon::GetLevel(iniPos.z)->WallAt(iniPos.x,iniPos.y);
-
-						entBase *entity = hnDungeon::GetLevel(iniPos.z)->MapTile(iniPos.x,iniPos.y).entity;
-						
-						if ( entity )
-							update.entityType[0] = entity->GetType();
-						else
-							update.entityType[0] = ENTITY_None;
-						
-						netServer::GetInstance()->SendMapUpdateBBox( update );
-						netServer::GetInstance()->TransmitMetaPacket();
-
-						delete update.material;
-						delete update.wall;
-						delete update.entityType;
-						// send this client info on the moving entity.
-					}
-					if ( abs(m_player[i]->GetPosition().x - endPos.x) <= 1 && 
-						abs(m_player[i]->GetPosition().y - endPos.y) <= 1 &&
-						m_player[i]->GetPosition().z == endPos.z )
-					{
-						// if we have a connected nearby player who isn't the one we've just sent an update to...
-						netServer::GetInstance()->StartMetaPacket(i);
-						update.loc = endPos;
-						update.width = 1;
-						update.height = 1;
-						update.material = new sint16;
-						update.wall = new sint16;
-						update.entityType = new sint8;
-						update.material[0] = hnDungeon::GetLevel(endPos.z)->MaterialAt(endPos.x,endPos.y);
-						update.wall[0] = hnDungeon::GetLevel(endPos.z)->WallAt(endPos.x,endPos.y);
-	
-						entBase *entity = hnDungeon::GetLevel(endPos.z)->MapTile(endPos.x,endPos.y).entity;
-						
-						if ( entity )
-							update.entityType[0] = entity->GetType();
-						else
-							update.entityType[0] = ENTITY_None;
-						
-						netServer::GetInstance()->SendMapUpdateBBox( update );
-						netServer::GetInstance()->TransmitMetaPacket();
-						
-						delete update.material;
-						delete update.wall;
-						delete update.entityType;
-						// send this client info on the moving entity.
-					}
+					if ( m_player[i]->CanSee(iniPos) || m_player[i]->CanSee(endPos) )
+						m_player[i]->PostTurn();
 				}
 			}
 		}

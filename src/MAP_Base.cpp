@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "MAP_Base.h"
 #include "OBJ_Base.h"
 #include "ENT_Base.h"
@@ -136,40 +137,115 @@ mapBase::PrepareVisibility()
 void
 mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 {
-        //---------------------------------------------------------------
-        //  Update visibility here.  For now, just update the 3x3 box
-        //  around the player.
-        //---------------------------------------------------------------
+	int range = 17;
 	
+	// Reset our visibility bounding box
 	m_bottomRightVisibility.Set(0,0);
 	m_topLeftVisibility.Set(m_width,m_height);
 	
-	hnPoint pos = position;
-	pos.x--;
-	pos.y--;
-
-	for ( int j = 0; j < 3; j++ )
-		for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < m_width; i++ )
+		for ( int j = 0; j < m_height; j++ )
 		{
-			int x = pos.x+i;
-			int y = pos.y+j;
-
-			MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
-			WallAt( x, y ) = sourceMap->WallAt( x, y );
-			if ( sourceMap->MapTile( x, y ).entity == NULL )
-				MapTile( x, y ).entityType = ENTITY_None;
-			else
-				MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
-
-			if ( x < m_topLeftVisibility.x )
-				m_topLeftVisibility.x = x;
-			if ( x > m_bottomRightVisibility.x )
-				m_bottomRightVisibility.x = x;
-			if ( y < m_topLeftVisibility.y )
-				m_topLeftVisibility.y = y;
-			if ( y > m_bottomRightVisibility.y )
-				m_bottomRightVisibility.y = y;
+			MapTile(i,j).visible = false;
 		}
+		
+	
+	
+	//-------------------------------------------------------------
+	//
+	//  Rogue-style LOS.. yes, it's not correct, but it's fast.
+	//  Real LOS is yet-to-be-implemented.
+	//
+	//-------------------------------------------------------------
+	
+	hnPoint pos = position;
+	
+	if ( WallAt( pos.x, pos.y ) == WALL_Room )
+	{
+		//---------------------------------------------------------------
+		//  Figure out what room we're in, then update visibility for the
+		//  whole room
+		//---------------------------------------------------------------
+		mapRoom *where = NULL;
+		
+		for ( int i = 0; i < sourceMap->m_roomCount; i++ )
+		{
+			mapRoom *room = sourceMap->m_room[i];
+			
+			if ( room )
+			{
+				if ( (room->left <= pos.x) && (room->right >= pos.x) &&
+					(room->top <= pos.y) && (room->bottom >= pos.y) )
+					{
+						where = room;
+						break;
+					}
+			}
+		}
+
+		if ( where )
+		{
+			for ( int y = where->top-1; y <= where->bottom+1; y++ )
+				for ( int x = where->left-1; x <= where->right+1; x++ )
+				{
+					MapTile(x,y).visible = true;
+					MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
+					WallAt( x, y ) = sourceMap->WallAt( x, y );
+					if ( sourceMap->MapTile( x, y ).entity == NULL )
+						MapTile( x, y ).entityType = ENTITY_None;
+					else
+						MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
+	
+					if ( x < m_topLeftVisibility.x )
+						m_topLeftVisibility.x = x;
+					if ( x > m_bottomRightVisibility.x )
+						m_bottomRightVisibility.x = x;
+					if ( y < m_topLeftVisibility.y )
+						m_topLeftVisibility.y = y;
+					if ( y > m_bottomRightVisibility.y )
+						m_bottomRightVisibility.y = y;
+				}
+		
+		}
+		else
+		{
+			printf("Couldn't figure out what room at (%d,%d)\n", pos.x, pos.y);
+			assert(0);
+		}
+	}
+	else
+	{
+	        //---------------------------------------------------------------
+	        //  Update visibility here.  In a corridor, just update the 3x3 box
+	        //  around the player.
+	        //---------------------------------------------------------------
+		pos.x--;
+		pos.y--;
+
+		for ( int j = 0; j < 3; j++ )
+			for ( int i = 0; i < 3; i++ )
+			{
+				int x = pos.x+i;
+				int y = pos.y+j;
+				
+				MapTile(x,y).visible = true;
+				MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
+				WallAt( x, y ) = sourceMap->WallAt( x, y );
+				if ( sourceMap->MapTile( x, y ).entity == NULL )
+					MapTile( x, y ).entityType = ENTITY_None;
+				else
+					MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
+
+				if ( x < m_topLeftVisibility.x )
+					m_topLeftVisibility.x = x;
+				if ( x > m_bottomRightVisibility.x )
+					m_bottomRightVisibility.x = x;
+				if ( y < m_topLeftVisibility.y )
+					m_topLeftVisibility.y = y;
+				if ( y > m_bottomRightVisibility.y )
+					m_bottomRightVisibility.y = y;
+			}
+	}
 }
 
 

@@ -18,6 +18,12 @@ April 29, 2001:
   place (easy to do, with NetHack's codebase!)  Also, I've put in some
   early scaffolding for the near-future implementation of line-of-sight.
 
+  Implemented rogue-style line-of-sight.  This is really a very poor
+  implementation, and the rogue-style line-of-sight algorithm is poor,
+  too, in this day and age.  Currently, you can see one square away
+  in hallways, and the full room when standing inside a room.  Proper
+  Line Of Sight code is a very, very big item on the TODO list, now.
+
 April 28, 2001:
   Client now sends name to server after connecting, and the server 
   displays the name in its packet trace messages (in addition to the 

@@ -28,6 +28,8 @@ public:
 	int			border;			// are we in the 'border zone' around a room?  (And thus cannot be used
 							// as part of a room)
 	bool			visionBlocked;		// we're blocked if we're a wall or under other conditions.
+	bool			visible;		// can we see this square?
+	bool			lit;			// light on this square?
 };
 
 class mapRoom

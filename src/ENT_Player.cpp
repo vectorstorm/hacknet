@@ -55,6 +55,14 @@ entPlayer::Listen( char * message )
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }
 
+bool
+entPlayer::CanSee( const hnPoint & where )
+{
+	mapBase *map = m_map[ GetPosition().z ];
+
+	return map->MapTile(where.x, where.y).visible;
+}
+
 void
 entPlayer::PostTurn()
 {
