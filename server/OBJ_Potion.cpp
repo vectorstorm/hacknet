@@ -23,7 +23,10 @@ objPotion::Quaff(entBase *entity, hnPlayer *player)
 	assert(entity);		// Well _somebody_ must be quaffing me!
 	
 	const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
-	char buffer[128] = "That was refreshing!";
+
+	entity->DoEffect( proto.property, m_blesscurse, proto.type );
+	
+	/*char buffer[128] = "That was refreshing!";
 	
 	hnStatus *status = entity->GetStatus();
 	
@@ -113,7 +116,7 @@ objPotion::Quaff(entBase *entity, hnPlayer *player)
 	else
 	{
 		// TODO: monster quaffed us, so register a 'see' event.
-	}
+	}*/
 
 	m_count--;
 	

@@ -196,7 +196,7 @@ hnPlayer::Drop( const objDescription &object, uint8 inventorySlot )
 	}
 	else
 	{
-		printf("Player requested illegal drop.\n");
+		printf("Player requested illegal drop of inventorySlot %d\n", inventorySlot);
 	}
 }
 

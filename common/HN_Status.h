@@ -95,6 +95,7 @@ public:
 	void		TakeDamage( sint16 points );
 	void		Heal( uint32 points, uint32 extraPoints, bool cureSick, bool cureBlind );
 	void		ExerciseStatistic( statisticType type, bool up );
+	bool		IncrementStatistic( statisticType type, bool up ); // return success
 	uint16		HallucinatingTime( uint16 timer ) { m_hallucinating = timer; }
 	void		RegainLevel();
 	

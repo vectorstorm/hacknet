@@ -370,6 +370,7 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 						}
 						else
 							TextMessage("You can't quaff that!");
+						break;
 					case ISM_Drop:
 						m_mode = MODE_Normal;
 						DropCommand(inventorySelected);

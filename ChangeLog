@@ -6,6 +6,18 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 24, 2002:
+  * ENT_Base.cpp: Moved potion effects into entBase::DoEffect().
+  * OBJ_Potion.cpp: Now calls entBase::DoEffect() to perform
+    potion function.  This means that all effects from potions
+    and scrolls are now located in one place, which means that
+    it'll be just a simple data change to add (for example) a scroll
+    of extra healing to the game, if someone should take it into
+    their heads to do so.
+  * HN_DisplayTTY.cpp: Fixed accidental sending of 'drop' packet
+    immediately after each 'quaff' packet.  (Missing 'break'
+    statement in a switch statement)
+
 February 20, 2002:
   * HN_DisplayTTY.cpp:  Fixed to use default background colour instead
     of forcing black.

@@ -193,6 +193,34 @@ hnStatus::ExerciseStatistic( statisticType type, bool up )
 	}
 }
 
+bool
+hnStatus::IncrementStatistic( statisticType type, bool up )
+{
+	bool success = false;
+	
+	// TODO: fail if we have fixed abilities.
+	
+	//TODO: if ( type == Intelligence || type == Wisdom && m_dunce )
+	//{
+	//	return false;
+	//}
+	
+	if ( up && m_statistic[type] < 18 )	// TODO: correct attribute maximum
+	{
+		m_statistic[type]++;
+		m_exercise[type] = 0;
+		success = true;
+	}
+	else if ( !up && m_statistic[type] > 3 )
+	{
+		m_statistic[type]--;
+		m_exercise[type] = 0;
+		success = true;
+	}
+	
+	return success;
+}
+
 void
 hnStatus::RegainLevel()
 {

@@ -14,14 +14,14 @@ class objBase
 	uint32		m_itemID;	// what are we, exactly?
 	hnPoint		m_position;
 	
-	uint8		m_blesscurse;
-
 
 	objBase *	m_next;
 	objBase *	m_prev;
 	
 protected:
+
 	uint16		m_flags;
+	uint8		m_blesscurse;
 	uint8		m_count;	// how many of us are there?
 
 	void		Unlink();	

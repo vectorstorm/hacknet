@@ -1,13 +1,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "HN_Properties.h"
+#include "HN_Random.h"
 #include "ENT_Base.h"
 #include "OBJ_Base.h"
+#include "OBJ_Types.h"
 #include "MAP_Base.h"
 #include "HN_Game.h"
 #include "HN_Dungeon.h"
 #include "HN_Player.h"
 #include "HN_Group.h"
+#include "HN_Status.h"
 
 #include "assert.h"
 
@@ -54,6 +58,109 @@ void
 entBase::SetPosition( const hnPoint & pos )
 {
 	m_position = pos;
+}
+
+void
+entBase::DoEffect( uint8 property, uint8 bc, objType type )
+{
+	bool blessed 	= (bc == BC_Blessed);
+	bool cursed 	= (bc == BC_Cursed);
+	bool uncursed 	= (bc == BC_Uncursed);
+
+	int blessFactor = ((blessed)?1:0) - ((cursed)?1:0);
+	
+	char buffer[128];
+
+	if ( type == OBJ_TYPE_Potion )
+		sprintf(buffer,"That was refreshing!");
+	else if ( type == OBJ_TYPE_Scroll )
+		sprintf(buffer,"What an interesting scroll!");
+	else
+		sprintf(buffer,"Odd...");
+	
+	switch( property )
+	{
+		case PROP_Gain_Ability:
+			if ( cursed )
+			{
+				if ( type == OBJ_TYPE_Potion )
+					sprintf(buffer,"Ulch!  That potion tasted foul!");
+				else
+					sprintf(buffer,"You feel your powers diminishing!");
+			}
+			else
+			{
+				if ( blessed )
+				{
+					// increase all stats
+					for ( int i = 0; i < hnStatus::MAX_STATISTICS; i++ )
+						GetStatus()->IncrementStatistic(i,true);
+				}
+				else
+				{
+					// try up to six times to increase a stat.
+					
+					for ( int j = 0; j < 6; j++ )
+					{
+						int i = hnRandom::GetInstance()->Get(hnStatus::MAX_STATISTICS);
+						if ( GetStatus()->IncrementStatistic(i,true) )
+							break;
+					}
+				}
+			}
+			break;
+		case PROP_Restore_Ability:
+			if ( cursed )
+				sprintf(buffer,"Ulch!  This makes you feel mediocre!");
+			else
+			{
+				sprintf(buffer,"Wow, this makes you feel %s",blessed?"great":"good");
+			}
+			break;
+		case PROP_Paralyse:
+			break;
+		case PROP_Heal:
+			sprintf(buffer,"You feel better.");
+			GetStatus()->Heal(
+					hnRandom::GetInstance()->Dice( 6+2*blessFactor, 4 ),
+					(!cursed) ? 1 : 0,
+					!blessed, !cursed 
+					);
+			GetStatus()->ExerciseStatistic( hnStatus::Constitution, true );
+			break;
+		case PROP_Extra_Heal:
+			sprintf(buffer,"You feel much better.");
+			GetStatus()->Heal(
+					hnRandom::GetInstance()->Dice( 6+2*blessFactor, 8 ),
+					blessed ? 5 : ((!cursed) ? 2 : 0),
+					!blessed, !cursed 
+					);
+			GetStatus()->HallucinatingTime(0);
+			GetStatus()->ExerciseStatistic( hnStatus::Strength, true );
+			GetStatus()->ExerciseStatistic( hnStatus::Constitution, true );
+			break;
+		case PROP_Gain_Level:
+			break;
+		case PROP_Gain_Energy:
+			break;
+		case PROP_Enlightenment:
+			break;
+		case PROP_Detect_Objects:
+			break;
+		case PROP_Sleep:
+			break;
+		case PROP_Booze:
+			break;
+		case PROP_Sickness:
+			break;
+	}
+
+	if ( m_player )
+		m_player->Listen(buffer);
+	else
+	{
+		// TODO: monster quaffed us, so register a 'see' event.
+	}
 }
 
 bool

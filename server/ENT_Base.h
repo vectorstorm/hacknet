@@ -58,6 +58,8 @@ public:
 	
 	virtual void		Think() {}			// Called to decide what to do each turn.
 
+	virtual void		DoEffect( uint8 property, uint8 bcstatus, objType type );
+
 	virtual bool		IsValidMove( hnDirection direction );	// Called to check to see if a move is legal.
 	virtual bool		IsValidMoveDestination( const hnPoint & destination );
 	virtual bool		FindMoveDestination( hnPoint & destination, hnDirection direction );  // pass in the direction and a place to store the destination point.  Returns true if it's a legal move.

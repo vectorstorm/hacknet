@@ -251,6 +251,7 @@ hnGame::ClientTake(int playerID, objDescription &desc, uint8 stackID)
 void
 hnGame::ClientDrop(int playerID, objDescription &desc, uint8 inventorySlot)
 {
+	printf("Player %d requests drop of inventory slot %d.\n", playerID, inventorySlot );
 	m_player[playerID]->Drop( desc, inventorySlot );
 	ClientTurn();
 }
