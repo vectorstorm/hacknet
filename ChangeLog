@@ -15,6 +15,8 @@ May 16, 2001:
     construction.  This in preparation for a combat system.
   * HN_Status.cpp/.h:  Added common source/header files for a class to
     manage player/monster statistics and status ailments.
+  * Renamed some networking functions, added ability to send unsigned
+    8,16,32-bit values within packets.
 
 May 13, 2001:
   * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.

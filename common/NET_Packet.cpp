@@ -13,21 +13,17 @@
 //  into a buffer which will eventually be transmitted over a network.
 //
 //  Points of note:  The packet structure is defined by calls on the
-//  base 'netMetaPacket' class.  Calls of Char(), Long(), String(), etc.
+//  base 'netMetaPacket' class.  Calls of Sint8(), Sint32(), String(), etc.
 //  are pure virtual functions, implemented by the derived input and
 //  output functions to read/write the appropriate types.  This means
 //  that we don't have to worry about keeping our packet reading/writing
 //  algorithms in synch with each other!  (Though we really should check
 //  that our version numbers are identical!  This is a big TODO.)
 //
-//  Another point to note is that the functions
-//  Char(), Short(), and Long() use NETWORK chars, shorts, and longs.
-//  That is, 8 bit, 16 bit, and 32 bit, respectively -- not the native
-//  machine's chars, shorts, and longs, which could vary in size across
-//  implementations.  To enforce this, we use uint8/sint8 to denote an
-//  eight bit unsigned/signed int, and similar types for 16 and 32 bit
-//  numbers.  These are typedefed in HN_Types.h from the standard
-//  network integer types u_int8_t (uint8_t, under *BSD).
+//  We use uint8/sint8 to denote an eight bit unsigned/signed int, and 
+//  similar types for 16 and 32 bit numbers.  These are typedefed in 
+//  HN_Types.h from the standard network integer types u_int*_t 
+//  (uint*_t, under *BSD).
 //
 //--------------------------------------------------------------------------
 
@@ -57,10 +53,10 @@ netMetaPacket::ClientLocation( netClientLocation &packet )
 	m_error = false;
 	
 	sint8 type = SPT_ClientLocation;
-	Char( type );
-	Char( packet.loc.x );
-	Char( packet.loc.y );
-	Char( packet.loc.z );
+	Sint8( type );
+	Sint8( packet.loc.x );
+	Sint8( packet.loc.y );
+	Sint8( packet.loc.z );
 
 	return (!m_error);
 }
@@ -71,13 +67,13 @@ netMetaPacket::ClientStatistics( netClientStatistics &packet )
 	m_error = false;
 
 	sint8 type = SPT_ClientStatistics;
-	Char( type );
-	Char( packet.strength );
-	Char( packet.dexterity );
-	Char( packet.constitution );
-	Char( packet.intelligence );
-	Char( packet.wisdom );
-	Char( packet.charisma );
+	Sint8( type );
+	Sint8( packet.strength );
+	Sint8( packet.dexterity );
+	Sint8( packet.constitution );
+	Sint8( packet.intelligence );
+	Sint8( packet.wisdom );
+	Sint8( packet.charisma );
 
 	return (!m_error);
 }
@@ -88,9 +84,9 @@ netMetaPacket::ClientHitPoints( netClientHitPoints &packet )
 	m_error = false;
 
 	sint8 type = SPT_ClientHitPoints;
-	Char( type );
-	Short( packet.maxHitPoints );
-	Short( packet.hitPoints );
+	Sint8( type );
+	Sint16( packet.maxHitPoints );
+	Sint16( packet.hitPoints );
 
 	return (!m_error);
 }
@@ -101,9 +97,9 @@ netMetaPacket::ClientSpellPoints( netClientSpellPoints &packet )
 	m_error = false;
 
 	sint8 type = SPT_ClientSpellPoints;
-	Char( type );
-	Short( packet.maxSpellPoints );
-	Short( packet.spellPoints );
+	Sint8( type );
+	Sint16( packet.maxSpellPoints );
+	Sint16( packet.spellPoints );
 
 	return (!m_error);
 }
@@ -114,9 +110,9 @@ netMetaPacket::ClientExperience( netClientExperience &packet )
 	m_error = false;
 
 	sint8 type = SPT_ClientExperience;
-	Char( type );
-	Short( packet.experiencePoints );
-	Char( packet.level );
+	Sint8( type );
+	Sint16( packet.experiencePoints );
+	Sint8( packet.level );
 
 	return (!m_error);
 }
@@ -128,7 +124,7 @@ netMetaPacket::TextMessage( char * buffer, sint16 & bufferlength )
 	m_error = false;
 	
 	sint8 type = SPT_Message;
-	Char(type);
+	Sint8(type);
 	String( buffer, bufferlength );
 	
 	return (!m_error);
@@ -140,12 +136,12 @@ netMetaPacket::MapTile( netMapTile &packet )
 	m_error = false;
 	
 	sint8 type = SPT_MapTile;
-	Char( type );
-	Char( packet.loc.x );
-	Char( packet.loc.y );
-	Char( packet.loc.z );
-	Short( packet.material );
-	Short( packet.wall );
+	Sint8( type );
+	Sint8( packet.loc.x );
+	Sint8( packet.loc.y );
+	Sint8( packet.loc.z );
+	Sint16( packet.material );
+	Sint16( packet.wall );
 
 	return (!m_error);
 }
@@ -156,8 +152,8 @@ netMetaPacket::DungeonReset( sint8 & levelCount )
 	m_error = false;
 
 	sint8 type = SPT_DungeonReset;
-	Char(type);
-	Char( levelCount );
+	Sint8(type);
+	Sint8( levelCount );
 
 	return (!m_error);
 }
@@ -168,10 +164,10 @@ netMetaPacket::MapReset( netMapReset &packet )
 	m_error = false;
 	
 	sint8 type = SPT_MapReset;
-	Char( type );
-	Char( packet.width );
-	Char( packet.height );
-	Char( packet.depth );
+	Sint8( type );
+	Sint8( packet.width );
+	Sint8( packet.height );
+	Sint8( packet.depth );
 	
 	return (!m_error);
 }
@@ -194,12 +190,12 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 	m_error = false;
 
 	sint8 type = SPT_MapUpdateBBox;
-	Char( type );
-	Char( packet.loc.x );
-	Char( packet.loc.y );
-	Char( packet.loc.z );
-	Char( packet.width );
-	Char( packet.height );
+	Sint8( type );
+	Sint8( packet.loc.x );
+	Sint8( packet.loc.y );
+	Sint8( packet.loc.z );
+	Sint8( packet.width );
+	Sint8( packet.height );
 	
 	sint32 nTiles = (sint32)packet.width * (sint32)packet.height;
 	
@@ -211,11 +207,11 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 	}
 	
 	for ( int i = 0; i < nTiles; i++ )
-		Short( packet.material[i] );
+		Sint16( packet.material[i] );
 	for ( int i = 0; i < nTiles; i++ )
-		Short( packet.wall[i] );
+		Sint16( packet.wall[i] );
 	for ( int i = 0; i < nTiles; i++ )
-		Char( packet.entityType[i] );
+		Sint8( packet.entityType[i] );
 
 	return (!m_error);
 }
@@ -226,11 +222,11 @@ netMetaPacket::MapEntity( netMapEntity &packet )
 	m_error = false;
 
 	sint8 type = SPT_MapEntity;
-	Char(type);
-	Char(packet.loc.x);
-	Char(packet.loc.y);
-	Char(packet.loc.z);
-	Char(packet.objectType);
+	Sint8(type);
+	Sint8(packet.loc.x);
+	Sint8(packet.loc.y);
+	Sint8(packet.loc.z);
+	Sint8(packet.objectType);
 
 	return (!m_error);
 }
@@ -241,7 +237,7 @@ netMetaPacket::MapObjectList( netMapObjectList &packet )
 	m_error = false;
 	
 	sint8 type = SPT_MapObjectList;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -252,10 +248,10 @@ netMetaPacket::GroupData( netGroupData &packet )
 	m_error = false;
 
 	sint8 type = SPT_GroupData;
-	Char( type );
-	Char( packet.memberCount );
-	Char( packet.memberTurns );
-	Char( packet.haveTurnFromClient );
+	Sint8( type );
+	Sint8( packet.memberCount );
+	Sint8( packet.memberTurns );
+	Sint8( packet.haveTurnFromClient );
 
 	return (!m_error);
 }
@@ -266,7 +262,7 @@ netMetaPacket::Refresh()
 	m_error = false;
 	
 	sint8 type = SPT_Refresh;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -277,7 +273,7 @@ netMetaPacket::JoinOK()
 	m_error = false;
 
 	sint8 type = SPT_JoinOk;
-	Char( type );
+	Sint8( type );
 
 	return (!m_error);
 }
@@ -288,7 +284,7 @@ netMetaPacket::QuitConfirm()
 	m_error = false;
 	
 	sint8 type = SPT_QuitConfirm;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -299,7 +295,7 @@ netMetaPacket::SaveConfirm()
 	m_error = false;
 	
 	sint8 type = SPT_SaveConfirm;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -310,7 +306,7 @@ netMetaPacket::BadPacketNotice()
 	m_error = false;
 	
 	sint8 type = SPT_BadPacketNotice;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -322,8 +318,8 @@ netMetaPacket::ClientMove( sint8 & direction )
 	m_error = false;
 	
 	sint8 type = CPT_Move;
-	Char( type );
-	Char( direction );
+	Sint8( type );
+	Sint8( direction );
 	
 	return (!m_error);
 }
@@ -334,8 +330,8 @@ netMetaPacket::ClientAttack( sint8 & direction )
 	m_error = false;
 	
 	sint8 type = CPT_Attack;
-	Char( type );
-	Char( direction );
+	Sint8( type );
+	Sint8( direction );
 	
 	return (!m_error);
 }
@@ -346,7 +342,7 @@ netMetaPacket::ClientWait( )
 	m_error = false;
 	
 	sint8 type = CPT_Wait;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -358,7 +354,7 @@ netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 	m_error = false;
 	
 	sint8 type = CPT_Name;
-	Char(type);
+	Sint8(type);
 	String( namebuffer, bufferlength );
 	
 	return (!m_error);
@@ -370,7 +366,7 @@ netMetaPacket::ClientTalk( char * talkbuffer, sint16 & bufferlength )
 	m_error = false;
 	
 	sint8 type = CPT_Talk;
-	Char(type);
+	Sint8(type);
 	String( talkbuffer, bufferlength );
 	
 	return (!m_error);
@@ -382,8 +378,8 @@ netMetaPacket::ClientRequestRefresh( sint8 & level )
 	m_error = false;
 
 	sint8 type = CPT_RequestRefresh;
-	Char(type);
-	Char(level);
+	Sint8(type);
+	Sint8(level);
 
 	return (!m_error);
 }
@@ -394,7 +390,7 @@ netMetaPacket::ClientQuit()
 	m_error = false;
 	
 	sint8 type = CPT_Quit;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -405,7 +401,7 @@ netMetaPacket::ClientSave()
 	m_error = false;
 	
 	sint8 type = CPT_Save;
-	Char( type );
+	Sint8( type );
 	
 	return (!m_error);
 }
@@ -425,7 +421,7 @@ netMetaPacketInput::~netMetaPacketInput()
 }
 
 bool
-netMetaPacketInput::Char( sint8 & result )
+netMetaPacketInput::Sint8( sint8 & result )
 {
 	bool success = false;
 	
@@ -442,9 +438,28 @@ netMetaPacketInput::Char( sint8 & result )
 	
 	return (!m_error);
 }
-	
+
 bool
-netMetaPacketInput::Short( sint16 & result )
+netMetaPacketInput::Uint8( uint8 & result )
+{
+	bool success = false;
+	
+	if ( m_bufferDistance < m_bufferLength )
+	{
+		result = *((uint8 *)m_bufferPoint);
+		m_bufferPoint += 1;				// we consider a char to be 1 byte.
+		m_bufferDistance += 1;
+		success = true;
+	}
+	
+	if ( !success )
+		m_error = true;
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacketInput::Sint16( sint16 & result )
 {
 	bool success = false;
 	
@@ -463,7 +478,26 @@ netMetaPacketInput::Short( sint16 & result )
 }
 
 bool
-netMetaPacketInput::Long( sint32 & result )
+netMetaPacketInput::Uint16( uint16 & result )
+{
+	bool success = false;
+	
+	if ( m_bufferDistance < m_bufferLength )
+	{
+		result = ntohs(*((uint16 *)m_bufferPoint));
+		m_bufferPoint += sizeof(uint16);
+		m_bufferDistance += sizeof(uint16);
+		success = true;
+	}
+	
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
+}
+
+bool
+netMetaPacketInput::Sint32( sint32 & result )
 {
 	bool success = false;
 	
@@ -482,6 +516,26 @@ netMetaPacketInput::Long( sint32 & result )
 }
 
 bool
+netMetaPacketInput::Uint32( uint32 & result )
+{
+	bool success = false;
+	
+	if ( m_bufferDistance < m_bufferLength )
+	{
+		result = ntohl(*((uint32 *)m_bufferPoint));
+		m_bufferPoint += sizeof(uint32);
+		m_bufferDistance += sizeof(uint32);
+		success = true;
+	}
+
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
+}
+
+
+bool
 netMetaPacketInput::String( char * string, sint16 & stringLength )
 {	
 	bool success = true;		// we always succeed, because this
@@ -495,7 +549,7 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 	sint16 packetStringLength;	// how much is actually stored in the packet
 	
 	// reading packet..
-	Short(packetStringLength);
+	Sint16(packetStringLength);
 	length = packetStringLength;
 
 	if ( length > stringLength-1 )
@@ -505,7 +559,7 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 	for ( int i = 0; i < length; i++ )
 	{
 		sint8 thebyte;
-		Char(thebyte);
+		Sint8(thebyte);
 		string[i] = thebyte;
 	}
 	string[length] = '\0';
@@ -516,7 +570,7 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 	// fail!)
 	sint8 temp;
 	for ( int i = length; i < packetStringLength; i++ )
-		Char(temp);
+		Sint8(temp);
 		
 	// if we're reading a packet, be sure we stick a null on the end, for safety.
 	string[stringLength-1] = '\0';
@@ -528,7 +582,7 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 }
 
 sint8
-netMetaPacketInput::PeekChar()
+netMetaPacketInput::PeekSint8()
 {
 	sint8 result = -1;	
 	
@@ -541,7 +595,7 @@ netMetaPacketInput::PeekChar()
 }
 	
 sint16
-netMetaPacketInput::PeekShort()
+netMetaPacketInput::PeekSint16()
 {
 	sint16 result = -1;
 	
@@ -554,7 +608,7 @@ netMetaPacketInput::PeekShort()
 }
 
 sint32
-netMetaPacketInput::PeekLong()
+netMetaPacketInput::PeekSint32()
 {
 	sint32 result = -1;
 	
@@ -583,7 +637,7 @@ netMetaPacketOutput::~netMetaPacketOutput()
 }
 
 bool
-netMetaPacketOutput::Char( sint8 & result )
+netMetaPacketOutput::Sint8( sint8 & result )
 {
 	bool success = false;
 	
@@ -601,7 +655,26 @@ netMetaPacketOutput::Char( sint8 & result )
 }
 	
 bool
-netMetaPacketOutput::Short( sint16 & result )
+netMetaPacketOutput::Uint8( uint8 & result )
+{
+	bool success = false;
+	
+	if ( m_bufferDistance < m_bufferLength )
+	{
+		*((uint8 *)m_bufferPoint++) = result;
+		m_bufferDistance += sizeof(uint8);
+		success = true;
+	}
+
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
+}
+	
+
+bool
+netMetaPacketOutput::Sint16( sint16 & result )
 {
 	bool success = false;
 	
@@ -620,7 +693,27 @@ netMetaPacketOutput::Short( sint16 & result )
 }
 
 bool
-netMetaPacketOutput::Long( sint32 & result )
+netMetaPacketOutput::Uint16( uint16 & result )
+{
+	bool success = false;
+	
+	if ( m_bufferDistance < m_bufferLength )
+	{
+		*((uint16 *)m_bufferPoint) = htons(result);
+		m_bufferPoint += sizeof(uint16);
+		m_bufferDistance += sizeof(uint16);
+		success = true;
+	}
+
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
+}
+
+
+bool
+netMetaPacketOutput::Sint32( sint32 & result )
 {
 	bool success = false;
 	
@@ -639,6 +732,26 @@ netMetaPacketOutput::Long( sint32 & result )
 }
 
 bool
+netMetaPacketOutput::Uint32( uint32 & result )
+{
+	bool success = false;
+	
+	if ( m_bufferDistance < m_bufferLength )
+	{
+		*((uint32 *)m_bufferPoint) = htonl(result);
+		m_bufferPoint += sizeof(uint32);
+		m_bufferDistance += sizeof(uint32);
+		success = true;
+	}
+
+	if ( !success )
+		m_error = true;
+
+	return (!m_error);
+}
+
+
+bool
 netMetaPacketOutput::String( char * string, sint16 & stringLength )
 {
 	bool success = true;		// we always succeed!
@@ -650,12 +763,12 @@ netMetaPacketOutput::String( char * string, sint16 & stringLength )
 		length = stringLength;
 	}
 	
-	Short(length);
+	Sint16(length);
 	
 	for ( int i = 0; i < length; i++ )
 	{
 		sint8 thebyte = string[i];
-		Char(thebyte);
+		Sint8(thebyte);
 	}
 	
 	if ( !success )

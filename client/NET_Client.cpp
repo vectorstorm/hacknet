@@ -171,7 +171,7 @@ netClient::Go()
 		
 		while ( !packet->Done() )
 		{
-			sint8 type = packet->PeekChar();
+			sint8 type = packet->PeekSint8();
 #define MAX_MESSAGE_BYTES	(256)
 			char	messageBuffer[MAX_MESSAGE_BYTES];
 			sint16 	messageBufferLength = MAX_MESSAGE_BYTES;
@@ -238,14 +238,14 @@ netClient::Go()
 					delete [] bbox.entityType;
 					break;
 				case SPT_BadPacketNotice:
+					packet->BadPacketNotice();
 					delete m_display;
-					packet->Char(type);
 					printf("Server killed us for sending an unknown packet.  Version mismatch?\n");
 					m_done = true;
 					//exit(1);
 					break;
 				case SPT_QuitConfirm:
-					packet->Char(type);
+					packet->QuitConfirm();
 					m_done = true;
 					break;
 				default:

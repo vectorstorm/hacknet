@@ -172,9 +172,12 @@ public:
 	bool			ClientQuit();
 
 	
-	virtual bool 		Char( sint8 & ) = 0;
-	virtual bool 		Short( sint16 & ) = 0;
-	virtual bool 		Long( sint32 & ) = 0;
+	virtual bool 		Sint8( sint8 & ) = 0;
+	virtual bool 		Sint16( sint16 & ) = 0;
+	virtual bool 		Sint32( sint32 & ) = 0;
+	virtual bool 		Uint8( uint8 & ) = 0;
+	virtual bool 		Uint16( uint16 & ) = 0;
+	virtual bool 		Uint32( uint32 & ) = 0;
 	virtual bool		String( char *, sint16 & ) = 0;
 
 	virtual	bool		Input() { return false; }
@@ -187,14 +190,17 @@ public:
 				netMetaPacketInput(char *packet, uint32 bufferLength);
 	virtual			~netMetaPacketInput();
 
-	virtual bool 		Char( sint8 & );
-	virtual bool 		Short( sint16 & );
-	virtual bool 		Long( sint32 & );
+	virtual bool 		Sint8( sint8 & );
+	virtual bool 		Sint16( sint16 & );
+	virtual bool 		Sint32( sint32 & );
+	virtual bool 		Uint8( uint8 & );
+	virtual bool 		Uint16( uint16 & );
+	virtual bool 		Uint32( uint32 & );
 	virtual bool		String( char *, sint16 & );
 	
-	virtual sint8 		PeekChar();
-	virtual sint16 		PeekShort();
-	virtual sint32		PeekLong();
+	virtual sint8 		PeekSint8();
+	virtual sint16 		PeekSint16();
+	virtual sint32		PeekSint32();
 	
 	virtual	bool		Input() { return true; }
 };
@@ -207,9 +213,12 @@ public:
 	
 	virtual long		GetBufferLength() { return m_bufferDistance; }	// tell how many bytes we actually wrote, not how big our buffer was
 
-	virtual bool 		Char( sint8 & );
-	virtual bool 		Short( sint16 & );
-	virtual bool 		Long( sint32 & );
+	virtual bool 		Sint8( sint8 & );
+	virtual bool 		Sint16( sint16 & );
+	virtual bool 		Sint32( sint32 & );
+	virtual bool 		Uint8( uint8 & );
+	virtual bool 		Uint16( uint16 & );
+	virtual bool 		Uint32( uint32 & );
 	virtual bool		String( char *, sint16 & );
 	
 	virtual	bool		Output() { return true; }

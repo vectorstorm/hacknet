@@ -310,7 +310,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	
 	while ( !packet->Done() && okay )
 	{
-		sint8 type = packet->PeekChar();
+		sint8 type = packet->PeekSint8();
 		sint8 direction;
 		sint8 level;
 		
