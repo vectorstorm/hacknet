@@ -8,6 +8,8 @@ entGridBug::entGridBug(const hnPoint & where, bool hasPlayer):
 {
 	// gridbugs have 1 or 2 hit points.
 	m_hitPoints = (rand() % 1) + 1;
+
+	SetName("grid bug");
 }
 
 entGridBug::~entGridBug()

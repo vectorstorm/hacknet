@@ -4,6 +4,7 @@
 entHuman::entHuman(const hnPoint & where, bool hasPlayer):
 	entBase( ENTITY_Human, where, hasPlayer )
 {
+	SetName("human");
 }
 
 entHuman::~entHuman()

@@ -11,6 +11,8 @@ May 16, 2001:
   * HN_Server.cpp, HN_Player.cpp, HN_Group.cpp:  Optimised network packets
     again so group data is only sent when it actually changes.  Server now
     aborts sending empty packets, instead of actually sending them.
+  * ENT_GridBug.cpp, ENT_Human.cpp:  Entities now set their names during
+    construction.  This in preparation for a combat system.
 
 May 13, 2001:
   * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.
