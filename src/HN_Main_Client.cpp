@@ -12,8 +12,22 @@ int main( int argc, char *argv[] )
 {
 	printf("HackNet Client starting up...\n");
 
-	printf("Starting hacknet client...\n");
+	// parse arguments..
+
+	char * host = "localhost";
+	if ( argc > 0 )
+	{
+		//for (int i = 1; i < argc-1; i++ )
+		//{
+		//	// parse options here
+		//}
 		
+		host = argv[argc-1];
+	}
+
+
+	printf("Starting hacknet client...\n");
+	
 	hnDisplay *display = NULL;
 #ifdef TTY_DISPLAY
 	display = new hnDisplayTTY;
@@ -21,7 +35,7 @@ int main( int argc, char *argv[] )
 
 	if ( display )
 	{
-		netClient *client = new netClient(display, "localhost");
+		netClient *client = new netClient(display, host);
 		client->Go();
 		delete client;
 	}

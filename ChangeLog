@@ -1,3 +1,15 @@
+April 24, 2001:
+  Long day at work -- not much time to work on HackNet.  Added ability
+  for the client to connect to an internet server, and tested it on my
+  local LAN.  No tests yet over the real Internet.  Note that we're using
+  TCP, and so delivery is guaranteed.. but this also means that we have
+  extra header data added to each packet.  Since most of our packets are
+  quite small, it might be silly to use TCP -- we've almost always got
+  larger packet headers than information in the packet!  Perhaps a switch
+  to UDP is in the cards...  On the other hand, automatic guaranteed 
+  delivery is a luxury I'm not eager to throw out.
+
+---
 April 23, 2001:
   Minor adjustment to temporary movement code still in HN_Game.cpp to fix
   a potential bug.  Before, if a non-moving player saw a monster move 
