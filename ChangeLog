@@ -18,6 +18,10 @@ July 2, 2001:
   * Cleaned up some map update handling code & fixed a relatively
     new crash when refreshing level contents (occurred when going
     up and down levels)
+  * Added a 'dagger' weapon type, just to test the method of
+    grabbing an object's name, as mentioned above.  The more I
+    think about this, the more I think that objects and entities
+    will need to be broken off into their own libraries..
 
 July 1, 2001:
   * Client can now 'pick up' objects with ',' -- no inventory yet,
