@@ -62,6 +62,12 @@ struct netClientExperience
 	uint8 level;
 };
 
+struct netClientTake
+{
+	objDescription 	object;
+	uint8		stackID;
+};
+
 struct netMapTile
 {
 	hnPoint loc;
@@ -124,6 +130,7 @@ enum
 	CPT_Attack,	// an attack is actually different from a move, so we don't attack people by accident.
 	CPT_Name,
 	CPT_Talk,
+	CPT_TakeObject,
 	CPT_RequestRefresh,	// request refreshed information on this level
 	CPT_Save,	// Save and quit
 	CPT_Quit,	// Quit without saving.
@@ -176,6 +183,7 @@ public:
 	bool			ClientWait();
 	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientTalk( char * talkbuffer, sint16 & bufferLength );
+	bool			ClientTake( netClientTake &packet );
 	bool			ClientRequestRefresh( sint8 & level );
 	bool			ClientSave();
 	bool			ClientQuit();
@@ -189,6 +197,8 @@ public:
 	virtual bool 		Uint32( uint32 & ) = 0;
 	virtual bool		String( char *, sint16 & ) = 0;
 
+	virtual bool		ObjDescription( objDescription & );
+	
 	virtual	bool		Input() { return false; }
 	virtual bool		Output() { return false; }
 };

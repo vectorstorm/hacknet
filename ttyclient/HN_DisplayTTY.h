@@ -42,6 +42,8 @@ public:
 	void		HandleKeypressMore( int key );
 	void		HandleKeypressTalking( int key );
 
+	void		HandleTake();
+	
 	virtual void	PostTurnSubmit();
 	
 	virtual void	Refresh();

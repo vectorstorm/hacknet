@@ -46,6 +46,16 @@ netMetaPacket::~netMetaPacket()
 	delete [] m_buffer;
 }
 
+bool
+netMetaPacket::ObjDescription( objDescription &object )
+{
+	Uint16(object.type);
+	Uint8(object.blesscurse);
+	Uint8(object.count);
+
+	return !m_error;
+}
+
 
 bool
 netMetaPacket::ClientLocation( netClientLocation &packet )
@@ -225,9 +235,10 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 		for ( int j = 0; j < packet.objectCount[i]; j++ )
 		{
 			// grab this object description
-			Uint16( packet.object[i][j].type );
-			Uint8( packet.object[i][j].blesscurse );
-			Uint8( packet.object[i][j].count );
+			ObjDescription( packet.object[i][j] );
+			//Uint16( packet.object[i][j].type );
+			//Uint8( packet.object[i][j].blesscurse );
+			//Uint8( packet.object[i][j].count );
 		}
 	}
 
@@ -379,18 +390,6 @@ netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 }
 
 bool
-netMetaPacket::ClientTalk( char * talkbuffer, sint16 & bufferlength )
-{
-	m_error = false;
-	
-	sint8 type = CPT_Talk;
-	Sint8(type);
-	String( talkbuffer, bufferlength );
-	
-	return (!m_error);
-}
-
-bool
 netMetaPacket::ClientRequestRefresh( sint8 & level )
 {
 	m_error = false;
@@ -420,6 +419,31 @@ netMetaPacket::ClientSave()
 	
 	sint8 type = CPT_Save;
 	Sint8( type );
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientTalk( char * talkbuffer, sint16 & bufferlength )
+{
+	m_error = false;
+	
+	sint8 type = CPT_Talk;
+	Sint8(type);
+	String( talkbuffer, bufferlength );
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientTake( netClientTake &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_TakeObject;
+	Sint8( type );
+	ObjDescription( packet.object );
+	Uint8( packet.stackID );
 	
 	return (!m_error);
 }

@@ -9,7 +9,9 @@
 
 class hnDisplay;
 class netMetaPacket;
+struct objDescription;
 struct sockaddr_in;
+
 
 #define MAX_BUFFER_SIZE (128)
 
@@ -38,13 +40,26 @@ public:
 	void		TransmitMetaPacket();
 	
 	void		Go();
+	
+	/*
+	 *
+	 * Functions to communicate to the server
+	 *
+	 */
+	
+	// --------  PLAYER COMMANDS ----------
+	
 	void		SendMove( hnDirection whichWay );
 	void		SendAttack( hnDirection whichWay );
 	void		SendWait( );
-	void		SendRefreshRequest( sint8 level );
 	void		SendName( char * name );
 	void		SendTalk( char * talk );
 	void		SendQuit( bool save );
+	void		SendTake( objDescription * desc, uint8 stackID );	// send description and stack ID (position in array of current location) of object(s) to pick up.  If they match on the server side too, we'll successfully pick up the objects.
+	
+	// --------  MAINTENANCE REQUESTS  ----------
+
+	void		SendRefreshRequest( sint8 level );
 };
 
 #endif	//__HN_NETCLIENT_H__

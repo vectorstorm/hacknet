@@ -351,6 +351,19 @@ netClient::SendTalk(char * talk)
 }
 
 void
+netClient::SendTake( objDescription *obj, uint8 stackID )
+{
+	netClientTake packet;
+
+	packet.object = *obj;
+	packet.stackID = stackID;
+
+	StartMetaPacket();
+	m_packet->ClientTake(packet);
+	TransmitMetaPacket();
+}
+
+void
 netClient::Disconnect()
 {
 	//printf("Disconnecting...\n");

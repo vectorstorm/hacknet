@@ -9,6 +9,8 @@
 #include "HN_Dungeon.h"
 #include "HN_Player.h"
 #include "HN_Group.h"
+#include "OBJ_Base.h"
+
 
 hnGame * hnGame::s_instance = NULL;
 
@@ -216,6 +218,27 @@ hnGame::ClientTalk(int playerID, char * talk)
 			for ( int i = 0; i < MAX_CLIENTS; i++ )
 				if ( m_player[i] )
 					m_player[i]->Listen( position, buffer );
+		}
+	}
+}
+
+void
+hnGame::ClientTake(int playerID, objDescription &desc, uint8 stackID)
+{
+	// check to make sure that the description and the stackID match.
+	
+	hnPoint pos = m_player[playerID]->GetPosition();
+
+	mapBase *map = hnDungeon::GetLevel(pos.z);
+
+	if ( map )
+	{
+		objBase *object = map->MapTile(pos.x,pos.y).object->GetObject(stackID);
+		
+		if ( object->PartialMatch( &desc ) )
+		{
+			map->MapTile(pos.x,pos.y).object->RemoveObject(object);
+			printf("Pickup from %s (player id %d).  Purging item.\n", m_player[playerID]->GetName(), playerID);
 		}
 	}
 }

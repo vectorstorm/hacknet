@@ -6,6 +6,11 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 1, 2001:
+  * Client can now 'pick up' objects with ',' -- no inventory yet,
+    so 'picked up' items merely vanish from the level.  TODO:
+    implement an inventory.
+
 June 27, 2001:
   * Client now generates 'You see a...' messages by itself.  TODO:
     client still needs a way to get an object's "name" string from

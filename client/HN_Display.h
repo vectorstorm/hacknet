@@ -39,6 +39,8 @@ public:
 	
 	void		MoveCommand( hnDirection dir );	// send move or attack, as appropriate
 	void		WaitCommand();			// send wait command.
+	void		TakeCommand( objDescription *desc, uint8 stackID );
+	
 	virtual void	PostTurnSubmit() {}		// called after submittting a turn.
 
 	virtual void	Refresh();

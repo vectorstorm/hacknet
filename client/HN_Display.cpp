@@ -171,3 +171,9 @@ hnDisplay::WaitCommand()
 
 	PostTurnSubmit();
 }
+
+void
+hnDisplay::TakeCommand( objDescription *desc, uint8 stackID )
+{
+	m_client->SendTake(desc,stackID);
+}

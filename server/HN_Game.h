@@ -4,6 +4,7 @@
 #include "HN_Config_Server.h"
 #include "HN_Enum.h"
 #include "HN_Point.h"
+#include "OBJ_Types.h"
 
 class netServer;
 class hnPlayer;
@@ -32,6 +33,7 @@ public:
 	void			ClientJoined(int clientID);
 	void			ClientName(int clientID, char * name);
 	void			ClientTalk(int clientID, char * talk);
+	void			ClientTake(int clientID, objDescription &desc, uint8 stackID );
 	void			ClientRequestRefresh( int clientID, int level );
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);

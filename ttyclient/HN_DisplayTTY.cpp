@@ -191,6 +191,10 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 		case ' ':
 			WaitCommand();
 			break;
+
+		case ',':
+			HandleTake();
+			break;
 		default:
 			//printf("Got unknown keypress.\n");
 			break;
@@ -255,6 +259,24 @@ hnDisplayTTY::HandleKeypressTalking( int commandKey )
 				m_needsRefresh = true;
 			}
 			break;
+	}
+}
+
+
+void
+hnDisplayTTY::HandleTake()
+{
+	// we've requested to take something.  If there's something
+	// here to take, grab it.  TODO:  Implement 'take' properly!
+	
+	mapClient * myMap = m_map[m_position.z];
+
+	if ( myMap )
+	{
+		mapClientTile myTile = myMap->MapTile(m_position.x, m_position.y);
+
+		if ( myTile.objectCount > 0 )
+			TakeCommand( myTile.object, 0 );
 	}
 }
 
