@@ -30,6 +30,8 @@ May 4, 2001:
   configure.in script to make it work on your system, I'll add
   your changes to the official distribution!
 
+  Added docs/instructions.txt to cover basic playing of HackNet.
+
 May 3, 2001:
   Added initial revision of sorting players into groups.  Groups
   only exist on a single level.. anyone within 10 squares of another

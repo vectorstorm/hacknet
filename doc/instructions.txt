@@ -1,0 +1,62 @@
+HackNet instructions
+
+It's come to my attention (at last) that HackNet can be a bit difficult
+to play, with no documentation!  Not that there's yet much to play, but..
+
+You'll have to forgive me my chatty writing style -- this is a free game,
+and it's my project, so I'll write the documentation in my own inimitable
+fashion.
+
+
+In order to run HackNet, you'll need two things.  First, you need a
+server.  If there isn't already a server you want to use, you'll need
+to run your own.
+
+To run the server, use the following command line from the src/ directory:
+
+./hacknetd
+
+This will yield lots and lots of debug output as it creates the level.
+You can ignore that output.  The server will also output more debug
+output during the game, allowing the person running the server to
+follow important events of the game and conversation on the system.
+Additional #defines are available inside the server code to enable
+extra debug output which is useful for debugging networking code.
+
+
+Second, you need to run the hacknet client, and connect to a running
+server -- either one on your own system, or elsewhere on the network.
+The command line (again, from the src/ directory) is as follows:
+
+./hacknet [-u name] host
+
+Where 'name' is the name you want to use in the game, and 'host' is
+the network address where the server is being run.
+
+
+Once in the game, you can move around using the standard NetHack
+'vi keys' controls.  That is, h, j, k, and l move you west, south,
+north, and east, respectively, and y, u, b, and n move you along
+diagonals.  Keypad movement hasn't yet been implemented, mostly
+because I'm writing HackNet on a laptop that has no keypad.
+This interface addition is a high priority, though, since I know
+a lot of people prefer keypad-based movement.
+
+If you get within a certain range of other players, you will be
+grouped together with them, and none of you will move until all
+of you have submitted turns.  To make this easier, when you're
+in a group, a prompt will appear at the bottom of the screen
+which will display how many members are in your group, and
+how many of those have submitted turns so far.  If people in
+your group are waiting for you to submit a turn, that information
+will also be displayed.
+
+To talk to people, just hit the " key.  Then type whatever you
+like.  People within a range of about 15 squares will hear
+anything you say, unless you end your statement with an
+exclamation point, in which case everyone in the game will
+hear what you say.
+
+That's all there is to it!  Currently there's no combat, so the
+various grid bugs sitting around the map are nothing but
+obstacles.. but this will be entering the game soon!
