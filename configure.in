@@ -44,7 +44,10 @@ AC_SUBST(CURSESINC)
 AC_SUBST(CURSESLIB)
 
 AC_HEADER_STDC
-AC_CHECK_LIB(pthread, pthread_create,THREADLIB='-lpthread')
+AC_CHECK_LIB(c_r, pthread_create,THREADLIB='-pthread', [
+	AC_CHECK_LIB(pthread, pthread_create,THREADLIB='-lpthread')
+	])
+		
 AC_SUBST(THREADLIB)
 
 dnl AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h unistd.h netinet/in.h)
@@ -56,9 +59,9 @@ dnl AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h unistd.h netinet/in.h)
 AC_MSG_CHECKING(whether 'socklen_t' is defined)
 AC_TRY_COMPILE(
 
-#include <netinet/in.h> 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h> 
 ,
 [
 socklen_t sin_size = sizeof(int);

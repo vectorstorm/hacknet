@@ -8,7 +8,7 @@
 class mapHack : public mapBase
 {
 	void			MakeRooms();
-	bool			CreateRoom(uint8 x, uint8 y, uint8 w, uint8 h, uint8 xalign, uint8 yalign, bool lit);
+	bool			CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yalign, bool lit);
 	bool			CheckRoomOkay(const mapRoom &room);
 	void			SortRooms();
 	void			MakeCorridors();

@@ -445,7 +445,7 @@ mapHack::SortRooms()
 }
 
 bool
-mapHack::CreateRoom(uint8 x, uint8 y, uint8 w, uint8 h, uint8 xalign, uint8 yalign, bool lit)
+mapHack::CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yalign, bool lit)
 {
 
 	if ( m_roomCount >= MAX_ROOMS )

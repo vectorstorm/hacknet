@@ -27,11 +27,22 @@ Platforms Supported
 
 HackNet has been successfully compiled on:
 
-Debian GNU/Linux 2.1 & current 'unstable'.
+x86 	- Debian GNU/Linux 2.1, 2.2, & current 'unstable'.
+x86 	- FreeBSD 4.2-stable
+x86 	- Cygwin (under Windows)
+Alpha 	- RedHat Linux 7.0
+PPC 	- Debian GNU/Linux 2.2
+Sparc	- Debian GNU/Linux 2.2
+
+Known problems exist for the following platforms:
+Compaq Tru64
+Sun Solaris
 
 ... more, as they're reported to me!  If you get it to compile on something
-else (something more interesting, I hope!), let me know!  And if doing so
-requires patches, please submit them to me at:  
+that isn't listed here, or get it compiling on one of the currently unworking
+platforms, or have a lead on how to get it working, please let me know!  
+Please submit any patches to me at: 
+
 whiterabbit@users.sourceforge.net
 
 

@@ -1,5 +1,7 @@
+#include <sys/types.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include "NET_Packet.h"
 
@@ -158,6 +160,8 @@ netMetaPacket::GroupData( netGroupData &packet )
 	Char( packet.memberCount );
 	Char( packet.memberTurns );
 	Char( packet.haveTurnFromClient );
+
+	return success;
 }
 
 bool

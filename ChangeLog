@@ -6,6 +6,14 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 5, 2001:
+  Spent the morning working at compiling hacknet on the various
+  machines in the SourceForge compile farm.  I think I've worked
+  through the issues preventing compilation on the *BSD platform,
+  and on Linux running on the Alpha.  Still no success at compilation
+  under Solaris, or on the Compaq Tru64.  I'll keep plugging away
+  at it, though!
+
 May 4, 2001:
   Late update today.. that's because I've had to implement today's new
   feature twice.  I wanted to make creatures vanish from the map
