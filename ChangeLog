@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 23, 2001:
+  * Removed debug output accidentally left in HN_Game.cpp
+
 July 22, 2001:
   * Changed object system again -- it was obvious that there was going
     to be massive class glut using the old object hierarchy.  Instead,

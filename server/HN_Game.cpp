@@ -139,7 +139,6 @@ hnGame::ClientJoined(int playerID)
 	{
 		const objPrototype &proto = objManager::GetInstance()->GetPrototype(i);
 		netServer::GetInstance()->SendObjectName( i, proto.type, proto.name );
-		printf("Object %d with type %d\n", i, proto.type);
 	}
 	
 	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
