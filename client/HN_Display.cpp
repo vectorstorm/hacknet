@@ -3,6 +3,7 @@
 #include <string.h>
 #include "HN_Display.h"
 #include "NET_Client.h"
+#include "OBJ_Registry.h"
 #include "OBJ_Types.h"
 #include "ENT_Types.h"
 
@@ -40,6 +41,19 @@ hnDisplay::~hnDisplay()
 			delete m_map[i];
 		delete [] m_map;
 	}
+}
+
+void
+hnDisplay::SetObjectStats(uint16 objectCount)
+{
+	objRegistry::Startup(objectCount);
+}
+
+void
+hnDisplay::SetObjectName(uint16 objectID, objType type, char *name)
+{
+	objRegistry::GetInstance()->SetName(objectID, name);
+	objRegistry::GetInstance()->SetType(objectID, type);
 }
 
 void
@@ -131,7 +145,7 @@ hnDisplay::DisplayItems()
 			else
 			{
 				char objectDesc[256];
-				GetObjectDescriptionText(topObject,objectDesc,256);
+				objRegistry::GetInstance()->GetObjectDescriptionText(topObject,objectDesc,256);
 				snprintf(buffer, 256, "You see here %s.", objectDesc );
 			}
 			TextMessage(buffer);
@@ -182,7 +196,7 @@ hnDisplay::TakenItem( const objDescription &desc, int inventoryID )
 
 	char buffer[256];
 	char nameBuffer[128];
-	GetObjectDescriptionText(desc, nameBuffer, 128);
+	objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
 	snprintf(buffer,256,"%c - %s.", inventoryLetters[inventoryID], nameBuffer);
 	TextMessage(buffer);
 }
@@ -192,7 +206,7 @@ hnDisplay::DroppedItem( const objDescription &desc )
 {
 	char buffer[256];
 	char nameBuffer[128];
-	GetObjectDescriptionText(desc, nameBuffer, 128);
+	objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
 	snprintf(buffer,256,"You drop %s.", nameBuffer);
 	TextMessage(buffer);
 }
@@ -211,7 +225,7 @@ hnDisplay::WieldedItem( const objDescription &desc, int inventoryID )
 
 	char buffer[256];
 	char nameBuffer[128];
-	GetObjectDescriptionText(desc, nameBuffer, 128);
+	objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
 	snprintf(buffer,256,"%c - %s (weapon in hands).", inventoryLetters[inventoryID], nameBuffer);
 	TextMessage(buffer);
 

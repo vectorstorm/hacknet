@@ -3,8 +3,10 @@
 #include "HN_Point.h"
 
 #include "ENT_GridBug.h"
-#include "OBJ_LongSword.h"
-#include "OBJ_Dagger.h"
+#include "OBJ_Manager.h"
+#include "OBJ_Base.h"
+//#include "OBJ_LongSword.h"
+//#include "OBJ_Dagger.h"
 
 #include <stdio.h>
 
@@ -119,25 +121,14 @@ mapHack::GenerateObjects()
 
 			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
 			{
-				MapTile(x,y).object->AddObject( new objLongSword( hnPoint(x, y, m_depth) ) );
-				didit = true;
-			}
-		}
-	}
-	for ( int i = 0; i < 10; i++ )
-	{	
-		// make ten swords.
-		bool didit = false;
-
-		while ( !didit )
-		{
-			int x = rand() % GetWidth();
-			int y = rand() % GetHeight();
-
-			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
-			{
-				MapTile(x,y).object->AddObject( new objDagger( hnPoint(x, y, m_depth) ) );
-				didit = true;
+				objBase *object = objManager::GetInstance()->RandomItem(m_depth);
+				if ( object )
+				{
+					object->SetPosition( hnPoint(x,y,m_depth) );
+					printf("Generated %s.\n", object->GetName() );
+					MapTile(x,y).object->AddObject( object );
+					didit = true;
+				}
 			}
 		}
 	}
@@ -162,7 +153,7 @@ mapHack::MakeCorridors()
 {
 	bool anyUnconnectedRooms = true;
 	
-	printf("We have %d rooms.\n", m_roomCount);
+	printf("Level %d has %d rooms.\n", m_depth, m_roomCount);
 
 	// Connect each room to the next room to the right.
 	for ( int i = 0; i < m_roomCount-1; i++ )
@@ -176,7 +167,7 @@ mapHack::MakeCorridors()
 		if ( m_room[i]->glob != m_room[i+2]->glob )
 			Join(i, i+2, false);
 	
-	printf("Sanity checks...\n");
+	//printf("Sanity checks...\n");
 	// Now make sure that we've connected each room to something.
 	for ( int i = 0; anyUnconnectedRooms && i < m_roomCount; i++ )
 	{
@@ -192,7 +183,7 @@ mapHack::MakeCorridors()
 		}
 	}
 	
-	printf("Random extra corridors...\n");
+	//printf("Random extra corridors...\n");
 	if ( m_roomCount > 2 )
 	{
 		// just for fun, add some more corridors at random.
@@ -225,7 +216,7 @@ mapHack::Join(uint8 roomA, uint8 roomB, bool extraCorridor)
 	hnPoint2D fromEntrance;
 	hnPoint2D toEntrance;
 	
-	printf("Joining room %d to %d...", roomA, roomB);
+	//printf("Joining room %d to %d...", roomA, roomB);
 	
 	if ( to->left > from->right )		// if target's west side is further east
 	{					// dig east
@@ -274,7 +265,7 @@ mapHack::Join(uint8 roomA, uint8 roomB, bool extraCorridor)
 	
 	if ( success )
 	{
-		printf("success!\n");
+		//printf("success!\n");
 
 		// this #if 0 is removing a piece of code which was written to emulate
 		// what appears to be a bug in NetHack's level generation code..  Inside 
@@ -300,7 +291,7 @@ mapHack::Join(uint8 roomA, uint8 roomB, bool extraCorridor)
 	}
 	else
 	{
-		printf("failed.\n");
+		//printf("failed.\n");
 	}
 }
 
@@ -625,7 +616,7 @@ mapHack::CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yali
 			WallAt(result.right+1,j) = WALL_Vertical;
 		}
 		
-		printf("Succeeded at generating room: %dx%d at %d,%d.\n", result.right - result.left,result.bottom-result.top, result.left, result.top);
+		//printf("Succeeded at generating room: %dx%d at %d,%d.\n", result.right - result.left,result.bottom-result.top, result.left, result.top);
 		
 		for ( int i = result.left-5; i <= result.right+5; i++ )
 			for ( int j = result.top-5; j <= result.bottom+5; j++ )

@@ -1,16 +1,16 @@
+#include "OBJ_Manager.h"
+#include "OBJ_Definition.h"
 #include "OBJ_Base.h"
 #include <stdio.h>
 
-char * objBase::s_name = "BaseObject";
-
-objBase::objBase( objType type, const hnPoint &where ):
+objBase::objBase( uint32 type ):
 	m_type(type),
-	m_position(where),
 	m_blesscurse(BC_Uncursed),
 	m_count(1),
 	m_next(this),
 	m_prev(this)
 {
+	m_position.Set(0,0,0);
 }
 
 objBase::~objBase()
@@ -96,6 +96,14 @@ objBase::RemoveObject( objBase * object )
 	}
 }
 
+const char *
+objBase::GetName()
+{
+	const objPrototype &proto = objManager::GetInstance()->GetPrototype(m_type);
+
+	return proto.name;
+}
+
 objBase *
 objBase::RemoveObjectQuantity( objBase *object, uint8 count )
 {
@@ -119,7 +127,7 @@ objBase::RemoveObjectQuantity( objBase *object, uint8 count )
 			else if ( object->m_count < count )
 			{
 				object->m_count -= count;
-				result = new objBase(object->m_type, hnPoint(0,0,0));
+				result = new objBase(object->m_type);
 				result->m_count = count;
 			}
 			

@@ -63,6 +63,9 @@ public:
 	virtual void	UpdateInventory( int objectCount, objDescription *objectArray );
 	virtual void	TextMessage( char * message ) {}
 
+	virtual void	SetObjectStats( uint16 objectCount );
+	virtual void	SetObjectName( uint16 objectID, objType type, char * name );
+
 	virtual void	TakenItem( const objDescription &desc, int inventoryID );
 	virtual void	DroppedItem( const objDescription &desc );
 	virtual void	WieldedItem( const objDescription &desc, int inventoryID );

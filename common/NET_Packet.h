@@ -27,6 +27,8 @@ enum{
 	SPT_WieldedItem,	// this item was just wielded
 	SPT_GroupData,		// sending information on the player's group.
 	SPT_Inventory,
+	SPT_ObjectStats,	// object stats packet
+	SPT_ObjectName,		// object name packet
 	SPT_QuitConfirm,	// yes, you're out of the game
 	SPT_SaveConfirm,	// yes, you've been saved and are out of the game
 	SPT_Refresh,		// we just finished sending a set of events.  Go ahead and refresh the screen now.
@@ -132,7 +134,6 @@ struct netMapObjectList
 	sint8 *objectType;
 };
 
-
 struct netMapEntity
 {
 	hnPoint loc;
@@ -210,6 +211,8 @@ public:
 	bool			TakenItem( netInventoryItem &packet );
 	bool			DroppedItem( netInventoryItem &packet );
 	bool			WieldedItem( netInventoryItem &packet );
+	bool			ObjectStats( uint16 &objectCount );
+	bool			ObjectName( uint16 &objectID, uint16 & type, char * nameBuffer, sint16 & bufferLength );
 	bool			JoinOK();
 	bool			QuitConfirm();
 	bool			SaveConfirm();

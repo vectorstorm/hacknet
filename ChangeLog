@@ -6,6 +6,23 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 22, 2001:
+  * Changed object system again -- it was obvious that there was going
+    to be massive class glut using the old object hierarchy.  Instead,
+    we'll now have a much smaller hierarchy of object classes, with
+    'prototype' data used to instantiate particulars.
+  * Static declaration of objects in OBJ_Types.h has been removed, and
+    the header file is now used for declaring common types of objects.
+    As long as this file remains the same, a particular client should
+    be able to connect to any server, even if servers add or remove
+    objects.
+  * Object definitions (in a VERY crude form) are in OBJ_Definitions.cpp
+    at the moment.  Will set up some macros to make them easier to
+    create.
+  
+July 16, 2001:
+  * Released version 0.0.5; incremented version number to 0.0.6
+
 July 15, 2001:
   * Fixed alignment issues in netMetaPacket.  Thanks to dbg, ig2, and
     LIM from #c++ on the OpenProjects irc network for helping me to

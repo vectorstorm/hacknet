@@ -459,6 +459,32 @@ netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 }
 
 bool
+netMetaPacket::ObjectStats( uint16 & objectCount )
+{
+	m_error = false;
+	
+	sint8 type = SPT_ObjectStats;
+	Sint8(type);
+	Uint16( objectCount );
+
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ObjectName( uint16 & objectID, uint16 & objtype, char *buffer, sint16 &bufferlength )
+{
+	m_error = false;
+
+	sint8 type = SPT_ObjectName;
+	Sint8(type);
+	Uint16(objectID);
+	Uint16(objtype);
+	String(buffer, bufferlength);
+
+	return (!m_error);
+}
+
+bool
 netMetaPacket::ClientRequestRefresh( sint8 & level )
 {
 	m_error = false;

@@ -9,6 +9,7 @@
 #include "HN_Dungeon.h"
 #include "HN_Player.h"
 #include "HN_Group.h"
+#include "OBJ_Manager.h"
 #include "OBJ_Base.h"
 
 
@@ -46,7 +47,9 @@ hnGame::hnGame()
 // TODO:  This should be implemented in an entirely different way.
 //        I'm not sure what, yet.
 
-	printf("Generating maps\n");
+	printf("Initialising objects...\n");
+	objManager::Startup();
+	printf("Generating maps...\n");
 	hnDungeon::Startup( MAX_LEVELS, LEVEL_WIDTH, LEVEL_HEIGHT );
 	hnGroupManager::Startup( MAX_CLIENTS );
 	
@@ -125,7 +128,22 @@ hnGame::ClientJoined(int playerID)
 	netServer::GetInstance()->SendDungeonReset( hnDungeon::GetInstance()->GetLevelCount() );
 	mapBase *map = hnDungeon::GetLevel(z);
 	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight(), z );
+	
+	// --- Transmit object information.. for now, send the whole object database.
+	// --- In the future, we'll let the client request the objects he's interested
+	// --- in, to minimize bandwidth requirements when joining.
+	
+	netServer::GetInstance()->SendObjectStats( objManager::GetInstance()->GetObjectCount() );
+
+	for ( int i = 0; i < objManager::GetInstance()->GetObjectCount(); i++ )
+	{
+		const objPrototype &proto = objManager::GetInstance()->GetPrototype(i);
+		netServer::GetInstance()->SendObjectName( i, proto.type, proto.name );
+		printf("Object %d with type %d\n", i, proto.type);
+	}
+	
 	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
+	
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 	
 	hnGroupManager::GetInstance()->AddPlayer( m_player[playerID] );

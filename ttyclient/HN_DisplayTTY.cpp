@@ -14,6 +14,7 @@
 #include <strings.h>
 #include "HN_DisplayTTY.h"
 #include "NET_Client.h"
+#include "OBJ_Registry.h"
 #include "HN_Enum.h"
 
 //#define __DEBUGGING_NETWORK__
@@ -166,34 +167,42 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case 'h':
 		case '4':
+		case KEY_LEFT:
 			MoveCommand(DIR_West);
 			break;
 		case 'j':
 		case '2':
+		case KEY_DOWN:
 			MoveCommand(DIR_South);
 			break;
 		case 'k':
 		case '8':
+		case KEY_UP:
 			MoveCommand(DIR_North);
 			break;
 		case '6':
 		case 'l':
+		case KEY_RIGHT:
 			MoveCommand(DIR_East);
 			break;
 		case '9':
 		case 'u':
+		case KEY_A3:
 			MoveCommand(DIR_NorthEast);
 			break;
 		case '7':
 		case 'y':
+		case KEY_A1:
 			MoveCommand(DIR_NorthWest);
 			break;
 		case '3':
 		case 'n':
+		case KEY_C1:
 			MoveCommand(DIR_SouthEast);
 			break;
 		case '1':
 		case 'b':
+		case KEY_C3:
 			MoveCommand(DIR_SouthWest);
 			break;
 		case '>':
@@ -204,6 +213,7 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case '.':
 		case ' ':
+		case KEY_B2:
 			WaitCommand();
 			break;
 		
@@ -758,7 +768,7 @@ hnDisplayTTY::DisplayItems()
 			else
                         {
                                 char objectDesc[256];
-                                GetObjectDescriptionText(topObject,objectDesc,256);
+				objRegistry::GetInstance()->GetObjectDescriptionText(topObject,objectDesc,256);
                                 snprintf(buffer, 256, "You see here %s.", objectDesc );
                         	TextMessage(buffer);
                         }
@@ -794,23 +804,14 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		"Potions"
 	};
 
-	const int categoryStart[CATEGORY_COUNT] =
+	const objType categoryValue[CATEGORY_COUNT] =
 	{
-		AMULET_MIN,
-		WEAPON_MIN,
-		ARMOUR_MIN,
-		POTION_MIN
+		Amulet,
+		Weapon,
+		Armour,
+		Potion
 	};
 
-
-	const int categoryEnd[CATEGORY_COUNT] =
-	{
-		AMULET_MAX,
-		WEAPON_MAX,
-		ARMOUR_MAX,
-		POTION_MAX
-	};
-	
 	if ( m_mode == MODE_FloorObjectDisplay )
 	{
 		move(y++,x);
@@ -825,7 +826,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		
 		for ( int i = 0; i < objectCount; i++ )
 		{
-			if ( objects[i].count > 0 && objects[i].type > categoryStart[j] && objects[i].type < categoryEnd[j] )
+			if ( objects[i].count > 0 && objRegistry::GetInstance()->GetType(objects[i].type) == categoryValue[j] )
 			{
 				if ( !somethingInThisCategory && drawheaders )
 				{
@@ -835,7 +836,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 					color_set( COLOR_WHITE, NULL );
 					somethingInThisCategory = true;
 				}
-				GetObjectDescriptionText(objects[i],buffer,256);
+				objRegistry::GetInstance()->GetObjectDescriptionText(objects[i],buffer,256);
 				move(y++,x);
 				
 				if ( inventory && m_wieldedItem == i )

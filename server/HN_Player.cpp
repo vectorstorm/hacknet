@@ -40,7 +40,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	
 	for ( int i = 0; i < INVENTORY_MAX; i++ )
 	{
-		m_clientInventory[i].type = OBJECT_None;
+		m_clientInventory[i].type = Illegal;
 		m_clientInventory[i].count = 0;
 		m_clientInventoryMapping[i] = NULL;
 	}
@@ -206,7 +206,7 @@ hnPlayer::Wield( const objDescription &object, uint8 inventorySlot )
 		// unwield instead.
 		m_queuedTurn.type = queuedTurn::Wield;
 		m_queuedTurn.wield.object = NULL;
-		m_queuedTurn.wield.desc.type = OBJECT_None;
+		m_queuedTurn.wield.desc.type = Illegal;
 		m_queuedTurn.wield.inventorySlot = inventorySlot;
 	}
 }

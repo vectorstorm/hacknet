@@ -91,6 +91,9 @@ netClient::Go()
 	netInventory inven;
 	netInventoryItem item;
 	objDescription *objList;
+	uint16	objectID;
+	objType objectType;
+	
 	
 	m_display->TextMessage("Trying to connect to server...\n");
 	if ( connect( m_socket, (sockaddr *)m_serverAddress, sizeof(sockaddr) ) == -1 )
@@ -207,6 +210,14 @@ netClient::Go()
 				case SPT_Message:
 					packet->TextMessage(messageBuffer, messageBufferLength);
 					m_display->TextMessage(messageBuffer);
+					break;
+				case SPT_ObjectStats:
+					packet->ObjectStats(objectID);
+					m_display->SetObjectStats(objectID);
+					break;
+				case SPT_ObjectName:
+					packet->ObjectName(objectID, objectType, messageBuffer, messageBufferLength);
+					m_display->SetObjectName(objectID, objectType, messageBuffer);
 					break;
 				case SPT_MapEntity:
 					packet->MapEntity(entityData);

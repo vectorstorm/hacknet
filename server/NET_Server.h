@@ -82,6 +82,9 @@ public:
 	void		SendMapReset( int width, int height, int depth );
 	void		SendMessage( char * message );
 
+	void		SendObjectStats( uint16 objectClasses );
+	void		SendObjectName( uint16 objectID, uint16 type, char *name );
+
 	void		SendDroppedItem( const objDescription & object );
 	void		SendTakenItem( const objDescription & object, int inventorySlot );
 	void		SendWieldedItem( const objDescription & object, int inventorySlot );

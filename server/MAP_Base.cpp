@@ -408,7 +408,7 @@ mapBase::MarkPointChanged( uint8 x, uint8 y )
 
 mapTile::mapTile()
 {
-	object = new objBase( OBJECT_None, hnPoint(0,0,0));
+	object = new objBase( 0 );
 	entity = NULL;
 	visionBlocked = false;
 }

@@ -513,6 +513,19 @@ netServer::SendMessage( char * message )
 }
 
 void
+netServer::SendObjectStats( uint16 objectCount )
+{
+	m_metaPacket->ObjectStats( objectCount );
+}
+
+void
+netServer::SendObjectName( uint16 objectID, uint16 type, char * name )
+{
+	sint16 messageLength = strlen(name);
+	m_metaPacket->ObjectName(objectID, type, name, messageLength);
+}
+
+void
 netServer::SendQuitConfirm(int clientID)
 {
 	StartMetaPacket(clientID);

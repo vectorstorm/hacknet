@@ -1,13 +1,13 @@
 #ifndef __OBJ_BASE_H__
 #define __OBJ_BASE_H__
 
+#include "OBJ_Types.h"
 #include "HN_Types.h"
 #include "HN_Point.h"
-#include "OBJ_Types.h"
 
 class objBase
 {
-	objType		m_type;
+	uint32		m_type;
 	hnPoint		m_position;
 	
 	uint8		m_blesscurse;
@@ -19,18 +19,17 @@ class objBase
 	
 protected:
 	void		Unlink();	
-	static char *	s_name;
 public:
-				objBase( objType type, const hnPoint & where );
+				objBase( uint32 type );
 	virtual 		~objBase();
 
 	virtual sint16		RollDamage();
 	
         const hnPoint &		GetPosition();
 	void			SetPosition( const hnPoint & );
-	objType			GetType() { return m_type; }
+	uint32			GetType() { return m_type; }
 
-	virtual const char *	GetName() { return s_name; }
+	const char *		GetName();
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it

@@ -19,7 +19,7 @@ entBase::entBase( entType type, const hnPoint & pos, hnPlayer *player ):
 	m_maxHitPoints(1)	// the proper amount on us.
 {
 	m_status = new hnStatus(1);
-	m_inventory = new objBase(OBJECT_None,hnPoint(0,0,0));
+	m_inventory = new objBase(Illegal);
 }
 
 entBase::~entBase()
