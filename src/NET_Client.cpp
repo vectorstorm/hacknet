@@ -67,7 +67,7 @@ netClient::StartClient( char * serverAddress )
 void
 netClient::Go()
 {
-	hnMapTile 	tile;				// for use in map updates
+	mapTile 	tile;				// for use in map updates
 	netMapTile tileData;
 	netMapEntity entityData;
 	netMapUpdateBBox bbox;
@@ -145,7 +145,7 @@ netClient::Go()
 				case SPT_MapUpdateBBox:
 					//printf("Map bbox update packet\n");
 					packet->MapUpdateBBox(bbox);
-					//hnMapTile tile;
+					//mapTile tile;
 
 					for ( int i = 0; i < bbox.width; i++ )
 						for ( int j = 0; j < bbox.height; j++ )

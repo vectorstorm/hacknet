@@ -14,7 +14,7 @@
 #include "NET_Server.h"
 #include "NET_Packet.h"
 #include "HN_Game.h"
-#include "HN_Map.h"
+#include "MAP_Base.h"
 
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
@@ -296,7 +296,7 @@ netServer::SendClientLocation( hnPoint *loc )
 }
 
 void
-netServer::SendMapTile( hnPoint *loc, const hnMapTile & tile )
+netServer::SendMapTile( hnPoint *loc, const mapTile & tile )
 {
 	assert( m_metaPacket );
 	netMapTile packet;

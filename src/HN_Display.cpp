@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include "HN_Display.h"
-#include "HN_Map.h"
+#include "MAP_Base.h"
 #include "HN_Consts.h"
 #include "HN_Entity.h"
 #include "HN_Creature.h"
 
 hnDisplay::hnDisplay()
 {
-	m_map = new hnMap(LEVEL_WIDTH, LEVEL_HEIGHT);
+	m_map = new mapBase(LEVEL_WIDTH, LEVEL_HEIGHT);
 }
 
 hnDisplay::~hnDisplay()
@@ -16,7 +16,7 @@ hnDisplay::~hnDisplay()
 }
 
 void
-hnDisplay::UpdateMapTile(sint8 x, sint8 y, const hnMapTile &tile)
+hnDisplay::UpdateMapTile(sint8 x, sint8 y, const mapTile &tile)
 {
 	m_map->MaterialAt(x,y) = tile.material;
 	m_map->WallAt(x,y) = tile.wall;
@@ -33,7 +33,7 @@ hnDisplay::UpdateMapCreature(sint8 x, sint8 y, hnEntityType type)
 /*	hnEntity *newEntity = NULL;
 	hnPoint where(x,y,0);
 	
-	hnMapTile & tile = m_map->MapTile(x,y);
+	mapTile & tile = m_map->MapTile(x,y);
 
 	if ( tile.entity )
 		delete tile.entity;

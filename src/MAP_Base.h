@@ -9,11 +9,11 @@
 
 class hnEntity;
 
-class hnMapTile
+class mapTile
 {
 public:
-				hnMapTile();
-	virtual 		~hnMapTile();
+				mapTile();
+	virtual 		~mapTile();
 	
 	hnEntity *		object;			// linked list of objects lying on the floor here.
 	hnEntity *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
@@ -24,7 +24,7 @@ public:
 							// as part of a room)
 };
 
-class hnRoom
+class mapRoom
 {
 public:
 	char			top;
@@ -35,20 +35,20 @@ public:
 	bool			lit;
 };
 
-class hnMap
+class mapBase
 {
 protected:
 
-	hnMapTile *		m_tile;			// map tiles.  Array is [width*height] long.
-	hnMapTile		m_backgroundType;	// if we ask for something outside the map, what type do we call it?
+	mapTile *		m_tile;			// map tiles.  Array is [width*height] long.
+	mapTile			m_backgroundType;	// if we ask for something outside the map, what type do we call it?
 	sint8			m_width;
 	sint8			m_height;
-	hnRoom *		m_room[MAX_ROOMS];	// pointers to our rooms.  Yay!
+	mapRoom *		m_room[MAX_ROOMS];	// pointers to our rooms.  Yay!
 	sint8			m_roomCount;		// how many rooms in this map?
 	
 public:
-				hnMap( sint8 width, sint8 height );
-	virtual			~hnMap();
+				mapBase( sint8 width, sint8 height );
+	virtual			~mapBase();
 
 	virtual void		Generate();
 	
@@ -58,7 +58,7 @@ public:
 	
 	hnMaterialType &	MaterialAt( sint8 x, sint8 y );
 	hnWallType &  		WallAt( sint8 x, sint8 y );
-	hnMapTile &		MapTile( sint8 x, sint8 y );
+	mapTile &		MapTile( sint8 x, sint8 y );
 };
 
 #endif // __HN_MAP_H__

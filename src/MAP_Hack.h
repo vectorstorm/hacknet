@@ -1,15 +1,15 @@
 #ifndef __HN_HACK_MAP_H__
 #define __HN_HACK_MAP_H__
 
-#include "HN_Map.h"
+#include "MAP_Base.h"
 
 #define MAX_ROOMS (8)
 
-class hnHackMap : public hnMap
+class mapHack : public mapBase
 {
 	void			MakeRooms();
 	bool			CreateRoom(char x, char y, char w, char h, char xalign, char yalign, char lit);
-	bool			CheckRoomOkay(const hnRoom &room);
+	bool			CheckRoomOkay(const mapRoom &room);
 	void			SortRooms();
 	void			MakeCorridors();
 	void			Join(char roomA, char roomB, bool extraCorridor);
@@ -23,8 +23,8 @@ class hnHackMap : public hnMap
 	void			Wallify();
 	
 public:
-				hnHackMap( unsigned int width, unsigned int height );
-	virtual			~hnHackMap();
+				mapHack( unsigned int width, unsigned int height );
+	virtual			~mapHack();
 
 	virtual void		Generate();
 };

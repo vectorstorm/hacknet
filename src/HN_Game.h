@@ -10,7 +10,7 @@
 //#define MAX_LEVELS	(50)
 #define MAX_LEVELS (2)
 
-class hnMap;
+class mapBase;
 class netServer;
 class hnEntity;
 
@@ -26,7 +26,7 @@ class hnGame
 {
 	netServer 		*m_server;
 	playerData		m_player[MAX_CLIENTS];
-	hnMap			*m_levelMap[MAX_LEVELS];
+	mapBase			*m_levelMap[MAX_LEVELS];
 
 	static hnGame *		s_instance;
 	

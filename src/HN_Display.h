@@ -3,17 +3,16 @@
 
 #include "HN_Enum.h"
 #include "HN_Point.h"
-#include "HN_Map.h"
+#include "MAP_Base.h"
 
 class netClient;
-class hnMap;
 
 class hnDisplay
 {
 protected:
 	netClient 	*m_client;
 	hnPoint		m_position;
-	hnMap		*m_map;		// this is our map of the current level...
+	mapBase		*m_map;		// this is our map of the current level...
 public:
 			hnDisplay();
 	virtual		~hnDisplay();
@@ -26,7 +25,7 @@ public:
 	virtual void	Refresh() {}
 	
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
-	virtual void	UpdateMapTile( sint8 x, sint8 y, const hnMapTile & tile );
+	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapTile & tile );
 	virtual void	UpdateMapCreature( sint8 x, sint8 y, hnEntityType type );
 };
 

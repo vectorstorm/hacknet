@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "HN_Map.h"
+#include "MAP_Base.h"
 #include "HN_Entity.h"
 //#include "HN_Object.h"
 #include "HN_Point.h"
@@ -9,10 +9,10 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-hnMap::hnMap(sint8 width, sint8 height):
+mapBase::mapBase(sint8 width, sint8 height):
 	m_width(width), m_height(height), m_roomCount(0)
 {
-	m_tile = new hnMapTile[width * height];
+	m_tile = new mapTile[width * height];
 	for ( int i = 0; i < width * height; i++ )
 	{
 		m_tile[i].material = MATERIAL_Unknown;
@@ -26,7 +26,7 @@ hnMap::hnMap(sint8 width, sint8 height):
 		m_room[i] = NULL;
 }
 
-hnMap::~hnMap()
+mapBase::~mapBase()
 {
 	for ( int i = 0; i < m_roomCount; i++ )
 		delete m_room[i];
@@ -35,7 +35,7 @@ hnMap::~hnMap()
 }
 
 hnMaterialType &
-hnMap::MaterialAt(sint8 x, sint8 y)
+mapBase::MaterialAt(sint8 x, sint8 y)
 {
 	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
 		return m_tile[x + (y * m_width)].material;
@@ -44,7 +44,7 @@ hnMap::MaterialAt(sint8 x, sint8 y)
 }
 
 hnWallType &
-hnMap::WallAt(sint8 x, sint8 y)
+mapBase::WallAt(sint8 x, sint8 y)
 {
 	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
 		return m_tile[x + (y * m_width)].wall;
@@ -52,8 +52,8 @@ hnMap::WallAt(sint8 x, sint8 y)
 	return m_backgroundType.wall;
 }
 
-hnMapTile &
-hnMap::MapTile(sint8 x, sint8 y)
+mapTile &
+mapBase::MapTile(sint8 x, sint8 y)
 {
 	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
 		return m_tile[x + (y * m_width)];
@@ -62,11 +62,11 @@ hnMap::MapTile(sint8 x, sint8 y)
 }
 
 void
-hnMap::RemoveObject( hnEntity *object )
+mapBase::RemoveObject( hnEntity *object )
 {
 	hnEntityType type = object->GetType();
 	const hnPoint & point = object->GetPosition();
-	hnMapTile & tile = MapTile(point.x, point.y);
+	mapTile & tile = MapTile(point.x, point.y);
 	
 	if ( type == CREATURE_Player )
 		tile.entity = NULL;	
@@ -75,10 +75,10 @@ hnMap::RemoveObject( hnEntity *object )
 }
 
 void
-hnMap::PutObjectAt( hnEntity *object, sint8 x, sint8 y )
+mapBase::PutObjectAt( hnEntity *object, sint8 x, sint8 y )
 {
 	hnEntityType type = object->GetType();
-	hnMapTile & tile = MapTile(x,y);
+	mapTile & tile = MapTile(x,y);
 	
 	if ( type == CREATURE_Player )
 		tile.entity = object;
@@ -87,14 +87,14 @@ hnMap::PutObjectAt( hnEntity *object, sint8 x, sint8 y )
 }
 
 void
-hnMap::MoveObjectTo( hnEntity *object, sint8 x, sint8 y )
+mapBase::MoveObjectTo( hnEntity *object, sint8 x, sint8 y )
 {
 	RemoveObject(object);
 	PutObjectAt(object,x,y);
 }
 
 void
-hnMap::Generate()
+mapBase::Generate()
 {
 	for ( int i = 0; i < m_width * m_height; i++ )  //clear us to fully rock
 	{
@@ -105,13 +105,13 @@ hnMap::Generate()
 }
 
 
-hnMapTile::hnMapTile()
+mapTile::mapTile()
 {
 	object = new hnEntity( ENTITY_None, hnPoint(0,0,0));
 	entity = NULL;
 }
 
-hnMapTile::~hnMapTile()
+mapTile::~mapTile()
 {
 	delete object;
 }

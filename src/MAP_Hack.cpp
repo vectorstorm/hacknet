@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "HN_HackMap.h"
+#include "MAP_Hack.h"
 #include "HN_Point.h"
 
 #include <stdio.h>
@@ -7,17 +7,17 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-hnHackMap::hnHackMap(unsigned int width, unsigned int height):
-	hnMap(width,height)
+mapHack::mapHack(unsigned int width, unsigned int height):
+	mapBase(width,height)
 {
 }
 
-hnHackMap::~hnHackMap()
+mapHack::~mapHack()
 {
 }
 
 void
-hnHackMap::MakeRooms()
+mapHack::MakeRooms()
 {
 	bool done = false;
 	
@@ -31,7 +31,7 @@ hnHackMap::MakeRooms()
 }
 
 void
-hnHackMap::MakeCorridors()
+mapHack::MakeCorridors()
 {
 	bool anyUnconnectedRooms = true;
 	
@@ -79,13 +79,13 @@ hnHackMap::MakeCorridors()
 //  so we can do mean things like putting boulders in the corridor
 //  or not make the corridor at all.
 void
-hnHackMap::Join(char roomA, char roomB, bool extraCorridor)
+mapHack::Join(char roomA, char roomB, bool extraCorridor)
 {
 	bool success = false;
 	
 	// pick a door point on each room, and then pass those points off to DrawCorridor.	
-	hnRoom *from = m_room[roomA];
-	hnRoom *to = m_room[roomB];
+	mapRoom *from = m_room[roomA];
+	mapRoom *to = m_room[roomB];
 	hnPoint2D direction(0,0);
 	hnPoint2D topLeft;
 	hnPoint2D bottomRight;
@@ -153,7 +153,7 @@ hnHackMap::Join(char roomA, char roomB, bool extraCorridor)
 #define WALL_CorridorDiggable ( WALL_Solid | WALL_Corridor )
 
 bool
-hnHackMap::DigCorridor( const hnPoint2D &f, const hnPoint2D &t )
+mapHack::DigCorridor( const hnPoint2D &f, const hnPoint2D &t )
 {
 	// f is from, t is to.
 	bool success = true;
@@ -289,7 +289,7 @@ hnHackMap::DigCorridor( const hnPoint2D &f, const hnPoint2D &t )
 }
 
 void
-hnHackMap::FindEntranceInRect( hnPoint2D *result, const hnPoint2D & topLeft, const hnPoint2D & bottomRight )
+mapHack::FindEntranceInRect( hnPoint2D *result, const hnPoint2D & topLeft, const hnPoint2D & bottomRight )
 {
 	sint8 x, y;
 
@@ -323,7 +323,7 @@ hnHackMap::FindEntranceInRect( hnPoint2D *result, const hnPoint2D & topLeft, con
 }
 
 void
-hnHackMap::SortRooms()
+mapHack::SortRooms()
 {
 	bool swapped;
 	
@@ -335,7 +335,7 @@ hnHackMap::SortRooms()
 			if ( m_room[i]->left > m_room[i+1]->left )
 			{
 				//printf("Swapping %d with %d.\n", i, i+1);
-				hnRoom *hold = m_room[i+1];
+				mapRoom *hold = m_room[i+1];
 				m_room[i+1] = m_room[i];
 				m_room[i] = hold;
 				swapped = true;
@@ -356,13 +356,13 @@ hnHackMap::SortRooms()
 }
 
 bool
-hnHackMap::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, char lit)
+mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, char lit)
 {
 
 	if ( m_roomCount >= MAX_ROOMS )
 		return false;
 
-	hnRoom result;
+	mapRoom result;
 	bool success = false;
 	bool exit = false;
 	char trycount = 0;
@@ -472,7 +472,7 @@ hnHackMap::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, 
 				MapTile(i,j).border = true;
 			}
 		
-		m_room[m_roomCount] = new hnRoom;
+		m_room[m_roomCount] = new mapRoom;
 		*m_room[m_roomCount] = result;
 		m_room[m_roomCount]->glob = m_roomCount;
 	}
@@ -481,7 +481,7 @@ hnHackMap::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, 
 }
 
 bool
-hnHackMap::OkayForDoor(char x, char y)
+mapHack::OkayForDoor(char x, char y)
 {
 	bool okay = false;
 
@@ -495,7 +495,7 @@ hnHackMap::OkayForDoor(char x, char y)
 }
 
 bool
-hnHackMap::NearDoor(char x, char y)
+mapHack::NearDoor(char x, char y)
 {
 	bool nearDoor = false;
 	
@@ -509,7 +509,7 @@ hnHackMap::NearDoor(char x, char y)
 }
 
 bool
-hnHackMap::CheckRoomOkay( const hnRoom &room )
+mapHack::CheckRoomOkay( const mapRoom &room )
 {
 	bool roomOkay = true;
 
@@ -524,11 +524,11 @@ hnHackMap::CheckRoomOkay( const hnRoom &room )
 }
 
 bool
-hnHackMap::CheckTileOkayForRoom( unsigned int x, unsigned int y )
+mapHack::CheckTileOkayForRoom( unsigned int x, unsigned int y )
 {
 	bool tileOkay = true;
 	
-	hnMapTile &tile = MapTile(x,y);
+	mapTile &tile = MapTile(x,y);
 	
 	if ( (!(tile.wall & WALL_Any)) || tile.border )
 		tileOkay = false;
@@ -537,7 +537,7 @@ hnHackMap::CheckTileOkayForRoom( unsigned int x, unsigned int y )
 }
 
 void
-hnHackMap::Wallify()
+mapHack::Wallify()
 {
 	for ( int i = 0; i < m_width; i++ )
 		for ( int j = 0; j < m_height; j++ )
@@ -550,7 +550,7 @@ hnHackMap::Wallify()
 }
 
 void
-hnHackMap::Generate()
+mapHack::Generate()
 {
 	for ( int i = 0; i < m_width * m_height; i++ )  //clear us to fully rock
 	{

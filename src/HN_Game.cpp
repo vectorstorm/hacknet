@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "HN_Game.h"
-#include "HN_HackMap.h"
+#include "MAP_Hack.h"
 #include "NET_Server.h"
 #include "HN_Point.h"
 #include "HN_Consts.h"
@@ -53,7 +53,7 @@ hnGame::hnGame()
 	{
 		printf(".");
 		m_levelMap[i] = NULL;
-		m_levelMap[i] = new hnHackMap(LEVEL_WIDTH, LEVEL_HEIGHT);
+		m_levelMap[i] = new mapHack(LEVEL_WIDTH, LEVEL_HEIGHT);
 		m_levelMap[i]->Generate();
 	}
 	printf("\n");

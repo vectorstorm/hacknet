@@ -194,7 +194,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	
 	if ( x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT )
 	{
-		hnMapTile & tile = m_map->MapTile(x,y);
+		mapTile & tile = m_map->MapTile(x,y);
 
 		if ( tile.entity != NULL )		// if someone is standing here...
 			theChar = '@';			// draw '@' instead of ground.  This is a HACK!
@@ -211,7 +211,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 }
 
 void
-hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const hnMapTile &tile)
+hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const mapTile &tile)
 {
 	hnDisplay::UpdateMapTile(x,y,tile);
 	PlotSquare(x,y);

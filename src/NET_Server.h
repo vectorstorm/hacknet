@@ -9,9 +9,9 @@
 #include "NET_ServerConsts.h"
 #include "NET_Packet.h"
 
-class hnMapTile;
+class mapTile;
 class hnGame;
-class hnMap;
+class mapBase;
 class hnPoint;
 struct sockaddr_in;
 struct netClientPacket;
@@ -61,8 +61,8 @@ public:
 	bool		TransmitMetaPacket();				// send the metapacket we were constructing
 	
 	void		SendClientLocation( hnPoint *loc );	// tell the client where they are.
-//	bool		SendMapUpdate(int clientID, hnMap *map);	// server sends move update to client
-	void		SendMapTile( hnPoint *loc, const hnMapTile & floorType );  // new floortype
+//	bool		SendMapUpdate(int clientID, mapBase *map);	// server sends move update to client
+	void		SendMapTile( hnPoint *loc, const mapTile & floorType );  // new floortype
 	void		SendMapUpdateBBox( netMapUpdateBBox *bbox );
 	void		SendMapObjectList( hnPoint *loc, int numObjects, hnEntityType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
 	

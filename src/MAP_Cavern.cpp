@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "HN_CavernMap.h"
+#include "MAP_Cavern.h"
 #include "HN_Point.h"
 
 #include <stdio.h>
@@ -7,12 +7,12 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-hnCavernMap::hnCavernMap(unsigned int width, unsigned int height):
-	hnMap(width,height)
+mapCavern::mapCavern(unsigned int width, unsigned int height):
+	mapBase(width,height)
 {
 }
 
-hnCavernMap::~hnCavernMap()
+mapCavern::~mapCavern()
 {
 }
 
@@ -23,7 +23,7 @@ int dir[16] = {
 	    
 
 void
-hnCavernMap::Randomise()
+mapCavern::Randomise()
 {
 	int limit = (m_width * m_height * 2) / 5;
 	int count = 0;
@@ -68,7 +68,7 @@ hnCavernMap::Randomise()
 }
 
 void
-hnCavernMap::HighPassOne()
+mapCavern::HighPassOne()
 {
 	for ( int i = 0; i < m_width; i++ )
 		for ( int j = 0; j < m_height; j++ )
@@ -86,7 +86,7 @@ hnCavernMap::HighPassOne()
 }
 
 void
-hnCavernMap::HighPassTwo()
+mapCavern::HighPassTwo()
 {
 	hnWallType *newGrid = new hnWallType[m_width * m_height];
 	
@@ -112,7 +112,7 @@ hnCavernMap::HighPassTwo()
 }
 
 void
-hnCavernMap::HighPassThree()
+mapCavern::HighPassThree()
 {
 	hnWallType *newGrid = new hnWallType[m_width * m_height];
 	
@@ -138,7 +138,7 @@ hnCavernMap::HighPassThree()
 }
 
 void
-hnCavernMap::Generate()
+mapCavern::Generate()
 {
 	for ( int i = 0; i < m_width * m_height; i++ )  //clear us to fully rock
 	{

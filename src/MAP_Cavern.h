@@ -1,9 +1,9 @@
-#ifndef __HN_CAVERN_MAP_H__
-#define __HN_CAVERN_MAP_H__
+#ifndef __MAP_CAVERN_H__
+#define __MAP_CAVERN_H__
 
-#include "HN_Map.h"
+#include "MAP_Base.h"
 
-class hnCavernMap : public hnMap
+class mapCavern : public mapBase
 {
 	//-----------------------------------------------------
 	//  Cavernous level generation
@@ -15,8 +15,8 @@ class hnCavernMap : public hnMap
 	void			Wallify();
 	
 public:
-				hnCavernMap( unsigned int width, unsigned int height );
-	virtual			~hnCavernMap();
+				mapCavern( unsigned int width, unsigned int height );
+	virtual			~mapCavern();
 
 	virtual void		Generate();
 };
