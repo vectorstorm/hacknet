@@ -4,10 +4,39 @@
 #include <time.h>
 #include "HN_Game.h"
 #include "NET_Server.h"
+#include "HN_Group.h"
 
 int main( int argc, char *argv[] )
 {
-	printf("HackNet starting up...\n");
+	// parse arguments
+
+	bool legalArgs = true;
+	bool noGroups = false;
+
+	if ( argc > 1 )
+	{
+		for ( int i = 1; i < argc; i++ )
+		{
+			if ( strncmp( argv[i], "--no-groups", 11 ) == 0 )
+			{
+				noGroups = true;
+			}
+			else
+				legalArgs = false;
+		}
+	}
+
+	if ( !legalArgs )
+	{
+		printf("HackNet Server version %s\n", VERSION );
+		printf("Usage: hacknetd [--no-groups]\n");
+		exit(1);
+	}
+
+	if ( noGroups )
+		hnGroupManager::SetMaxGroupDistance(0);
+	
+	printf("HackNet version %s starting up...\n", VERSION );
 	
 	printf("Initialising random number generator...\n");
 	srand((int)time(NULL));

@@ -34,6 +34,7 @@ class hnGroupManager
 	hnGroup **		m_group;
 	int			m_maxGroupCount;
 	
+	static int		s_maxGroupDistanceSq;
 	static hnGroupManager *	s_instance;
 
 				hnGroupManager( int maxPlayers );
@@ -47,6 +48,8 @@ public:
 	static void		Shutdown();
 	
 	static hnGroupManager *	GetInstance();
+
+	static void		SetMaxGroupDistance(int dist) { s_maxGroupDistanceSq = dist * dist; }
 	
 	void			ProcessTurn();	// somebody's submitted a turn.  Check, and if any group is ready, do them!
 	void			UpdateGroups();

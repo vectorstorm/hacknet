@@ -4,7 +4,11 @@
 #include "HN_Player.h"
 #include "NET_Server.h"
 
+#define GROUP_DISTANCE_LEEWAY 		(15)
+#define GROUP_DISTANCE_LEEWAY_SQ 	(GROUP_DISTANCE_LEEWAY * GROUP_DISTANCE_LEEWAY)
+
 hnGroupManager * hnGroupManager::s_instance = NULL;
+int		hnGroupManager::s_maxGroupDistanceSq = GROUP_DISTANCE_LEEWAY_SQ;
 
 hnGroup::hnGroup( int maxPlayers ):
 	m_player(NULL),
@@ -214,8 +218,6 @@ hnGroupManager::AddPlayer( hnPlayer * player )
 	assert( 0 );
 }
 
-#define GROUP_DISTANCE_LEEWAY 		(15)
-#define GROUP_DISTANCE_LEEWAY_SQ 	(GROUP_DISTANCE_LEEWAY * GROUP_DISTANCE_LEEWAY)
 
 void
 hnGroupManager::PutPlayerInGroup(int id)
@@ -242,7 +244,7 @@ hnGroupManager::PutPlayerInGroup(int id)
 		}
 	}
 
-	if ( minDistance <= GROUP_DISTANCE_LEEWAY_SQ )
+	if ( minDistance <= s_maxGroupDistanceSq )
 	{
 		m_group[minGroupID]->AddPlayer(player);
 		return;

@@ -32,6 +32,14 @@ May 4, 2001:
 
   Added docs/instructions.txt to cover basic playing of HackNet.
 
+  Added --no-groups option to the server, to disable synching turns.
+  This leads to massive visibility issues.. a player's vision isn't
+  updated until he moves, which means that you won't see someone
+  walking near you if he walks faster than you.. I'd have to put that
+  hack code back into hnGame to make this work again..  I'm not going
+  to do that, and am going to hope that a better solution occurs to me
+  soon.
+
 May 3, 2001:
   Added initial revision of sorting players into groups.  Groups
   only exist on a single level.. anyone within 10 squares of another
