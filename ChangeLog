@@ -6,6 +6,17 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 1, 2001:
+  Moved movement validation code from hnGame into entBase, where it
+  belongs.  Talking should be moved into the entPlayer.  I'm now
+  contemplating moving the entPlayer out of the entBase hierarchy.. the
+  player isn't exactly a stable creature -- he can be polymorphed into
+  any other creature type, which suggests that he should posess a class
+  derived from the entBase, but not be one himself.  I'll make an entHuman
+  class or an entKnight class for him, and move the player-specific code
+  into perhaps hnPlayer, I think.  I'll think this over for a little while,
+  and perhaps these changes will be made tomorrow.
+
 April 30, 2001:
   Minor bugfixes to clean up some sloppy coding that was revealed when I
   finally remembered to build with -Wall.  Oops!

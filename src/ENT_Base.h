@@ -30,6 +30,8 @@ public:
 	void			SetPosition( const hnPoint & );
 	
 	virtual void		Think() {}			// Called to decide what to do each turn.
+
+	virtual bool		IsValidMove( hnDirection direction );	// Called to check to see if a move is legal.
 	virtual void		Move( hnDirection direction );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn

@@ -10,6 +10,7 @@ public:
 	virtual			~entGridBug();
 	
 	virtual void		Think(); 			// Called to decide what to do each turn.
+	virtual bool		IsValidMove( hnDirection dir );
 };
 
 #endif // __ENT_GRIDBUG_H__

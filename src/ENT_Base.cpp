@@ -44,6 +44,70 @@ entBase::SetPosition( const hnPoint & pos )
 	m_position = pos;
 }
 
+bool
+entBase::IsValidMove( hnDirection dir )
+{
+	bool legalMove = false;
+	bool blocked = false;
+	// validate the direction we've been given, and return true if we're
+	// able to go that way; false if not.
+
+	if ( dir >= 0 && dir < 8 )
+	{
+		// north->northwest
+		hnPoint potentialPos = offsetVector[dir] + GetPosition();
+
+		if ( hnDungeon::GetLevel(potentialPos.z)->WallAt(potentialPos.x,potentialPos.y) & WALL_Passable )
+			if ( hnDungeon::GetLevel(potentialPos.z)->MapTile(potentialPos.x,potentialPos.y).entity == NULL )
+			{
+				legalMove = true;
+			}
+			else
+				blocked = true;
+	}
+	else
+	{
+		// up or down -- check for appropriate stairways
+		hnPoint currentPos = GetPosition();
+		if ( dir == DIR_Up )
+		{
+			if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsUp )
+			{
+				hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
+				if ( hnDungeon::GetLevel(currentPos.z-1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
+				{
+					legalMove = true;       // nobody standing where we want to go.
+				}
+				else
+					blocked = true;
+			}
+		}
+		else if ( dir == DIR_Down )
+		{
+			if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsDown )
+			{
+				hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z+1)->GetUpStairs();
+				if ( hnDungeon::GetLevel(currentPos.z+1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
+				{
+					legalMove = true;       // nobody standing where we want to go.
+				}
+				else
+					blocked = true;
+			}
+		}
+	}
+/*	
+	if ( blocked )
+	{
+		char *buffer = "Someone is blocking the way.";
+		netServer::GetInstance()->StartMetaPacket( playerID );
+		netServer::GetInstance()->SendMessage(buffer);
+		netServer::GetInstance()->TransmitMetaPacket();
+	}
+*/
+	return legalMove;
+}
+
 void
 entBase::Move( hnDirection dir )
 {

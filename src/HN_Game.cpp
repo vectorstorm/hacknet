@@ -205,64 +205,10 @@ void
 hnGame::ClientMove(int playerID, hnDirection dir)
 {
 	entPlayer *player = m_player[playerID];
-	if ( dir >= 0 && dir < 10 )	// final sanity check
-	{
-		bool legalMove = false;
-		bool blocked = false;
-		//bool legalMove = true;
-		
-		if ( dir >= 0 && dir < 8 )
+	if ( dir >= 0 && dir < 10 )	// sanity check
+	{	
+		if ( player->IsValidMove(dir) )
 		{
-			// north->northwest
-			hnPoint potentialPos = offsetVector[dir] + player->GetPosition();
-			
-			if ( hnDungeon::GetLevel(potentialPos.z)->WallAt(potentialPos.x,potentialPos.y) & WALL_Passable )
-				if ( hnDungeon::GetLevel(potentialPos.z)->MapTile(potentialPos.x,potentialPos.y).entity == NULL )
-				{
-					legalMove = true;
-				}
-				else
-					blocked = true;
-		}
-		else
-		{
-			// up or down -- check for appropriate stairways here.
-			hnPoint currentPos = player->GetPosition();
-			if ( dir == DIR_Up )
-				if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsUp )
-				{
-					hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
-					if ( hnDungeon::GetLevel(currentPos.z-1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
-					{
-						legalMove = true;	// nobody standing where we want to go.
-					}
-					else
-						blocked = true;
-				}
-			if ( dir == DIR_Down )
-				if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsDown )
-				{
-					hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z+1)->GetUpStairs();
-					if ( hnDungeon::GetLevel(currentPos.z+1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
-					{
-						legalMove = true;	// nobody standing where we want to go.
-					}
-					else
-						blocked = true;
-				}
-		}
-		
-		if ( blocked )
-		{
-			char *buffer = "Someone is blocking the way.";
-			netServer::GetInstance()->StartMetaPacket( playerID );
-			netServer::GetInstance()->SendMessage(buffer);
-			netServer::GetInstance()->TransmitMetaPacket();
-		}
-		if ( legalMove )
-		{
-			// TODO:
-			// I'd really like to move most (all?) of this code into hnPlayer::Move() and/or MoveTo().
 			hnPoint iniPos = player->GetPosition();
 			netMapUpdateBBox update;
 			
@@ -282,13 +228,9 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			hnPoint endPos = player->GetPosition();
 
 			for ( int i = 0; i < MAX_CLIENTS; i++ )
-			{
 				if ( i != playerID && m_player[i] != NULL )
-				{
 					if ( m_player[i]->CanSee(iniPos) || m_player[i]->CanSee(endPos) )
 						m_player[i]->PostTurn();
-				}
-			}
 		}
 	}else{
 		printf("Tried to move in an illegal direction: %d.\n", dir);
