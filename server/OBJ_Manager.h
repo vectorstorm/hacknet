@@ -14,7 +14,7 @@ class objManager
 	
 	objPrototype *		m_objectDef;
 	uint16			m_objectCount;
-	uint16			m_objectTotalProbability;
+	uint16			m_objectTotalProbability[OBJ_TYPE_MAX];
 
 				objManager();
 				~objManager();
@@ -28,7 +28,7 @@ public:
 
 	const objPrototype &	GetPrototype(uint16 id);
 
-	objBase *		RandomItem(uint8 level);
+	objBase *		RandomItem(uint8 level, objType type = OBJ_TYPE_Random);
 };
 
 

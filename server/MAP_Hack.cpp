@@ -594,7 +594,7 @@ mapHack::CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yali
 			for ( int j = result.top; j <= result.bottom; j++ )
 			{
 				WallAt(i,j) = WALL_Room;
-				MapTile(i,j).lit = lit;
+				MapTile(i,j).permalit = lit;
 			}
 		
 		// now make our walls..
@@ -622,6 +622,13 @@ mapHack::CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yali
 			for ( int j = result.top-5; j <= result.bottom+5; j++ )
 			{
 				MapTile(i,j).border = true;
+			}
+		
+		//  Now light the room.
+		for ( int i = result.left-1; i <= result.right+1; i++ )
+			for ( int j = result.top-1; j <= result.bottom+1; j++ )
+			{
+				MapTile(i,j).permalit = lit;
 			}
 		
 		m_room[m_roomCount] = new mapRoom;

@@ -36,6 +36,8 @@ mapBase::mapBase(uint8 width, uint8 height, uint8 depth):
 
 	for ( int i = 0; i < MAX_ROOMS; i++ )
 		m_room[i] = NULL;
+
+	m_cells = new mapCell[max(width,height)];
 }
 
 mapBase::~mapBase()
@@ -44,6 +46,7 @@ mapBase::~mapBase()
 		delete m_room[i];
 
 	delete [] m_tile;
+	delete [] m_cells;
 }
 
 hnMaterialType &
@@ -71,6 +74,15 @@ mapBase::MapTile(uint8 x, uint8 y)
 		return m_tile[x + (y * m_width)];
 
 	return m_backgroundType;
+}
+
+bool
+mapBase::OnMap(uint8 x, uint8 y)
+{
+	if ( x < m_width && y < m_height )
+		return true;
+
+	return false;
 }
 
 void
@@ -148,6 +160,59 @@ mapBase::PrepareVisibility()
 		}
 }
 
+
+void
+mapBase::CalculateVisibility( const hnPoint & position, mapClient * destMap )
+{
+	//-------------------------------------------------------------
+	//
+	//  Reset dest's visibility of last frame, since we're about to
+	//  recalculate it.
+	//
+	//-------------------------------------------------------------
+
+	for ( int i = 0; i < m_width; i++ )
+		for ( int j = 0; j < m_height; j++ )
+			destMap->MapTile(i,j).visible = false;
+	
+	//-------------------------------------------------------------
+	//
+	//  Set 'lit' property on all map tiles, based upon player
+	//  location and suchlike.  (TODO:  Implement movable light
+	//  sources)
+	//
+	//-------------------------------------------------------------
+	
+	for ( int i = 0; i < m_width; i++ )
+		for ( int j = 0; j < m_height; j++ )
+		{
+			MapTile(i,j).lit = false;
+			
+			if ( MapTile(i,j).permalit )
+				MapTile(i,j).lit = true;
+			else
+				if ( (fabs(i-position.x ) <=1) && (fabs(j-position.y) <= 1) )
+					MapTile(i,j).lit = true;
+		}
+	
+	hnPoint pos = position;
+
+	CalculateOctantVisibility(pos, hnPoint(1,1), false, m_width, destMap);
+	CalculateOctantVisibility(pos, hnPoint(1,-1), false, m_width, destMap);
+	CalculateOctantVisibility(pos, hnPoint(-1,1), false, m_width, destMap);
+	CalculateOctantVisibility(pos, hnPoint(-1,-1), false, m_width, destMap);
+	
+	CalculateOctantVisibility(pos, hnPoint(1,1), true, m_width, destMap);
+	CalculateOctantVisibility(pos, hnPoint(1,-1), true, m_width, destMap);
+	CalculateOctantVisibility(pos, hnPoint(-1,1), true, m_width, destMap);
+	CalculateOctantVisibility(pos, hnPoint(-1,-1), true, m_width, destMap);
+	
+	destMap->MapTile(pos.x,pos.y).visible = true;
+	
+}
+
+
+/* 
 void
 mapBase::CalculateVisibility( const hnPoint & position, mapClient * destMap )
 {
@@ -222,81 +287,6 @@ mapBase::CalculateVisibility( const hnPoint & position, mapClient * destMap )
 			}
 	}
 }
-/*
-void
-mapBase::UpdateVisibility( const hnPoint & position, mapBase * sourceMap )
-{
-	//-------------------------------------------------------------
-	//
-	//  Reset visibility of last frame, since we're about to
-	//  recalculate it.
-	//
-	//-------------------------------------------------------------
-
-	for ( int i = 0; i < m_width; i++ )
-		for ( int j = 0; j < m_height; j++ )
-			MapTile(i,j).visible = false;
-	
-	//-------------------------------------------------------------
-	//
-	//  Rogue-style LOS.. yes, it's not correct, but it's fast.
-	//  Real LOS is yet-to-be-implemented.
-	//
-	//-------------------------------------------------------------
-	
-	hnPoint pos = position;
-	
-	if ( sourceMap->WallAt( pos.x, pos.y ) & WALL_WithinRoom )
-	{
-		//---------------------------------------------------------------
-		//  Figure out what room we're in, then update visibility for the
-		//  whole room
-		//---------------------------------------------------------------
-		mapRoom *where = NULL;
-		
-		for ( int i = 0; i < sourceMap->m_roomCount; i++ )
-		{
-			mapRoom *room = sourceMap->m_room[i];
-			
-			if ( room )
-			{
-				if ( (room->left <= pos.x) && (room->right >= pos.x) &&
-					(room->top <= pos.y) && (room->bottom >= pos.y) )
-					{
-						where = room;
-						break;
-					}
-			}
-		}
-
-		if ( where )
-		{
-			for ( int y = where->top-1; y <= where->bottom+1; y++ )
-				for ( int x = where->left-1; x <= where->right+1; x++ )
-					MapTile(x,y).visible 	= 	true;
-		
-		}
-		else
-		{
-			printf("Couldn't figure out what room at (%d,%d)\n", pos.x, pos.y);
-			assert(0);
-		}
-	}
-	else
-	{
-	        //---------------------------------------------------------------
-	        //  Update visibility here.  In a corridor, just update the 3x3 box
-	        //  around the player.
-	        //---------------------------------------------------------------
-
-		for ( int j = -1; j <= 1; j++ )
-			for ( int i = -1; i <= 1; i++ )
-			{
-				if ( !(sourceMap->WallAt(pos.x+i,pos.y+j) & WALL_Any) )
-					MapTile(pos.x+i,pos.y+j).visible = true;
-			}
-	}
-}
 */
 
 void
@@ -317,7 +307,7 @@ mapBase::UpdateMap( mapClient * destMap )
 		{
 			mapClientTile *myTile 	= 	&destMap->MapTile(x,y);
 			
-			if ( myTile->visible )
+			if ( myTile->visible && MapTile(x,y).lit )
 			{
 				mapTile *realTile 	= 	&MapTile(x,y);
 				bool changed 		= 	false;
@@ -380,6 +370,11 @@ mapBase::UpdateMap( mapClient * destMap )
 			}
 			else
 			{
+				// uncomment the following two lines to send full visibility information
+				// each turn, marking unseen things as unknown, to test visibility algorithms.
+				
+					//myTile->wall = WALL_Unknown;
+					//destMap->MarkPointChanged( x, y );
 				if ( myTile->entity )
 				{
 					myTile->entity = ENTITY_None;
@@ -411,6 +406,8 @@ mapTile::mapTile()
 	object = new objBase( 0 );
 	entity = NULL;
 	visionBlocked = false;
+	permalit = false;
+	lit = false;
 }
 
 mapTile::~mapTile()
@@ -422,4 +419,238 @@ void
 mapTile::UpdateVisibility()
 {
 	visionBlocked = !(wall & WALL_Passable);	// if we can't walk through it, we can't see through it.
+}
+
+bool
+mapTile::isLitForMe(hnPoint position)
+{
+	return true;
+}
+
+
+//  Line of Sight Implementation
+
+void
+mapBound::reset()
+{
+	max = 0.0f;
+	count = 0.0f;
+}
+
+bool
+mapBound::inUse() const
+{
+	return ( max != 0.0f );
+}
+
+bool
+mapBound::reached() const
+{
+	return ( inUse() && count > max );
+}
+
+bool
+mapBound::steeper(float inverseGradient) const 
+{
+	return ( !inUse() || inverseGradient < max );
+}
+
+bool
+mapBound::shallower(float inverseGradient) const
+{
+	return ( inverseGradient > max );
+}
+
+void
+mapCell::init()
+{
+	lit = true;		// In shadowcasting, everything starts lit.
+	upperBound.reset();
+	lowerBound.reset();
+}
+
+
+void
+mapBase::CalculateOctantVisibility( const hnPoint &position, const hnPoint &offset, bool swap, unsigned int N, mapClient *destMap )
+{
+	bool blocker;
+	int below = 0;
+	bool belowLeftLit = false;
+	bool somethingWasLit = false;
+	
+	int boundsCounter = 0;
+	int cell;
+	int col;
+
+	// Cell 0,0 is assumed to be lit.
+	
+	m_cells[0].init();
+
+	// For each column...
+	for (col = 1; col < N; ++col)
+	{
+		somethingWasLit = false;
+		belowLeftLit = false;
+
+		// For each cell in the column, such that we iterate
+		// over an octant...
+		for ( cell = 0; cell <= col; ++cell )
+		{
+			below = cell - 1;
+			if ( cell == col )
+			{
+				m_cells[cell].init();
+			}
+			
+			bool onMap;
+			mapTile *t;
+			mapClientTile *dt;
+			if ( swap )
+			{
+				t = &MapTile( position.x + offset.x * cell, position.y + offset.y * col);
+				dt = &destMap->MapTile( position.x + offset.x * cell, position.y + offset.y * col);
+				onMap = OnMap( position.x + offset.x * cell, position.y + offset.y * col);
+			}
+			else
+			{
+				t = &MapTile( position.x + offset.x * col, position.y + offset.y * cell);
+				dt = &destMap->MapTile( position.x + offset.x * col, position.y + offset.y * cell);
+				onMap = OnMap( position.x + offset.x * col, position.y + offset.y * cell);
+			}
+			
+			blocker = ( t->visionBlocked );
+
+			if (blocker)
+			{
+				// By default, blockers are not visible
+				m_cells[cell].visibleBlocker = false;
+
+				// If cell below is lit or cell left is lit or cell diagonally below and left is lit...
+				if ( (below >= 0 && m_cells[below].lit) || m_cells[cell].lit || belowLeftLit )
+				{
+					// This blocker is visible.
+
+					// belowLeftLit is set to true if the cell
+					// to the left of the current cell is lit --
+					// this will be used during the next iteration,
+					// where it will refer to the cell to the bottom left
+					// of the new cell under consideration.
+
+					belowLeftLit = m_cells[cell].lit;
+
+					// We're visible...
+					m_cells[cell].visibleBlocker = true;
+
+					// But unlit, so that we propagate shadows
+					m_cells[cell].lit = false;
+					
+					// Create a new shadow!
+
+					// Calculate appropriate upper/lower inverse gradients
+					// (run/rise)
+
+					// Calculate upper inverse gradient from top-left of
+					// this cell to the centre of the source (0.5,0.5).
+					float upper = (float)(col - 0.5f)/(float)(cell + 0.5f);
+
+					// If the gradient for the top is steeper than our
+					// current one, set up a shadow.
+					if ( m_cells[cell].upperBound.steeper(upper) )
+					{
+						// new upper shadow
+						m_cells[cell].upperBound.max = upper;
+						m_cells[cell].upperBound.count = 0;
+						boundsCounter++;
+					}
+
+					// Calculate lower inverse gradient from bottom-right
+					// of this cell to the centre of the source.
+					if ( cell > 0 )
+					{
+						float lower = (float)(col + 0.5f)/(float)(cell - 0.5f);
+
+						// If the gradient for the bottom is shallower
+						// than our current one, set up a shadow.
+						if ( m_cells[cell].lowerBound.shallower(lower))
+						{
+							// New lower shadow.
+							m_cells[cell].lowerBound.max = lower;
+							m_cells[cell].lowerBound.count = 0;
+							boundsCounter++;
+						}
+					}
+				}
+			}
+
+			if (below >= 0)
+			{
+				// Grow shadow bounds.
+
+				m_cells[cell].upperBound.count += 1.0f;
+				m_cells[cell].lowerBound.count += 1.0f;
+
+				// Grow lower bound.
+				if ( m_cells[below].lowerBound.reached() )
+				{
+					// light is moving up from below
+					// so move below's lower shadow bound to this cell.
+					m_cells[below].lit = true;
+					m_cells[cell].visibleBlocker = true;
+					m_cells[cell].lowerBound.max = m_cells[below].lowerBound.max;
+					m_cells[cell].lowerBound.count = m_cells[below].lowerBound.count - m_cells[below].lowerBound.max;
+					m_cells[below].lowerBound.max = 0;
+					m_cells[below].lowerBound.count = 0;
+				}
+
+				// Grow upper bound
+				if ( m_cells[below].upperBound.reached() )
+				{
+					// a shadow is moving up from below.
+					// move below's upper shadow bound to this cell.
+					m_cells[cell].lit = false;
+					m_cells[cell].visibleBlocker = false;
+					m_cells[cell].upperBound.max = m_cells[below].upperBound.max;
+					m_cells[cell].upperBound.count = m_cells[below].upperBound.count - m_cells[below].upperBound.max;
+					m_cells[below].upperBound.max = 0;
+					m_cells[below].upperBound.count = 0;
+				}
+
+				// Remove superfluous shadow boundaries.
+
+				// Remove lower bound if possible.
+				if (!m_cells[below].lit)	// if the cell below isn't lit
+				{
+					// Remove our shadow
+					if (m_cells[cell].lowerBound.inUse() )
+						boundsCounter--;
+					m_cells[cell].lowerBound.reset();
+				}
+
+				// Remove upper bound if possible.
+				if (!m_cells[cell].lit)  	// if this cell is unlit
+				{
+					// Remove below's shadow.
+					if (m_cells[below].upperBound.inUse())
+						boundsCounter--;
+					m_cells[below].upperBound.reset();
+				}
+			} // end if (below >= 0)
+
+			if ( onMap )
+			{
+			// Apply 'lit' value.
+			
+				if (m_cells[cell].lit || (blocker && m_cells[cell].visibleBlocker))
+				{
+					somethingWasLit = true;
+					dt->visible = t->isLitForMe( position );
+				}
+			}
+		}
+
+		if ( !somethingWasLit )
+		{
+			return;		
+		}
+	}
 }

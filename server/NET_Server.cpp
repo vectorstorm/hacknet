@@ -604,7 +604,6 @@ netServer::TransmitMetaPacket()
 				printf("Value: %d\n", m_metaPacket->GetBuffer()[i]);
 			}
 #endif
-		
 			if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), 0 ) == -1 )
 			{
 				// something's gone wrong here -- presumably the client has disconnected from us
@@ -614,9 +613,21 @@ netServer::TransmitMetaPacket()
 			}
 			success = true;
 		}
+		else
+		{
+		//	We don't actually care about this case..  it's perfectly legal to try to send a
+		//	zero-length metapacket -- we'll just quietly not send it.  (This makes network
+		//	logic a lot simpler elsewhere in the codebase)
+		//	
+		//	printf("Illegal metapacket length %d!\n",m_metaPacket->GetBufferLength());
+		}
 		
 		delete m_metaPacket;
 		m_metaPacket = NULL;
+	}
+	else
+	{
+		printf("Illegal request to send non-existant metapacket!\n");
 	}
 	
 	return success;

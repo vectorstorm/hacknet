@@ -63,9 +63,9 @@ hnDisplay::UpdateMapTile(const hnPoint &point, const mapClientTile &tile)
 	{
 		mapClientTile *myTile = &m_map[point.z]->MapTile(point.x,point.y);
 		
-		if ( tile.material != MATERIAL_Unknown )
+//		if ( tile.material != MATERIAL_Unknown )
 			m_map[point.z]->MaterialAt(point.x,point.y) = tile.material;
-		if ( tile.wall != WALL_Unknown )
+//		if ( tile.wall != WALL_Unknown )
 			m_map[point.z]->WallAt(point.x,point.y) = tile.wall;
 		
 		myTile->entity = tile.entity;
@@ -222,7 +222,7 @@ hnDisplay::WieldedItem( const objDescription &desc, int inventoryID )
                 'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
         };
 
-	if (desc.type != Illegal )
+	if (desc.type != OBJ_TYPE_Illegal )
 	{
 		char buffer[256];
 		char nameBuffer[128];

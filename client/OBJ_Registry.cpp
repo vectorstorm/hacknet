@@ -15,7 +15,7 @@ objRegistry::objRegistry(uint16 objectCount):
 
 	for( int i = 0; i < m_nameCount; i++ )
 	{
-		m_objectType[i] = Illegal;
+		m_objectType[i] = OBJ_TYPE_Illegal;
 		m_objectName[i] = NULL;
 	}
 }
@@ -89,7 +89,7 @@ objRegistry::SetType(uint16 i, objType type)
 objType
 objRegistry::GetType(uint16 i)
 {
-	objType result = Illegal;
+	objType result = OBJ_TYPE_Illegal;
 
 	if ( i < m_nameCount )
 		result = m_objectType[i];
@@ -110,19 +110,19 @@ objRegistry::GetObjectDescriptionText(const objDescription &desc, char *buffer, 
 
 	switch( type )
 	{
-		case Potion:
+		case OBJ_TYPE_Potion:
 			snprintf(name, NAMEBUFFER_LEN, "potion");
 			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
 			break;
-		case Scroll:
+		case OBJ_TYPE_Scroll:
 			snprintf(name, NAMEBUFFER_LEN, "scroll");
 			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
 			break;
-		case Wand:
+		case OBJ_TYPE_Wand:
 			snprintf(name, NAMEBUFFER_LEN, "wand");
 			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
 			break;
-		case Spellbook:
+		case OBJ_TYPE_Spellbook:
 			snprintf(name, NAMEBUFFER_LEN, "spellbook");
 			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
 			break;

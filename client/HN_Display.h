@@ -25,6 +25,7 @@ protected:
 	uint8		m_inventoryCount;
 
 	sint8		m_wieldedItem;
+	sint8		m_wornItem[WORN_MAX];
 
 	hnStatus *	m_status;	// status of our player.
 

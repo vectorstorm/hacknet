@@ -40,7 +40,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	
 	for ( int i = 0; i < INVENTORY_MAX; i++ )
 	{
-		m_clientInventory[i].type = Illegal;
+		m_clientInventory[i].type = OBJ_TYPE_Illegal;
 		m_clientInventory[i].count = 0;
 		m_clientInventoryMapping[i] = NULL;
 	}
@@ -207,7 +207,7 @@ hnPlayer::Wield( const objDescription &object, uint8 inventorySlot )
 		// unwield instead.
 		m_queuedTurn.type = queuedTurn::Wield;
 		m_queuedTurn.wield.object = NULL;
-		m_queuedTurn.wield.desc.type = Illegal;
+		m_queuedTurn.wield.desc.type = OBJ_TYPE_Illegal;
 		m_queuedTurn.wield.inventorySlot = inventorySlot;
 	}
 }
@@ -445,6 +445,7 @@ hnPlayer::UpdateVision()
 	//  Sanity checks, and be sure that our vision map has been
 	//  allocated.
 	//---------------------------------------------------------------
+	
 	if ( GetPosition().z < 0 )
 		return;		// we've left the dungeon.  No need to do vision checks.
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
@@ -467,6 +468,16 @@ void
 hnPlayer::SendUpdate()
 {
        	//---------------------------------------------------------------
+	//  Sanity checks, and be sure that our vision map has been
+	//  allocated.
+	//---------------------------------------------------------------
+	if ( GetPosition().z < 0 )
+	{
+		printf("ERROR!  I'm at an illegal level depth!\n");
+		return;
+	}
+	
+	//---------------------------------------------------------------
       	// in case we need to send a packet, tell the server to
       	// start building one.  We'll tell it to transmit it at the
       	// end of this function.  If no data is actually put into the
@@ -474,12 +485,6 @@ hnPlayer::SendUpdate()
 	//---------------------------------------------------------------
 	netServer::GetInstance()->StartMetaPacket(m_playerID);
 
-	//---------------------------------------------------------------
-	//  Sanity checks, and be sure that our vision map has been
-	//  allocated.
-	//---------------------------------------------------------------
-	if ( GetPosition().z < 0 )
-		return;
 
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
 	assert(realMap);
@@ -762,5 +767,9 @@ hnPlayer::SendMapData( const hnPoint2D &tlpos, const hnPoint2D &brpos, int level
 	
 		netServer::GetInstance()->SendClientLocation( GetPosition() );
 		netServer::GetInstance()->SendMapUpdateBBox( update );
+	}
+	else
+	{
+		printf( "No visual change.\n" );
 	}
 }

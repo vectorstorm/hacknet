@@ -9,20 +9,20 @@
 	OBJECT( \
 		OBJ(name,appearance), \
 		BITS(nameknown,merge,true,false,false,true,false,false,big,false,type,subtype,material), \
-		0, Weapon, prob, 0, \
+		0, OBJ_TYPE_Weapon, prob, 0, \
 		weight, cost, sdam, ldam, hitbonus, 0, weight, color )
 
 #define PROJECTILE(name,app,kn,prob,wt,cost,sdam,ldam,hitbon,metal,sub,color) \
         OBJECT( \
                 OBJ(name,app), \
                 BITS(kn,1,1,0,0,1,0,0,0,0,P,sub,metal), 0, \
-                Weapon, prob, 0, \
+                OBJ_TYPE_Weapon, prob, 0, \
                 wt, cost, sdam, ldam, hitbon, 0, wt, color )
 
 #define BOW(name,app,kn,prob,wt,cost,hitbon,metal,sub,color) \
         OBJECT( \
 		OBJ(name,app), BITS(kn,0,1,0,0,1,0,0,0,0,0,sub,metal), 0, \
-		Weapon, prob, 0, \
+		OBJ_TYPE_Weapon, prob, 0, \
 		wt, cost, 2, 2, hitbon, 0, wt, color )
 							
 /* armor ... */
@@ -34,7 +34,7 @@
 #define ARMOR(name,desc,kn,mgc,blk,power,prob,delay,wt,cost,ac,can,sub,metal,c) \
         OBJECT( \
                 OBJ(name,desc), BITS(kn,0,1,0,mgc,1,0,0,blk,0,0,sub,metal), \
-		power, Armour, prob, delay, wt, cost, \
+		power, OBJ_TYPE_Armour, prob, delay, wt, cost, \
                 0, 0, 10 - ac, can, wt, c )
 #define HELM(name,desc,kn,mgc,power,prob,delay,wt,cost,ac,can,metal,c) \
         ARMOR(name,desc,kn,mgc,0,power,prob,delay,wt,cost,ac,can,ARM_Helm,metal,c)
@@ -52,62 +52,62 @@
 #define RING(name,power,stone,cost,mgc,spec,mohs,metal,color) OBJECT( \
                 OBJ(name,stone), \
                 BITS(0,0,spec,0,mgc,spec,0,0,0,HARDGEM(mohs),0,P_NONE,metal), \
-                power, Ring, 0, 0, 3, cost, 0, 0, 0, 0, 15, color )
+                power, OBJ_TYPE_Ring, 10, 0, 3, cost, 0, 0, 0, 0, 15, color )
 
 #define AMULET(name,desc,power,prob) OBJECT( \
                 OBJ(name,desc), BITS(0,0,0,0,1,0,0,0,0,0,0,P_NONE,IRON), power, \
-                Amulet, prob, 0, 20, 150, 0, 0, 0, 0, 20, HI_METAL )
+                OBJ_TYPE_Amulet, prob, 0, 20, 150, 0, 0, 0, 0, 20, HI_METAL )
 
 #define TOOL(name,desc,kn,mrg,mgc,chg,prob,wt,cost,mat,color) \
         OBJECT( OBJ(name,desc), \
                 BITS(kn,mrg,chg,0,mgc,chg,0,0,0,0,0,P_NONE,mat), \
-                0, Tool, prob, 0, \
+                0, OBJ_TYPE_Tool, prob, 0, \
                 wt, cost, 0, 0, 0, 0, wt, color )
 #define CONTAINER(name,desc,kn,mgc,chg,prob,wt,cost,mat,color) \
         OBJECT( OBJ(name,desc), \
                 BITS(kn,0,chg,1,mgc,chg,0,0,0,0,0,P_NONE,mat), \
-                0, Tool, prob, 0, \
+                0, OBJ_TYPE_Tool, prob, 0, \
                 wt, cost, 0, 0, 0, 0, wt, color )
 #define WEPTOOL(name,desc,kn,mgc,bi,prob,wt,cost,sdam,ldam,hitbon,sub,mat,clr) \
         OBJECT( OBJ(name,desc), \
                 BITS(kn,0,1,0,mgc,1,0,0,bi,0,hitbon,sub,mat), \
-                0, Tool, prob, 0, \
+                0, OBJ_TYPE_Tool, prob, 0, \
                 wt, cost, sdam, ldam, hitbon, 0, wt, clr )
 
 #define FOOD(name,prob,delay,wt,unk,tin,nutrition,color) OBJECT( \
                 OBJ(name,(char *)0), BITS(1,1,unk,0,0,0,0,0,0,0,0,P_NONE,tin), 0, \
-                Food, prob, delay, \
+                OBJ_TYPE_Food, prob, delay, \
                 wt, nutrition/20 + 5, 0, 0, 0, 0, nutrition, color )
 
 #define POTION(name,desc,mgc,power,prob,cost,color) OBJECT( \
                 OBJ(name,desc), BITS(0,1,0,0,mgc,0,0,0,0,0,0,P_NONE,GLASS), power, \
-                Potion, prob, 0, 20, cost, 0, 0, 0, 0, 10, color )
+                OBJ_TYPE_Potion, prob, 0, 20, cost, 0, 0, 0, 0, 10, color )
 
 #define SCROLL(name,text,mgc,prob,cost) OBJECT( \
                 OBJ(name,text), BITS(0,1,0,0,mgc,0,0,0,0,0,0,P_NONE,PAPER), 0, \
-                Scroll, prob, 0, 5, cost, 0, 0, 0, 0, 6, HI_PAPER )
+                OBJ_TYPE_Scroll, prob, 0, 5, cost, 0, 0, 0, 0, 6, HI_PAPER )
 
 #define SPELL(name,desc,sub,prob,delay,level,mgc,dir,color) OBJECT( \
                 OBJ(name,desc), BITS(0,0,0,0,mgc,0,0,0,0,0,dir,sub,PAPER), 0, \
-                Spellbook, prob, delay, \
+                OBJ_TYPE_Spellbook, prob, delay, \
                 50, level*100, 0, 0, 0, level, 20, color )
 
 #define WAND(name,typ,prob,cost,mgc,dir,metal,color) OBJECT( \
                 OBJ(name,typ), BITS(0,0,1,0,mgc,1,0,0,0,0,dir,P_NONE,metal), 0, \
-                Wand, prob, 0, 7, cost, 0, 0, 0, 0, 30, color )
+                OBJ_TYPE_Wand, prob, 0, 7, cost, 0, 0, 0, 0, 30, color )
 
 #define COIN(name,prob,metal) OBJECT( \
                 OBJ(name,(char *)0), BITS(0,1,0,0,0,0,0,0,0,0,0,P_NONE,metal), 0, \
-                Gold, prob, 0, 1, 0, 0, 0, 0, 0, 0, HI_GOLD )
+                OBJ_TYPE_Gold, prob, 0, 1, 0, 0, 0, 0, 0, 0, HI_GOLD )
 
 #define GEM(name,desc,prob,wt,gval,nutr,mohs,glass,color) OBJECT( \
             OBJ(name,desc), \
             BITS(0,1,0,0,0,0,0,0,0,HARDGEM(mohs),0,-P_SLING,glass), 0, \
-            Gem, prob, 0, 1, gval, 3, 3, 0, 0, nutr, color )
+            OBJ_TYPE_Gem, prob, 0, 1, gval, 3, 3, 0, 0, nutr, color )
 #define ROCK(name,desc,kn,prob,wt,gval,sdam,ldam,mgc,nutr,mohs,glass,color) OBJECT( \
             OBJ(name,desc), \
             BITS(kn,1,0,0,mgc,0,0,0,0,HARDGEM(mohs),0,-P_SLING,glass), 0, \
-            Gem, prob, 0, wt, gval, sdam, ldam, 0, 0, nutr, color )
+            OBJ_TYPE_Gem, prob, 0, wt, gval, sdam, ldam, 0, 0, nutr, color )
 
 
 
@@ -529,10 +529,10 @@ AMULET("amulet of reflection",    "hexagonal",  REFLECTING,  75),
 AMULET("amulet of magical breathing", "octagonal",      MAGICAL_BREATHING, 65),
 OBJECT(OBJ("cheap plastic imitation of the Amulet of Yendor",
         "Amulet of Yendor"), BITS(0,0,1,0,0,0,0,0,0,0,0,0,PLASTIC), 0,
-        Amulet, 0, 0, 20,    0, 0, 0, 0, 0,  1, HI_METAL),
+        OBJ_TYPE_Amulet, 0, 0, 20,    0, 0, 0, 0, 0,  1, HI_METAL),
 OBJECT(OBJ("Amulet of Yendor",  /* note: description == name */
         "Amulet of Yendor"), BITS(0,0,1,0,1,0,1,1,0,0,0,0,MITHRIL), 0,
-        Amulet, 0, 0, 20, 3500, 0, 0, 0, 0, 20, HI_METAL),
+        OBJ_TYPE_Amulet, 0, 0, 20, 3500, 0, 0, 0, 0, 20, HI_METAL),
 
 /* containters */
 CONTAINER("large box", (char *)0,       1, 0, 0,  40,350,   8, WOOD, HI_WOOD),
@@ -611,10 +611,10 @@ WEPTOOL("unicorn horn", (char *)0,
 /* two special unique artifact "tools" */
 OBJECT(OBJ("Candelabrum of Invocation", "candelabrum"),
                 BITS(0,0,1,0,1,0,1,1,0,0,0,P_NONE,GOLD), 0,
-                Tool, 0, 0,10, 3000, 0, 0, 0, 0, 200, HI_GOLD),
+                OBJ_TYPE_Tool, 0, 0,10, 3000, 0, 0, 0, 0, 200, HI_GOLD),
 OBJECT(OBJ("Bell of Opening", "silver bell"),
                 BITS(0,0,1,0,1,1,1,1,0,0,0,P_NONE,SILVER), 0,
-                Tool, 0, 0,10, 1000, 0, 0, 0, 0, 50, HI_SILVER),
+                OBJ_TYPE_Tool, 0, 0,10, 1000, 0, 0, 0, 0, 50, HI_SILVER),
 
 /* meat */
 FOOD("tripe ration",       140, 2, 10, 0, FLESH, 200, CLR_BROWN),
@@ -626,7 +626,7 @@ FOOD("huge chunk of meat",   0,20,400, 0, FLESH,2000, CLR_BROWN),
 /* special case because it's not mergable */
 OBJECT(OBJ("meat ring", (char *)0),
     BITS(1,0,0,0,0,0,0,0,0,0,0,0,FLESH),
-    0, Food, 0, 1, 5, 1, 0, 0, 0, 0, 5, CLR_BROWN),
+    0, OBJ_TYPE_Food, 0, 1, 5, 1, 0, 0, 0, 0, 5, CLR_BROWN),
 
 /* fruits & veggies */
 FOOD("kelp frond",           0, 1,  1, 0, VEGGY,  30, CLR_GREEN),
@@ -756,7 +756,7 @@ SPELL("stone to flesh",  "thick",       P_HEALING_SPELL, 15,  1, 3, 1, IMMEDIATE
 SPELL("blank paper",     "plain",       P_NONE, 18,  0, 0, 0, 0,         HI_PAPER),
 /* a special, one of a kind, spellbook */
 OBJECT(OBJ("Book of the Dead", "papyrus"), BITS(0,0,1,0,1,0,1,1,0,0,0,P_NONE,PAPER), 0,
-        Spellbook, 0, 0,20, 3500, 0, 0, 0, 7, 20, HI_PAPER),
+        OBJ_TYPE_Spellbook, 0, 0,20, 3500, 0, 0, 0, 7, 20, HI_PAPER),
 
 /* Wands... */
 WAND("light",          "glass",    95, 100, 1, NODIR,     GLASS,    HI_GLASS),
@@ -837,24 +837,24 @@ ROCK("rock", (char *)0,         1,100,  10,  0, 3, 3, 0, 10, 7, MINERAL, CLR_GRA
  * on a specific type and may act as containers (both affect weight).
  */
 OBJECT(OBJ("boulder",(char *)0), BITS(1,0,0,0,0,0,0,0,1,0,0,P_NONE,MINERAL), 0,
-                Rock,   100, 0, 6000,  0, 20, 20, 0, 0, 2000, HI_MINERAL),
+                OBJ_TYPE_Rock,   100, 0, 6000,  0, 20, 20, 0, 0, 2000, HI_MINERAL),
 OBJECT(OBJ("statue", (char *)0), BITS(1,0,0,1,0,0,0,0,0,0,0,P_NONE,MINERAL), 0,
-                Rock,   900, 0, 2500,  0, 20, 20, 0, 0, 2500, CLR_WHITE),
+                OBJ_TYPE_Rock,   900, 0, 2500,  0, 20, 20, 0, 0, 2500, CLR_WHITE),
 
 OBJECT(OBJ("heavy iron ball", (char *)0), BITS(1,0,0,0,0,0,0,0,0,0,WHACK,P_NONE,IRON), 0,
-                Ball,  1000, 0,  480, 10, 25, 25, 0, 0,  200, HI_METAL),
+                OBJ_TYPE_Ball,  1000, 0,  480, 10, 25, 25, 0, 0,  200, HI_METAL),
                                                 /* +d4 when "very heavy" */
 OBJECT(OBJ("iron chain", (char *)0), BITS(1,0,0,0,0,0,0,0,0,0,WHACK,P_NONE,IRON), 0,
-                Chain, 1000, 0,  120,  0,  4,  4, 0, 0,  200, HI_METAL),
+                OBJ_TYPE_Chain, 1000, 0,  120,  0,  4,  4, 0, 0,  200, HI_METAL),
                                                 /* +1 both l & s */
 
 
 OBJECT(OBJ("blinding venom", "splash of venom"),
                 BITS(0,1,0,0,0,0,0,1,0,0,0,P_NONE,LIQUID), 0,
-                Venom,  500, 0,    1,  0,  0,  0, 0, 0,    0, HI_ORGANIC),
+                OBJ_TYPE_Venom,  500, 0,    1,  0,  0,  0, 0, 0,    0, HI_ORGANIC),
 OBJECT(OBJ("acid venom", "splash of venom"),
                 BITS(0,1,0,0,0,0,0,1,0,0,0,P_NONE,LIQUID), 0,
-                Venom,  500, 0,    1,  0,  6,  6, 0, 0,    0, HI_ORGANIC),
+                OBJ_TYPE_Venom,  500, 0,    1,  0,  6,  6, 0, 0,    0, HI_ORGANIC),
                 /* +d6 small or large */
 
 

@@ -20,6 +20,7 @@ public:
 	virtual 		~mapTile();
 
 	void			UpdateVisibility();
+	bool			isLitForMe(hnPoint position);
 	
 	objBase *		object;			// linked list of objects lying on the floor here.
 	entBase *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
@@ -31,6 +32,50 @@ public:
 	bool			visionBlocked;		// we're blocked if we're a wall or under other conditions.
 	bool			visible;		// can we see this square?
 	bool			lit;			// light on this square?
+	bool			permalit;		// permanent light on this square?
+};
+
+class mapBound
+{
+	public:
+	
+	// inverse gradient of the bound's slope
+	float max;
+
+	// counter which starts at 0.  When it reaches max,
+	// the shadow widens and count is reset.
+	float count;
+
+	void reset();
+	bool inUse() const;
+	bool reached() const;
+	bool steeper(float inverseGradient) const;
+	bool shallower(float inverseGradient) const;
+};
+
+class mapCell
+{
+	public:
+
+	// If a tile is not a blocker, lit is whether or not the source
+	// lights it.
+	// Otherwise, lit == false
+	bool lit;
+
+	// If a tile is a blocker, visibleBlocker is whether or not the
+	// source lights it.
+	// Otherwise, visibleBlocker = false
+	bool visibleBlocker;
+
+	// If this cell is on the upper boundary of a shadow, this is
+	// the shadow's upper bound.
+	mapBound	upperBound;
+	
+	// If this cell is on the lower boundary of a shadow, this is
+	// the shadow's lower bound
+	mapBound	lowerBound;
+
+	void init();
 };
 
 class mapRoom
@@ -55,6 +100,8 @@ protected:
 	uint8			m_depth;		// what level are we in the dungeon?
 	mapRoom *		m_room[MAX_ROOMS];	// pointers to our rooms.  Yay!
 	uint8			m_roomCount;		// how many rooms in this map?
+
+	mapCell *		m_cells;
 
 	hnPoint2D		m_stairsUp;		// where our up stairs are located.
 	hnPoint2D		m_stairsDown;		// where our down stairs are located.
@@ -81,10 +128,14 @@ public:
 	const hnPoint2D &	GetTopLeftMaxChanged() { return m_topLeftMaxChanged; }
 	const hnPoint2D &	GetBottomRightChanged() { return m_bottomRightChanged; }
 	const hnPoint2D &	GetBottomRightMaxChanged() { return m_bottomRightMaxChanged; }
+
 	
 	void			PrepareVisibility();
 	//void			UpdateVisibility( const hnPoint & position, mapBase * sourceMap );	// calculate what squares are visible
 	void			CalculateVisibility( const hnPoint & position, mapClient *destMap );	// calculate what we can see, and set the appropriate stuff on the destination map.
+
+	void			CalculateOctantVisibility( const hnPoint &position, const hnPoint &offset, bool swap, unsigned int N, mapClient *mapClient );
+	
 	void			UpdateMap( mapClient * destMap );		// copy our tiles into the visible squares of the destination map.
 	
 	virtual void		Generate();
@@ -102,6 +153,7 @@ public:
 	hnMaterialType &	MaterialAt( uint8 x, uint8 y );
 	hnWallType &  		WallAt( uint8 x, uint8 y );
 	mapTile &		MapTile( uint8 x, uint8 y );
+	bool			OnMap( uint8 x, uint8 y );
 };
 
 #endif // __HN_MAP_H__

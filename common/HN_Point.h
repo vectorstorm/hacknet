@@ -8,7 +8,7 @@ class hnPoint
 {
 public:
 			hnPoint();
-			hnPoint(sint8 x, sint8 y, sint8 z);
+			hnPoint(sint8 x, sint8 y, sint8 z=0);
 	virtual		~hnPoint();	
 	
 	sint8		x, y, z;

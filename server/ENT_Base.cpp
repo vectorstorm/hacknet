@@ -19,7 +19,7 @@ entBase::entBase( entType type, const hnPoint & pos, hnPlayer *player ):
 	m_maxHitPoints(1)	// the proper amount on us.
 {
 	m_status = new hnStatus(1);
-	m_inventory = new objBase(Illegal);
+	m_inventory = new objBase(OBJ_TYPE_Illegal);
 }
 
 entBase::~entBase()
@@ -401,10 +401,11 @@ entBase::Attack( hnDirection dir )
 
 			if ( foe->IsAPlayer() )
 				foe->GetPlayer()->SetEntity(NULL);
-			
-			hnGroupManager::GetInstance()->RemoveEntity(foe);
-			
-			delete foe;
+			else
+			{
+				hnGroupManager::GetInstance()->RemoveEntity(foe);
+				delete foe;
+			}
 			
 			return AT_Kill;
 		}

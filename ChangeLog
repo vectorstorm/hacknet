@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 4, 2002:
+  * Proper line-of-sight code, at last!  Using shadowcasting code,
+    adapted from Greg McIntyre's SDL FOV demo, who in turn took
+    the algorithm from Gordon Lipford.  Thanks to everyone involved!
+  * More fixes to properly generate objects of appropriate types.
+
 January 7, 2002:
   * Imported all remaining NetHack items into HackNet.  (There seems
     to be a bug involving item creation probabilities)

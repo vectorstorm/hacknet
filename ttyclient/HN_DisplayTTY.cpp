@@ -570,7 +570,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 			// check the topmost object.
 			objType type =  tile.object[0].type;
 
-			const char objectTile[MAX] = {
+			const char objectTile[OBJ_TYPE_MAX] = {
 				'#',	// random
 				'#',	// illegal
 				' ',	// none
@@ -849,16 +849,16 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 
 	const objType categoryValue[CATEGORY_COUNT] =
 	{
-		Amulet,
-		Weapon,
-		Armour,
-		Food,
-		Scroll,
-		Spellbook,
-		Potion,
-		Ring,
-		Tool,
-		Gem
+		OBJ_TYPE_Amulet,
+		OBJ_TYPE_Weapon,
+		OBJ_TYPE_Armour,
+		OBJ_TYPE_Food,
+		OBJ_TYPE_Scroll,
+		OBJ_TYPE_Spellbook,
+		OBJ_TYPE_Potion,
+		OBJ_TYPE_Ring,
+		OBJ_TYPE_Tool,
+		OBJ_TYPE_Gem
 	};
 
 	if ( m_mode == MODE_FloorObjectDisplay )
