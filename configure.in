@@ -12,7 +12,7 @@ AC_INIT(README)
 # The AM_INIT_AUTOMAKE macro tells automake the name and version number
 # of the software package so it can generate rules for building a source
 # archive.
-AM_INIT_AUTOMAKE(hacknet, 0.0.6)
+AM_INIT_AUTOMAKE(hacknet, 0.0.7)
 
 # We now have a list of macros which tell autoconf what tools we need to
 # build our software, in this case "make", a C++ compiler, and "install".

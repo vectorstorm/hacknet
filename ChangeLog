@@ -30,6 +30,7 @@ November 9, 2002:
   * HN_DisplayTTY.cpp:  Added ability to send eat commands.  Also fixed
     things so that in eat and drink commands, appropriate messages are
     given to the player if they don't have anything to eat or drink.
+  * Released version 0.0.6.  Updated version number to 0.0.7
   
 April 6, 2002:
   * HN_DisplayTTY.cpp:  Added mutex to protect 'Refresh()' function
