@@ -51,6 +51,9 @@ public:
 				mapBase( sint8 width, sint8 height );
 	virtual			~mapBase();
 
+	sint8			GetWidth() { return m_width; }
+	sint8			GetHeight() { return m_height; }
+	
 	virtual void		Generate();
 	
 	void			RemoveObject( objBase *object );					// remove object from map

@@ -36,6 +36,9 @@ public:
 				mapClient( sint8 width, sint8 height );
 	virtual			~mapClient();
 
+	sint8			GetWidth() { return m_width; }
+	sint8			GetHeight() { return m_height; }
+
 	virtual void		Generate();
 	
 	void			RemoveObject( objType object );					// remove object from map

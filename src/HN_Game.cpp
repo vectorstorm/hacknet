@@ -5,13 +5,14 @@
 #include "MAP_Hack.h"
 #include "NET_Server.h"
 #include "HN_Point.h"
-#include "HN_Consts.h"
 #include "HN_Dungeon.h"
 #include "ENT_Player.h"
 
 hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
 
+#define LEVEL_WIDTH (78)
+#define LEVEL_HEIGHT (20)
 
 void
 hnGame::Startup()
@@ -101,7 +102,10 @@ hnGame::ClientJoined(int playerID)
 	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
 	
 	hnPoint pos = m_player[playerID]->GetPosition();
-	
+
+	mapBase *map = hnDungeon::GetLevel(z);
+	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight() );
+
 	pos += offsetVector[DIR_NorthWest];
 	netMapUpdateBBox update;
 	update.loc = pos;

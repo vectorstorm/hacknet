@@ -9,6 +9,7 @@
 enum{
 	SPT_ClientLocation,
 	SPT_MapTile,
+	SPT_MapReset,
 	SPT_MapUpdateBBox,
 	SPT_MapObjectList,
 	SPT_MapEntity,
@@ -30,6 +31,12 @@ struct netMapTile
 	hnPoint loc;
 	sint16 material;
 	sint16 wall;
+};
+
+struct netMapReset		// we've moved to a new map.. init a map with this width/height.
+{
+	sint8 width;
+	sint8 height;
 };
 
 struct netMapUpdateBBox
@@ -104,6 +111,7 @@ public:
 	
 	bool			ClientLocation( netClientLocation &packet );
 	bool			MapTile( netMapTile &packet );
+	bool			MapReset( netMapReset &packet );
 	bool			MapUpdateBBox( netMapUpdateBBox &packet );
 	bool			MapEntity( netMapEntity &packet );
 	bool			MapObjectList( netMapObjectList &packet );

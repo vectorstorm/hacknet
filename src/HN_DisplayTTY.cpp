@@ -7,7 +7,6 @@
 #include "HN_DisplayTTY.h"
 #include "NET_Client.h"
 #include "HN_Enum.h"
-#include "HN_Consts.h"
 
 //#define __DEBUGGING_NETWORK__
 
@@ -192,7 +191,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 			break;
 	}
 	
-	if ( x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT )
+	if ( x >= 0 && x < m_map->GetWidth() && y >= 0 && y < m_map->GetHeight() )
 	{
 		mapClientTile & tile = m_map->MapTile(x,y);
 

@@ -1,12 +1,11 @@
 #include <stdlib.h>
 #include "HN_Display.h"
-#include "HN_Consts.h"
 #include "OBJ_Types.h"
 #include "ENT_Types.h"
 
-hnDisplay::hnDisplay()
+hnDisplay::hnDisplay():
+	m_map(NULL)
 {
-	m_map = new mapClient(LEVEL_WIDTH, LEVEL_HEIGHT);
 }
 
 hnDisplay::~hnDisplay()
@@ -21,6 +20,13 @@ hnDisplay::UpdateMapTile(sint8 x, sint8 y, const mapClientTile &tile)
 	m_map->WallAt(x,y) = tile.wall;
 
 	m_map->MapTile(x,y).entity = tile.entity;
+}
+
+void
+hnDisplay::MapReset(sint8 width, sint8 height)
+{
+	delete m_map;
+	m_map = new mapClient( width, height );
 }
 
 void

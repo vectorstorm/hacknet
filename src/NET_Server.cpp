@@ -305,6 +305,15 @@ netServer::SendMapTile( const hnPoint & loc, const mapTile & tile )
 }
 
 void
+netServer::SendMapReset( int width, int height )
+{
+	netMapReset packet;
+	packet.width = width;
+	packet.height = height;
+	m_metaPacket->MapReset( packet );
+}
+
+void
 netServer::SendMapUpdateBBox( netMapUpdateBBox & bbox )
 {
 	// note -- netMapUpdateBBox isn't 'const' here because it gets passed verbatim

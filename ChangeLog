@@ -6,6 +6,18 @@ April 23, 2001:
   notice the change until monster movement is added.  And that won't
   happen until monsters are added.  So much to do!
 
+  Removed HN_Consts.h, which was storing a level width/height.  This was
+  just an ugly hack, to synchronise the size of the client's map with
+  the server's map.  Now the server sends the client a 'map reset' packet
+  when the client joins, which tells the client what size map it's going
+  to use.  The server should also send this packet to the client every time
+  the client moves to a new level (even if that level had been seen before).
+  This tells the client to purge its memory of what level it's currently on.
+  The server should ALWAYS follow the mapReset information with a full map
+  refresh if the client has moved to a level he's visited before, and then
+  with a set of visibility information, regardless of whether the player
+  has visited that map before.
+
 ---
 April 22, 2001:
   Big changes today.  Here's the scoop:

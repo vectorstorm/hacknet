@@ -71,6 +71,7 @@ netClient::Go()
 	netMapTile tileData;
 	netMapEntity entityData;
 	netMapUpdateBBox bbox;
+	netMapReset mapReset;
 	netClientLocation clientLoc;
 	hnPoint	point;
 	char 		buffer[MAX_DATA_SIZE];
@@ -142,6 +143,9 @@ netClient::Go()
 					packet->MapEntity(entityData);
 					m_display->UpdateMapCreature(entityData.loc.x, entityData.loc.y, entityData.objectType);
 					break;
+				case SPT_MapReset:
+					packet->MapReset(mapReset);
+					m_display->MapReset(mapReset.width, mapReset.height);
 				case SPT_MapUpdateBBox:
 					//printf("Map bbox update packet\n");
 					packet->MapUpdateBBox(bbox);

@@ -25,6 +25,7 @@ public:
 	
 	virtual void	Refresh() {}
 	
+	virtual void	MapReset( sint8 width, sint8 height );
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
 	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapClientTile & tile );
 	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );

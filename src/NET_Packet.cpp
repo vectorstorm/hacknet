@@ -52,6 +52,19 @@ netMetaPacket::MapTile( netMapTile &packet )
 }
 
 bool
+netMetaPacket::MapReset( netMapReset &packet )
+{
+	bool success = true;
+	
+	sint8 type = SPT_MapReset;
+	Char( type );
+	Char( packet.width );
+	Char( packet.height );
+	
+	return success;
+}
+
+bool
 netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 {
 	bool success = true;
