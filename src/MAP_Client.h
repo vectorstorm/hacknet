@@ -30,30 +30,30 @@ protected:
 
 	mapClientTile *		m_tile;			// map tiles.  Array is [width*height] long.
 	mapClientTile		m_backgroundType;	// if we ask for something outside the map, what type do we call it?
-	sint8			m_width;
-	sint8			m_height;
-	sint8			m_roomCount;		// how many rooms in this map?
+	uint8			m_width;
+	uint8			m_height;
+	uint8			m_roomCount;		// how many rooms in this map?
 	
 public:
-				mapClient( sint8 width, sint8 height );
+				mapClient( uint8 width, uint8 height );
 	virtual			~mapClient();
 
-	sint8			GetWidth() { return m_width; }
-	sint8			GetHeight() { return m_height; }
+	uint8			GetWidth() { return m_width; }
+	uint8			GetHeight() { return m_height; }
 
 	virtual void		Generate();
 	
 	void			RemoveObject( objType object );					// remove object from map
-	void			PutObjectAt( objType object, sint8 x, sint8 y );			// put object at given coords
-	void			MoveObjectTo( objType object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
+	void			PutObjectAt( objType object, uint8 x, uint8 y );			// put object at given coords
+	void			MoveObjectTo( objType object, uint8 x, uint8 y );			// remove object from map, then put it at given coords
 	
 	void			RemoveEntity( entType object );					// remove object from map
-	void			PutEntityAt( entType object, sint8 x, sint8 y );			// put object at given coords
-	void			MoveEntityTo( entType object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
+	void			PutEntityAt( entType object, uint8 x, uint8 y );			// put object at given coords
+	void			MoveEntityTo( entType object, uint8 x, uint8 y );			// remove object from map, then put it at given coords
 
-	hnMaterialType &	MaterialAt( sint8 x, sint8 y );
-	hnWallType &  		WallAt( sint8 x, sint8 y );
-	mapClientTile &		MapTile( sint8 x, sint8 y );
+	hnMaterialType &	MaterialAt( uint8 x, uint8 y );
+	hnWallType &  		WallAt( uint8 x, uint8 y );
+	mapClientTile &		MapTile( uint8 x, uint8 y );
 };
 
 #endif // __MAP_CLIENT_H__

@@ -7,7 +7,7 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-mapClient::mapClient(sint8 width, sint8 height):
+mapClient::mapClient(uint8 width, uint8 height):
 	m_width(width), m_height(height), m_roomCount(0)
 {
 	m_tile = new mapClientTile[width * height];
@@ -29,27 +29,27 @@ mapClient::~mapClient()
 }
 
 hnMaterialType &
-mapClient::MaterialAt(sint8 x, sint8 y)
+mapClient::MaterialAt(uint8 x, uint8 y)
 {
-	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
+	if ( x < m_width && y < m_height )
 		return m_tile[x + (y * m_width)].material;
 
 	return m_backgroundType.material;
 }
 
 hnWallType &
-mapClient::WallAt(sint8 x, sint8 y)
+mapClient::WallAt(uint8 x, uint8 y)
 {
-	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
+	if ( x < m_width && y < m_height )
 		return m_tile[x + (y * m_width)].wall;
 
 	return m_backgroundType.wall;
 }
 
 mapClientTile &
-mapClient::MapTile(sint8 x, sint8 y)
+mapClient::MapTile(uint8 x, uint8 y)
 {
-	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
+	if ( x < m_width && y < m_height )
 		return m_tile[x + (y * m_width)];
 
 	return m_backgroundType;
@@ -62,14 +62,14 @@ mapClient::RemoveObject( objType object )
 }
 
 void
-mapClient::PutObjectAt( objType object, sint8 x, sint8 y )
+mapClient::PutObjectAt( objType object, uint8 x, uint8 y )
 {
 	mapClientTile & tile = MapTile(x,y);
 	tile.object = object;
 }
 
 void
-mapClient::MoveObjectTo( objType object, sint8 x, sint8 y )
+mapClient::MoveObjectTo( objType object, uint8 x, uint8 y )
 {
 	RemoveObject(object);
 	PutObjectAt(object,x,y);
@@ -85,14 +85,14 @@ mapClient::RemoveEntity( entType entity )
 }
 
 void
-mapClient::PutEntityAt( entType entity, sint8 x, sint8 y )
+mapClient::PutEntityAt( entType entity, uint8 x, uint8 y )
 {
 	mapClientTile & tile = MapTile(x,y);
 	tile.entity = entity;
 }
 
 void
-mapClient::MoveEntityTo( entType entity, sint8 x, sint8 y )
+mapClient::MoveEntityTo( entType entity, uint8 x, uint8 y )
 {
 	RemoveEntity(entity);
 	PutEntityAt(entity,x,y);
