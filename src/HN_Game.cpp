@@ -6,7 +6,7 @@
 #include "NET_Server.h"
 #include "HN_Point.h"
 #include "HN_Dungeon.h"
-#include "ENT_Player.h"
+#include "HN_Player.h"
 
 hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
@@ -115,8 +115,7 @@ hnGame::ClientJoined(int playerID)
 	}while ( hnDungeon::GetLevel(z)->WallAt(x,y) & WALL_Any || hnDungeon::GetLevel(z)->MapTile(x,y).entity != NULL );
 
 	printf("Setting playerID %d initial position to: (%d,%d,%d)\n", playerID, x, y, z);
-	m_player[playerID] = new entPlayer( playerID, hnPoint(x,y,z) );
-	hnDungeon::GetLevel(z)->PutEntityAt( m_player[playerID], x, y );
+	m_player[playerID] = new hnPlayer( playerID, hnPoint(x,y,z) );
 	
 	netServer::GetInstance()->StartMetaPacket( playerID );
 	netServer::GetInstance()->SendDungeonReset( hnDungeon::GetInstance()->GetLevelCount() );
@@ -195,7 +194,6 @@ hnGame::ClientQuit(int playerID)
 {
 	// when a client quits, we need to remove his entity.
 	
-	hnDungeon::GetLevel(m_player[playerID]->GetPosition().z)->RemoveEntity( m_player[playerID] );
 	delete m_player[playerID];
 	m_player[playerID] = NULL;
 }
@@ -204,7 +202,7 @@ hnGame::ClientQuit(int playerID)
 void
 hnGame::ClientMove(int playerID, hnDirection dir)
 {
-	entPlayer *player = m_player[playerID];
+	hnPlayer *player = m_player[playerID];
 	if ( dir >= 0 && dir < 10 )	// sanity check
 	{	
 		if ( player->IsValidMove(dir) )

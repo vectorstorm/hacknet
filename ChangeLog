@@ -17,6 +17,14 @@ May 1, 2001:
   into perhaps hnPlayer, I think.  I'll think this over for a little while,
   and perhaps these changes will be made tomorrow.
 
+  Who's a happy little overachiever?  I've made the changes I outlined
+  above.  There is no longer an 'entPlayer', but rather a 'hnPlayer',
+  which owns an entBase.  It's an easy change to let the player be any
+  existing type of monster, rather than an entHuman.  (Try switching the
+  hnPlayer constructor to make the player be an entGridBug instead of an
+  entHuman.  You'll appear as a grid bug, and be correctly constrained 
+  to moving along a grid!)
+
 April 30, 2001:
   Minor bugfixes to clean up some sloppy coding that was revealed when I
   finally remembered to build with -Wall.  Oops!

@@ -12,13 +12,13 @@
 
 //class mapBase;
 class netServer;
-class entPlayer;
+class hnPlayer;
 
 // hnGame is a singleton.
 
 class hnGame
 {
-	entPlayer *		m_player[MAX_CLIENTS];
+	hnPlayer *		m_player[MAX_CLIENTS];
 
 	static hnGame *		s_instance;
 	

@@ -6,7 +6,7 @@ enum {
 		        
         ENTITY_Monster,      	        // there should be one of these for every type of monster
 	ENTITY_GridBug,
-        ENTITY_Player,
+	ENTITY_Human,
 
         ENTITY_MAX
 };

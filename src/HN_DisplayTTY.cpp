@@ -281,7 +281,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 		mapClientTile & tile = m_map[m_position.z]->MapTile(x,y);
 		color_set( floorTileColor[floorType],NULL);
 
-		if ( tile.entity == ENTITY_Player )	// if someone is standing here...
+		if ( tile.entity == ENTITY_Human )	// if someone is standing here...
 		{
 			color_set( COLOR_WHITE, NULL );
 			theChar = '@';			// draw '@' instead of ground.  This is a HACK!
