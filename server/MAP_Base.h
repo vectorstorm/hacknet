@@ -11,6 +11,8 @@
 class objBase;
 class entBase;
 
+class mapClient;
+
 class mapTile
 {
 public:
@@ -21,7 +23,6 @@ public:
 	
 	objBase *		object;			// linked list of objects lying on the floor here.
 	entBase *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
-	entType			entityType;		// for use if we aren't the authoritative map and so don't want to store the actual pointer.
 	
 	hnMaterialType		material;		// what type of material makes up this tile?
 	hnWallType		wall;			// am I a wall?
@@ -82,8 +83,9 @@ public:
 	const hnPoint2D &	GetBottomRightMaxChanged() { return m_bottomRightMaxChanged; }
 	
 	void			PrepareVisibility();
-	void			UpdateVisibility( const hnPoint & position, mapBase * sourceMap );	// calculate what squares are visible
-	void			UpdateMap( mapBase * sourceMap );		// copy contents of sourceMap into our visible squares
+	//void			UpdateVisibility( const hnPoint & position, mapBase * sourceMap );	// calculate what squares are visible
+	void			CalculateVisibility( const hnPoint & position, mapClient *destMap );	// calculate what we can see, and set the appropriate stuff on the destination map.
+	void			UpdateMap( mapClient * destMap );		// copy our tiles into the visible squares of the destination map.
 	
 	virtual void		Generate();
 	virtual void		GenerateStairsUp() {}

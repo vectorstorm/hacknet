@@ -5,7 +5,8 @@
 #include "HN_Enum.h"
 #include "HN_Point.h"
 
-class mapBase;
+//class mapBase;
+class mapClient;
 class entBase;
 class hnGroup;
 
@@ -38,7 +39,7 @@ class hnPlayer
 	int		m_playerID;				// the ID the server assigns to us.  NOT TO BE SAVED.
 	entBase *	m_entity;
 	
-	mapBase **	m_map;
+	mapClient **	m_map;
 	int		m_mapCount;
 	
 	hnGroup *	m_group;				// pointer to the group we're a part of.

@@ -22,6 +22,7 @@ public:
 	hnWallType		wall;			// am I a wall?
 	int			border;			// are we in the 'border zone' around a room?  (And thus cannot be used
 							// as part of a room)
+	bool			visible;
 };
 
 class mapClient
@@ -33,6 +34,11 @@ protected:
 	uint8			m_width;
 	uint8			m_height;
 	uint8			m_roomCount;		// how many rooms in this map?
+
+	hnPoint2D		m_topLeftChanged;
+	hnPoint2D		m_topLeftMaxChanged;
+	hnPoint2D		m_bottomRightChanged;
+	hnPoint2D		m_bottomRightMaxChanged;
 
 	bool			m_visited;		// have I been visited yet?
 	
@@ -58,6 +64,16 @@ public:
 	hnMaterialType &	MaterialAt( uint8 x, uint8 y );
 	hnWallType &  		WallAt( uint8 x, uint8 y );
 	mapClientTile &		MapTile( uint8 x, uint8 y );
+
+	void			MarkPointChanged( uint8 x, uint8 y );
+	void			ResetChanged();
+
+        const hnPoint2D &       GetTopLeftChanged() { return m_topLeftChanged; }
+        const hnPoint2D &       GetTopLeftMaxChanged() { return m_topLeftMaxChanged; }
+        const hnPoint2D &       GetBottomRightChanged() { return m_bottomRightChanged; }
+        const hnPoint2D &       GetBottomRightMaxChanged() { return m_bottomRightMaxChanged; }
+
+
 };
 
 #endif // __MAP_CLIENT_H__

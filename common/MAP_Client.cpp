@@ -5,6 +5,7 @@
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
+#define max(x,y) ( (x>y)?x:y )
 
 mapClient::mapClient(uint8 width, uint8 height):
 	m_width(width), 
@@ -23,6 +24,10 @@ mapClient::mapClient(uint8 width, uint8 height):
 	
 	m_backgroundType.material = MATERIAL_Dirt;
 	m_backgroundType.wall = WALL_Any;
+
+	ResetChanged();
+	m_bottomRightMaxChanged.Set(0,0);
+	m_topLeftMaxChanged.Set(width,height);
 }
 
 mapClient::~mapClient()
@@ -113,6 +118,28 @@ mapClient::Generate()
 	}
 }
 
+
+
+void
+mapClient::MarkPointChanged( uint8 x, uint8 y )
+{
+	m_topLeftChanged.x = min( m_topLeftChanged.x, x );
+	m_topLeftMaxChanged.x = min( m_topLeftMaxChanged.x, x );
+	m_topLeftChanged.y = min( m_topLeftChanged.y, y );
+	m_topLeftMaxChanged.y = min( m_topLeftMaxChanged.y, y );
+
+	m_bottomRightChanged.x = max( m_bottomRightChanged.x, x );
+	m_bottomRightMaxChanged.x = max( m_bottomRightMaxChanged.x, x );
+	m_bottomRightChanged.y = max( m_bottomRightChanged.y, y );
+	m_bottomRightMaxChanged.y = max( m_bottomRightMaxChanged.y, y );
+}
+
+void
+mapClient::ResetChanged()
+{
+	m_bottomRightChanged.Set(0,0);
+	m_topLeftChanged.Set(m_width,m_height);
+}
 
 mapClientTile::mapClientTile()
 {

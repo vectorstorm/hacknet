@@ -6,6 +6,7 @@
 #include "HN_Dungeon.h"
 #include "HN_Group.h"
 #include "MAP_Base.h"
+#include "MAP_Client.h"
 
 #include "ENT_Human.h"
 #include "ENT_GridBug.h"
@@ -22,7 +23,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_spellPointsChanged(true)
 {
 	m_mapCount = hnDungeon::GetInstance()->GetLevelCount();
-	m_map = new (mapBase *)[m_mapCount];
+	m_map = new (mapClient *)[m_mapCount];
 
 	m_entity = new entHuman( where, this );
 //	Ever wanted to play as a Grid Bug?  Comment out the line above and 
@@ -161,7 +162,7 @@ hnPlayer::Listen( char * message )
 bool
 hnPlayer::CanSee( const hnPoint & where )
 {
-	mapBase *map = m_map[ GetPosition().z ];
+	mapClient *map = m_map[ GetPosition().z ];
 
 	return map->MapTile(where.x, where.y).visible;
 }
@@ -274,16 +275,17 @@ hnPlayer::RecalculateVision()
 	assert(realMap);
 
 	if ( m_map[ m_entity->GetPosition().z ] == NULL )
-		m_map[ m_entity->GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
+		m_map[ m_entity->GetPosition().z ] = new mapClient( realMap->GetWidth(), realMap->GetHeight() );
 
-	mapBase *map = m_map[ m_entity->GetPosition().z ];
+	mapClient *map = m_map[ m_entity->GetPosition().z ];
 	assert( map );
 
 	//---------------------------------------------------------------
 	//  Calculate visibility
 	//---------------------------------------------------------------
 	
-	map->UpdateVisibility( m_entity->GetPosition(), realMap );
+	//map->UpdateVisibility( m_entity->GetPosition(), realMap );
+	realMap->CalculateVisibility( m_entity->GetPosition(), map );
 }
 
 void
@@ -299,16 +301,16 @@ hnPlayer::UpdateVision()
 	assert(realMap);
 
 	if ( m_map[ m_entity->GetPosition().z ] == NULL )
-		m_map[ m_entity->GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
+		m_map[ m_entity->GetPosition().z ] = new mapClient( realMap->GetWidth(), realMap->GetHeight() );
 
-	mapBase *map = m_map[ m_entity->GetPosition().z ];
+	mapClient *map = m_map[ m_entity->GetPosition().z ];
 	assert( map );
 
 	//---------------------------------------------------------------
 	//  Copy visible squares of real map into our vision map
 	//---------------------------------------------------------------
 	
-	map->UpdateMap( realMap );
+	realMap->UpdateMap( map );
 }
 
 void
@@ -334,9 +336,9 @@ hnPlayer::SendUpdate()
 
 	//  Allocate map storage if we haven't been here before.
 	if ( m_map[ m_entity->GetPosition().z ] == NULL )
-		m_map[ m_entity->GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
+		m_map[ m_entity->GetPosition().z ] = new mapClient( realMap->GetWidth(), realMap->GetHeight() );
 
-	mapBase *map = m_map[ m_entity->GetPosition().z ];
+	mapClient *map = m_map[ m_entity->GetPosition().z ];
 	assert( map );
 
 	// Send an update packet to our player.
@@ -373,7 +375,7 @@ hnPlayer::SendUpdate()
 			
        				update.material[i+(j*update.width)] = map->MaterialAt(x,y);
    				update.wall[i+(j*update.width)] = map->WallAt(x,y);
-				update.entityType[i+(j*update.width)] = map->MapTile(x,y).entityType;
+				update.entityType[i+(j*update.width)] = map->MapTile(x,y).entity;
 			}
 	
 		netServer::GetInstance()->SendMapUpdateBBox( update );
@@ -438,9 +440,9 @@ hnPlayer::RefreshMap( int level )
 
 	//  Allocate map storage if we haven't been here before.
 	if ( m_map[ level ] == NULL )
-		m_map[ level ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), level );
+		m_map[ level ] = new mapClient( realMap->GetWidth(), realMap->GetHeight() );
 
-	mapBase *map = m_map[ level ];
+	mapClient *map = m_map[ level ];
 	assert( map );
 
 	netMapUpdateBBox update;
@@ -476,7 +478,7 @@ hnPlayer::RefreshMap( int level )
 			
        			update.material[i+(j*update.width)] = map->MaterialAt(x,y);
    			update.wall[i+(j*update.width)] = map->WallAt(x,y);
-			update.entityType[i+(j*update.width)] = map->MapTile(x,y).entityType;
+			update.entityType[i+(j*update.width)] = map->MapTile(x,y).entity;
 		}
 	
 	netServer::GetInstance()->SendMapUpdateBBox( update );

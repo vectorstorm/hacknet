@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "MAP_Base.h"
+#include "MAP_Client.h"
 #include "OBJ_Base.h"
 #include "ENT_Base.h"
 //#include "HN_Object.h"
@@ -148,6 +149,81 @@ mapBase::PrepareVisibility()
 }
 
 void
+mapBase::CalculateVisibility( const hnPoint & position, mapClient * destMap )
+{
+	//-------------------------------------------------------------
+	//
+	//  Reset dest's visibility of last frame, since we're about to
+	//  recalculate it.
+	//
+	//-------------------------------------------------------------
+
+	for ( int i = 0; i < m_width; i++ )
+		for ( int j = 0; j < m_height; j++ )
+			destMap->MapTile(i,j).visible = false;
+	
+	//-------------------------------------------------------------
+	//
+	//  Rogue-style LOS.. yes, it's not correct, but it's fast.
+	//  Real LOS is yet-to-be-implemented.
+	//
+	//-------------------------------------------------------------
+	
+	hnPoint pos = position;
+	
+	if ( WallAt( pos.x, pos.y ) & WALL_WithinRoom )
+	{
+		//---------------------------------------------------------------
+		//  Figure out what room we're in, then update visibility for the
+		//  whole room
+		//---------------------------------------------------------------
+		mapRoom *where = NULL;
+		
+		for ( int i = 0; i < m_roomCount; i++ )
+		{
+			mapRoom *room = m_room[i];
+			
+			if ( room )
+			{
+				if ( (room->left <= pos.x) && (room->right >= pos.x) &&
+					(room->top <= pos.y) && (room->bottom >= pos.y) )
+					{
+						where = room;
+						break;
+					}
+			}
+		}
+
+		if ( where )
+		{
+			for ( int y = where->top-1; y <= where->bottom+1; y++ )
+				for ( int x = where->left-1; x <= where->right+1; x++ )
+					destMap->MapTile(x,y).visible 	= 	true;
+		
+		}
+		else
+		{
+			printf("Couldn't figure out what room at (%d,%d)\n", pos.x, pos.y);
+			assert(0);
+		}
+	}
+	else
+	{
+	        //---------------------------------------------------------------
+	        //  Update visibility here.  In a corridor, just update the 3x3 box
+	        //  around the player.
+	        //---------------------------------------------------------------
+
+		for ( int j = -1; j <= 1; j++ )
+			for ( int i = -1; i <= 1; i++ )
+			{
+				if ( !(WallAt(pos.x+i,pos.y+j) & WALL_Any) )
+					destMap->MapTile(pos.x+i,pos.y+j).visible = true;
+			}
+	}
+}
+/*
+void
 mapBase::UpdateVisibility( const hnPoint & position, mapBase * sourceMap )
 {
 	//-------------------------------------------------------------
@@ -221,10 +297,10 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase * sourceMap )
 			}
 	}
 }
-
+*/
 
 void
-mapBase::UpdateMap( mapBase * sourceMap )
+mapBase::UpdateMap( mapClient * destMap )
 {
 	//-------------------------------------------------------------------
 	//  Function for vision maps.  Passing in the map to use as the
@@ -239,11 +315,11 @@ mapBase::UpdateMap( mapBase * sourceMap )
 	{
 		for ( uint8 x = 0; x < m_width; x++ )
 		{
-			mapTile *myTile 	= 	&MapTile(x,y);
+			mapClientTile *myTile 	= 	&destMap->MapTile(x,y);
 			
 			if ( myTile->visible )
 			{
-				mapTile *realTile 	= 	&sourceMap->MapTile(x,y);
+				mapTile *realTile 	= 	&MapTile(x,y);
 				bool changed 		= 	false;
 			
 				if ( myTile->material != realTile->material )
@@ -258,21 +334,21 @@ mapBase::UpdateMap( mapBase * sourceMap )
 				}
 				entType type = (realTile->entity) ? (realTile->entity->GetType()) : ENTITY_None;
 				
-				if ( myTile->entityType != type )
+				if ( myTile->entity != type )
 				{
-					myTile->entityType = type;
+					myTile->entity = type;
 					changed = true;
 				}
 					
 				if ( changed )
-					MarkPointChanged( x, y );
+					destMap->MarkPointChanged( x, y );
 			}
 			else
 			{
-				if ( myTile->entityType )
+				if ( myTile->entity )
 				{
-					myTile->entityType = ENTITY_None;
-					MarkPointChanged( x, y );
+					myTile->entity = ENTITY_None;
+					destMap->MarkPointChanged( x, y );
 				}
 			}
 		}
@@ -299,7 +375,6 @@ mapTile::mapTile()
 {
 	object = new objBase( OBJECT_None, hnPoint(0,0,0));
 	entity = NULL;
-	entityType = ENTITY_None;
 	visionBlocked = false;
 }
 

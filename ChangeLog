@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+June 2, 2001:
+  * Large infrastructure change -- hnPlayers now store their local copies
+    of map data in the same format as the clients (that is, as mapClient
+    instances).  This will make map updates much easier to manage!  Again,
+    this is all moving towards implementing objects...
+
 May 30, 2001:
   * ENT_*:  Modified entities to use static strings for entity names,
     instead of storing the strings on each instance of the classes.
