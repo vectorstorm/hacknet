@@ -624,7 +624,7 @@ hnPlayer::SendUpdate()
 
 		for ( int i = 0; i < INVENTORY_MAX; i++ )
 		{
-			if ( slotUsed[i] == false )
+			if ( slotUsed[i] == false && m_clientInventory[i].count > 0 )
 			{
 				m_clientInventory[i].count = 0;
 				inventoryUpdated = true;
@@ -633,6 +633,7 @@ hnPlayer::SendUpdate()
 		
 		if ( inventoryUpdated )
 		{
+			printf("Updating inventory.\n");
 			netInventory inven(INVENTORY_MAX);
 
 			for ( int i = 0; i < INVENTORY_MAX; i++ )

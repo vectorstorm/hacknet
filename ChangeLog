@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+August 3, 2001:
+  * HN_Player.cpp: Fixed old bug which caused inventory to be re-sent
+    with every move, instead of only when it changes.
+
 July 29, 2001:
   * Added first pass at NetHack-style entity definitions.  I'm still
     not certain that this is how I actually want to do this, but it's
