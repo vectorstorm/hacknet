@@ -26,13 +26,20 @@ class hnStatus
 	bool	m_stunned;
 	bool	m_hallucinating;
 	bool	m_paralyzed;
+	bool	m_undead;	// are we a ghost/zombie/etc?
+
+	bool	m_changedStatistics;
+	bool	m_changedHitPoints;
+	bool	m_changedSpellPoints;
+
+	void		Initialise();
 
 public:	
 			hnStatus();
-			hnStatus( const hnStatus & );
 			hnStatus( uint8 level );
 	virtual		~hnStatus();
-
+	
+	
 	uint8		Strength() { return m_strength; }
 	uint8		Dexterity() { return m_dexterity; }
 	uint8		Constitution() { return m_constitution; }
@@ -56,8 +63,17 @@ public:
 	bool		Hungry();
 	bool		Weak();
 	bool		Fainting();
-	bool		Hallucinating();
-	bool		Paralyzed();
+	bool		Hallucinating() { return m_hallucinating; }
+	bool		Paralyzed() { return m_paralyzed; }
+
+	bool		ChangedStatistics() { return m_changedStatistics; }
+	bool		ChangedHitPoints() { return m_changedHitPoints; }
+	bool		ChangedSpellPoints() { return m_changedSpellPoints; }
+	
+	void		TakeDamage( sint16 points );
+	void		TurnPassed();	// a turn has passed.  Do whatever needs to be done.
+	
+	void		ResetChanged();	// reset our 'changed' flags.
 };
 
 

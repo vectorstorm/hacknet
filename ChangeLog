@@ -17,6 +17,8 @@ May 16, 2001:
     manage player/monster statistics and status ailments.
   * Renamed some networking functions, added ability to send unsigned
     8,16,32-bit values within packets.
+  * HN_Status:  Added more functionality to hnStatus.  Closer to being
+    able to implement combat!
 
 May 13, 2001:
   * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.
