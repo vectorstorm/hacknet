@@ -24,6 +24,31 @@ entPlayer::Move( hnDirection dir )
 	// is there anything else we need to do here?  Probably..
 }
 
+#define MAX_TALK_DISTANCE	(5)
+#define MAX_TALK_DISTANCE_SQ	(MAX_TALK_DISTANCE * MAX_TALK_DISTANCE)
+
+void
+entPlayer::Listen( const hnPoint & position, char * message )
+{
+	hnPoint offset = position - GetPosition();
+
+	if ( offset.z == 0 )
+	{
+		if ( (offset.x * offset.x) + (offset.y * offset.y) < MAX_TALK_DISTANCE_SQ )
+		{
+			Listen(message);
+		}
+	}
+}
+
+void
+entPlayer::Listen( char * message )
+{
+	netServer::GetInstance()->StartMetaPacket(m_playerID);
+	netServer::GetInstance()->SendMessage( message );
+	netServer::GetInstance()->TransmitMetaPacket();	// all done!
+}
+
 void
 entPlayer::PostTurn()
 {

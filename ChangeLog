@@ -33,6 +33,19 @@ April 28, 2001:
   messages to the server, and the server displays them in its output.
   Next to be implemented:  Sending 'talk' strings to all clients.
 
+  Speaking and shouting fully implemented.  To yell, put an exclamation
+  point on the end of your 'talk' message.  Anyone within a seven square
+  range of you will hear you speak, and everyone in the game will hear
+  a shout.  Obviously, both ranges need tweaking, but this seems fair
+  for a starting point.  Client currently shows the last three messages
+  sent from the server.  (NetHack only shows two, but I expect that
+  we'll be seeing somewhat more conversation than NetHack)  :)  Also
+  moved the dungeon display down by four lines to make room for the
+  messages and prompts to not overlap the dungeon.  Everything should
+  still fit on a 24 line display (though only barely).  I'll probably
+  have to lower the number of messages displayed and otherwise adjust
+  to UI to be able to fit statistics at the bottom of the screen.
+
 ---
 April 27, 2001:
   Adjusted client argument parsing.  Client still defaults to 'localhost'

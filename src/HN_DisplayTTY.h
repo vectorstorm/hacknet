@@ -12,10 +12,15 @@ class hnDisplayTTY : public hnDisplay
 
 	inputMode	m_mode;
 
-#define MAX_TALK_BYTES	(128)
+#define MAX_TALK_BYTES		(128)
 
+#define MAX_MESSAGE_LINES	(3)
+#define MAX_MESSAGE_BYTES	(256)
+	
 	char		m_talkBuffer[MAX_TALK_BYTES];
 	int		m_talkLength;
+	
+	char		m_messageBuffer[MAX_MESSAGE_LINES][MAX_MESSAGE_BYTES];
 	
 	bool		m_needsRefresh;
 	bool		m_done;
@@ -35,6 +40,8 @@ public:
 	virtual void	UpdateLocation( const hnPoint &point );
 	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapClientTile &tile );
 	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
+
+	virtual void	TextMessage( char * message );
 };
 
 void *	StartEventLoop(void *);		// for use by our thread to check for keypresses

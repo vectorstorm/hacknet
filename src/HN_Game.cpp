@@ -159,6 +159,46 @@ hnGame::ClientName(int playerID, char * name)
 	m_player[playerID]->SetName(name);
 }
 
+#define MAX_TALK_BUFFER (256)
+
+void
+hnGame::ClientTalk(int playerID, char * talk)
+{
+	int talkLength = strlen(talk);
+
+	if ( talkLength > 0 )
+	{	
+		hnPoint position = m_player[playerID]->GetPosition();
+		
+		if ( talk[talkLength-1] == '!' )
+		{
+			// we're shouting.
+			char buffer[MAX_TALK_BUFFER];
+			char *name = m_player[playerID]->GetName();
+			
+			snprintf( buffer, MAX_TALK_BUFFER, "%s shouts, \"%s\"", name, talk );
+			
+			for ( int i = 0; i < MAX_CLIENTS; i++ )
+				if ( m_player[i] )
+					m_player[i]->Listen( buffer );
+		}
+		else
+		{
+			char buffer[MAX_TALK_BUFFER];
+			char *name = m_player[playerID]->GetName();
+			
+			if ( talk[talkLength-1] == '?' )	// different message for questions.
+				snprintf( buffer, MAX_TALK_BUFFER, "%s asks, \"%s\"", name, talk );
+			else
+				snprintf( buffer, MAX_TALK_BUFFER, "%s says, \"%s\"", name, talk );
+	
+			for ( int i = 0; i < MAX_CLIENTS; i++ )
+				if ( m_player[i] )
+					m_player[i]->Listen( position, buffer );
+		}
+	}
+}
+
 void
 hnGame::ClientQuit(int playerID)
 {

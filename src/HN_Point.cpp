@@ -18,13 +18,26 @@ hnPoint::~hnPoint()
 }
 
 hnPoint 
-hnPoint::operator+(const hnPoint &b)
+hnPoint::operator+(const hnPoint &b) const
 {
 	return hnPoint(x + b.x, y + b.y, z + b.z );
 }
 
+hnPoint 
+hnPoint::operator-(const hnPoint &b) const
+{
+	return hnPoint(x - b.x, y - b.y, z - b.z );
+}
+
 hnPoint &
 hnPoint::operator+=(const hnPoint &b)
+{
+	x += b.x; y += b.y; z += b.z;
+	return *this;
+}
+
+hnPoint &
+hnPoint::operator-=(const hnPoint &b)
 {
 	x += b.x; y += b.y; z += b.z;
 	return *this;
@@ -54,15 +67,28 @@ hnPoint2D::~hnPoint2D()
 }
 
 hnPoint2D 
-hnPoint2D::operator+(const hnPoint2D &b)
+hnPoint2D::operator+(const hnPoint2D &b) const
 {
 	return hnPoint2D(x + b.x, y + b.y );
+}
+
+hnPoint2D 
+hnPoint2D::operator-(const hnPoint2D &b) const
+{
+	return hnPoint2D(x - b.x, y - b.y );
 }
 
 hnPoint2D &
 hnPoint2D::operator+=(const hnPoint2D &b)
 {
 	x += b.x; y += b.y;
+	return *this;
+}
+
+hnPoint2D &
+hnPoint2D::operator-=(const hnPoint2D &b)
+{
+	x -= b.x; y -= b.y;
 	return *this;
 }
 

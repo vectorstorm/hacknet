@@ -94,6 +94,7 @@ public:
 	
 	/*****************   Server Packets  ******************/
 	bool			ClientLocation( netClientLocation &packet );
+	bool			TextMessage( char * messagebuffer, sint16 & bufferlength );
 	bool			MapTile( netMapTile &packet );
 	bool			MapReset( netMapReset &packet );
 	bool			MapUpdateBBox( netMapUpdateBBox &packet );

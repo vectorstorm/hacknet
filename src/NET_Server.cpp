@@ -19,6 +19,8 @@
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
 
+//#define __DEBUG_NETWORKING__
+
 netServer * netServer::s_instance = NULL;
 
 void
@@ -293,6 +295,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				break;
 			case CPT_Talk:
 				packet->ClientTalk(localbuffer, bufferSize);
+				m_game->ClientTalk(clientID, localbuffer);
 				printf("%s says, \"%s\"\n", m_game->GetPlayerName(clientID), localbuffer);
 				break;
 			case CPT_Name:
@@ -386,6 +389,12 @@ netServer::SendMapObjectList( const hnPoint & loc, int numObjects, entType objec
 	m_metaPacket->MapObjectList(packet);*/
 }
 
+void
+netServer::SendMessage( char * message )
+{
+	sint16 messageLength = strlen(message);
+	m_metaPacket->TextMessage( message, messageLength );
+}
 
 void
 netServer::SendQuitConfirm(int clientID)
@@ -443,18 +452,21 @@ netServer::TransmitMetaPacket()
 	{
 		// here we go -- send our netMetaPacket to the given client!
 		short metapacketdatalength = htons(m_metaPacket->GetBufferLength());	
-		
+
+#ifdef __DEBUG_NETWORKING__
 		printf("Sending %d byte metapacket to %s (id %d)...\n", m_metaPacket->GetBufferLength(), 
 									m_game->GetPlayerName(m_packetClientID), m_packetClientID);
-		
+#endif
 		
 		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )
 			perror("send");
-		
-/*		for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
+
+#ifdef __DEBUG_NETWORKING__
+		for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
 		{
 			printf("Value: %d\n", m_metaPacket->GetBuffer()[i]);
-		}*/
+		}
+#endif
 		
 		if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), MSG_NOSIGNAL) == -1 )
 			perror("send");

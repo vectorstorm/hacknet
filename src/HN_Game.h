@@ -19,7 +19,6 @@ class entPlayer;
 class hnGame
 {
 	entPlayer *		m_player[MAX_CLIENTS];
-//	mapBase			*m_levelMap[MAX_LEVELS];
 
 	static hnGame *		s_instance;
 	
@@ -36,6 +35,7 @@ public:
 	
 	void			ClientJoined(int clientID);
 	void			ClientName(int clientID, char * name);
+	void			ClientTalk(int clientID, char * talk);
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);
 	void			ClientAttack(int clientID, hnDirection dir);

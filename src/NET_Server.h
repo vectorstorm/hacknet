@@ -51,8 +51,8 @@ class netServer
 protected:
 				netServer();					// constructs and starts listening on our port..
 	virtual			~netServer();
-	void		StartServer();
-	bool		ProcessClientPacket(int clientID, char *buffer, short bufferLength); // false == invalid packet, so kill the connection.
+	void			StartServer();
+	bool			ProcessClientPacket(int clientID, char *buffer, short bufferLength); // false == invalid packet, so kill the connection.
 public:
 	static void		Startup();
 	static void		Shutdown();
@@ -72,6 +72,7 @@ public:
 	void		SendMapUpdateBBox( netMapUpdateBBox & bbox );
 	void		SendMapObjectList( const hnPoint & loc, int numObjects, entType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
 	void		SendMapReset( int width, int height );
+	void		SendMessage( char * message );
 	
 	void		SendQuitConfirm( int clientID );	// doesn't require a metapacket
 	void		SendBadPacketNotice( int clientID );	// doesn't require a metapacket

@@ -4,6 +4,7 @@
 #include CURSESINC
 #endif
 #include <pthread.h>
+#include <string.h>
 #include "HN_DisplayTTY.h"
 #include "NET_Client.h"
 #include "HN_Enum.h"
@@ -18,6 +19,12 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 	m_needsRefresh(false),
 	m_done(false)
 {
+
+	m_talkBuffer[0] = '\0';
+
+	for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
+		m_messageBuffer[i][0] = '\0';
+
 #ifndef __DEBUGGING_NETWORK__
 	initscr();
 	keypad(stdscr,true); // enable keyboard mapping
@@ -52,6 +59,8 @@ hnDisplayTTY::~hnDisplayTTY()
 	refresh();
 	endwin();
 #endif
+
+	// put any debugging output here, if needed -- curses has been shut down and printf is safe again.
 }
 
 bool
@@ -80,7 +89,8 @@ hnDisplayTTY::EventLoop()
 {
 	
 #ifdef __DEBUGGING_NETWORK__
-	SendMove(DIR_West);
+	//m_client->SendMove(DIR_West);
+	m_client->SendTalk("Hoi!");
 #endif	
 
 	while ( !m_done )
@@ -264,8 +274,8 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 		
 		color_set( floorTileColor[floorType],NULL);
 		//mvaddch(y,x,floorTileChar[floorType]);
-		mvaddch(y,x,theChar);
-		move(m_position.y,m_position.x);
+		mvaddch(y + MAX_MESSAGE_LINES+1,x,theChar);
+		move(m_position.y + MAX_MESSAGE_LINES+1,m_position.x);
 
 		m_needsRefresh = true;
 	}
@@ -291,6 +301,16 @@ hnDisplayTTY::UpdateMapCreature( sint8 x, sint8 y, entType type )
 }
 
 void
+hnDisplayTTY::TextMessage( char * message )
+{
+	for ( int i = 0; i < MAX_MESSAGE_LINES-1; i++ )
+		strncpy( m_messageBuffer[i], m_messageBuffer[i+1], MAX_MESSAGE_BYTES );
+	strncpy( m_messageBuffer[MAX_MESSAGE_LINES-1], message, MAX_MESSAGE_BYTES );	
+
+	m_needsRefresh = true;
+}
+
+void
 hnDisplayTTY::Refresh()
 {
 	if ( m_needsRefresh )
@@ -304,13 +324,36 @@ hnDisplayTTY::Refresh()
 				PlotSquare(i,j);
 			}
 		
-		// do prompts over the map, if required.
+		// clear prompt area.
+		for ( int j = 0; j < MAX_MESSAGE_LINES+1; j++ )
+		{
+			int maxy, maxx;
+			getmaxyx(stdscr, maxy, maxx);
+			for ( int i = 0; i < maxx; i++ )
+			{
+				mvaddch(j,i,' ');
+			}
+		}
+		
+		// do prompts.
+		
+		for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
+		{
+			move( i, 0 );
+			printw("%s", m_messageBuffer[i]);
+		}
+		
 		if ( m_mode == MODE_Talking )
 		{
 			// draw our string in the top few lines..
 			
-			move( 1, 1 );
+			move( MAX_MESSAGE_LINES, 2 );
 			printw("Say: %s", m_talkBuffer);
+		}
+		else
+		{
+			// now put our cursor back onto us, when in normal mode.
+			move(m_position.y + MAX_MESSAGE_LINES+1,m_position.x);
 		}
 	
 		refresh();

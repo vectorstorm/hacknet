@@ -29,6 +29,8 @@ public:
 			~entPlayer();
 	
 	virtual void	Move( hnDirection dir );
+	virtual void	Listen( const hnPoint & position, char * message );
+	virtual void	Listen( char * message );
 	virtual void	PostTurn();
 };
 

@@ -37,6 +37,18 @@ netMetaPacket::ClientLocation( netClientLocation &packet )
 }
 
 bool
+netMetaPacket::TextMessage( char * buffer, sint16 & bufferlength )
+{
+	bool success = true;
+	
+	sint8 type = SPT_Message;
+	Char(type);
+	String( buffer, bufferlength );
+	
+	return success;
+}
+
+bool
 netMetaPacket::MapTile( netMapTile &packet )
 {
 	bool success = true;

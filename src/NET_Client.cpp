@@ -115,19 +115,26 @@ netClient::Go()
 			cleanexit(1);
 		}
 #ifdef __DEBUGGING_NETWORK__	
+		printf("Packet of %d bytes:\n", incomingBytes);
 		char *bufferstart = buffer;
 		
 		for ( int i = 0; i < incomingBytes; i++ )	
 		{
 			printf("Value: %d\n",*(bufferstart + i));
 		}
-		while ( 1 ) {}
+		printf("\n");
+		
+		if ( incomingBytes == 7 )
+			while ( 1 ) {}
 #endif
 		netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
 		
 		while ( !packet->Done() )
 		{
 			sint8 type = packet->PeekChar();
+#define MAX_MESSAGE_BYTES	(256)
+			char	messageBuffer[MAX_MESSAGE_BYTES];
+			sint16 	messageBufferLength = MAX_MESSAGE_BYTES;
 			
 			switch ( type )
 			{
@@ -143,6 +150,10 @@ netClient::Go()
 					tile.material = (hnMaterialType)tileData.material;
 					tile.wall = (hnWallType)tileData.wall;
 					m_display->UpdateMapTile(tileData.loc.x, tileData.loc.y, tile);
+					break;
+				case SPT_Message:
+					packet->TextMessage(messageBuffer, messageBufferLength);
+					m_display->TextMessage(messageBuffer);
 					break;
 				case SPT_MapEntity:
 					packet->MapEntity(entityData);
@@ -170,11 +181,6 @@ netClient::Go()
 					delete [] bbox.wall;
 					delete [] bbox.entityType;
 					break;
-				/*case SPT_Refresh:
-					//printf("Refresh packet\n");
-					packet->Char(type);
-					m_display->Refresh();
-					break;*/
 				case SPT_BadPacketNotice:
 					delete m_display;
 					packet->Char(type);
