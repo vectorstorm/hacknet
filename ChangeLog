@@ -11,6 +11,10 @@ May 30, 2001:
     instead of storing the strings on each instance of the classes.
     (This means the string "grid bug" is now only stored once in memory,
     instead of once for each grid bug in the world).
+  * Moved MAP_Client.cpp/.h into 'common' from 'client'.  They're needed
+    in the server code, for maintaining a proper copy of what each client
+    can see of the map.  (This will let me remove some kludges from within 
+    the MAP_Base)
 
 May 27, 2001:
   * Lots of adjustments to ttyclient to switch towards a NetHack style
