@@ -6,7 +6,7 @@
 //  (Game) -> (netServer) -> [internet] -> (netClient) -> (Client)
 
 #include "HN_Enum.h"
-#include "NET_ServerConsts.h"
+#include "HN_Config_Server.h"
 #include "NET_Packet.h"
 #include "ENT_Base.h"
 

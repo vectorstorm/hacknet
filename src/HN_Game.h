@@ -3,7 +3,7 @@
 
 // toplevel instance of a game.
 
-#include "NET_ServerConsts.h"
+#include "HN_Config_Server.h"
 #include "HN_Enum.h"
 #include "HN_Point.h"
 

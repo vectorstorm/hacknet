@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "config.h"
+#include "HN_Config_Client.h"
 #include "HN_Display.h"
 #include "NET_Client.h"
 

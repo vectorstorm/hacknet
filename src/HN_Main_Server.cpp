@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "config.h"
 #include "HN_Game.h"
 #include "NET_Server.h"
 
