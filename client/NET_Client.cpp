@@ -376,7 +376,7 @@ netClient::SendTake( objDescription *obj, uint8 stackID )
 void
 netClient::SendDrop( objDescription *object, uint8 inventoryID )
 {
-	netClientDrop packet;
+	netInventoryItem packet;
 
 	packet.object = *object;
 	packet.inventorySlot = inventoryID;

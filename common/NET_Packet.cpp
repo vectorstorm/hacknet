@@ -56,6 +56,12 @@ netMetaPacket::ObjDescription( objDescription &object )
 	return !m_error;
 }
 
+bool
+netMetaPacket::NetInventoryItem( netInventoryItem &packet )
+{
+	ObjDescription( packet.object );
+	Uint8( packet.inventorySlot );
+}
 
 bool
 netMetaPacket::ClientLocation( netClientLocation &packet )
@@ -479,14 +485,25 @@ netMetaPacket::ClientTake( netClientTake &packet )
 }
 
 bool
-netMetaPacket::ClientDrop( netClientDrop &packet )
+netMetaPacket::ClientDrop( netInventoryItem &packet )
 {
 	m_error = false;
 	
 	sint8 type = CPT_DropObject;
 	Sint8( type );
-	ObjDescription( packet.object );
-	Uint8( packet.inventorySlot );
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientWield( netInventoryItem &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_WieldObject;
+	Sint8( type );
+	NetInventoryItem(packet);
 	
 	return (!m_error);
 }

@@ -69,7 +69,8 @@ struct netClientTake
 	uint8		stackID;
 };
 
-struct netClientDrop
+
+struct netInventoryItem
 {
 	objDescription 	object;
 	uint8		inventorySlot;
@@ -127,6 +128,7 @@ struct netMapObjectList
 	sint8 numObjects;
 	sint8 *objectType;
 };
+
 
 struct netMapEntity
 {
@@ -215,7 +217,8 @@ public:
 	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientTalk( char * talkbuffer, sint16 & bufferLength );
 	bool			ClientTake( netClientTake &packet );
-	bool			ClientDrop( netClientDrop &packet );
+	bool			ClientDrop( netInventoryItem &packet );
+	bool			ClientWield( netInventoryItem &packet );
 	bool			ClientWield( netClientWield &packet );
 	bool			ClientRequestRefresh( sint8 & level );
 	bool			ClientSave();
@@ -231,6 +234,7 @@ public:
 	virtual bool		String( char *, sint16 & ) = 0;
 
 	virtual bool		ObjDescription( objDescription & );
+	virtual bool		NetInventoryItem( netInventoryItem & );
 	
 	virtual	bool		Input() { return false; }
 	virtual bool		Output() { return false; }

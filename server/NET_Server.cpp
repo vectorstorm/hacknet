@@ -299,7 +299,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	char localbuffer[MAX_NAME_BYTES];
 	sint16 bufferSize = MAX_NAME_BYTES;
 	netClientTake take;
-	netClientDrop drop;
+	netInventoryItem drop;
 	
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
 #ifdef __DISPLAY_PACKET_CONTENT__
