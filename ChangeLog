@@ -14,6 +14,14 @@ May 5, 2001:
   under Solaris, or on the Compaq Tru64.  I'll keep plugging away
   at it, though!
 
+  Split up lots of vision calculating/updating functions in mapBase
+  and in hnPlayer.  Added stuff to hnGroupManager to trigger vision
+  updates every time a player moves.  If something moves within a
+  hnPlayer's field of view (even if that thing is outside the 
+  hnPlayer's group, or if groups are turned off on the server), 
+  the hnPlayer will now send updates to its client to keep the client 
+  up to date.
+
 May 4, 2001:
   Late update today.. that's because I've had to implement today's new
   feature twice.  I wanted to make creatures vanish from the map

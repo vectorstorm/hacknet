@@ -26,9 +26,11 @@ hnGroup::~hnGroup()
 	delete [] m_player;
 }
 
-void
+bool
 hnGroup::ProcessTurn()
 {
+	bool didATurn = false;
+	
 	if ( m_playerCount > 0 )
 	{	
 		bool everyoneHasATurn = true;
@@ -40,13 +42,18 @@ hnGroup::ProcessTurn()
 		
 		if ( everyoneHasATurn )
 		{
+			didATurn = true;
+			
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
 					m_player[i]->DoTurn();
 			
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
-					m_player[i]->PostTurn();
+				{
+					m_player[i]->UpdateVision();
+					m_player[i]->SendUpdate();
+				}
 		}
 		else
 		{
@@ -64,6 +71,7 @@ hnGroup::ProcessTurn()
 				}
 		}
 	}
+	return didATurn;
 }
 
 int
@@ -281,10 +289,26 @@ void
 hnGroupManager::ProcessTurn()
 {
 	// check each group to see if they're ready to run a turn, and do so if they are.
-
+	bool ranATurn = false;
+	
 	for ( int i = 0; i < m_maxGroupCount; i++ )
 	{
-		m_group[i]->ProcessTurn();
+		if ( m_group[i]->ProcessTurn() )
+			ranATurn = true;
+	}
+
+	if ( ranATurn )
+	{
+		// update vision of everyone to correspond with activities of other groups.
+
+		for ( int i = 0; i < m_maxGroupCount; i++ )
+		{
+			if ( m_player[i] != NULL )
+			{
+				m_player[i]->UpdateVision();
+				m_player[i]->SendUpdate();
+			}
+		}
 	}
 }
 

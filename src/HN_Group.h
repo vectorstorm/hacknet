@@ -23,7 +23,7 @@ public:
 	int			GetPlayerCount() { return m_playerCount; }
 	int			QueuedTurnCount();			// how many players with queued turns?
 
-	void			ProcessTurn();
+	bool			ProcessTurn();				// returns true if we actually ran a turn.
 };
 
 class hnGroupManager

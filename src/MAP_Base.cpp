@@ -20,8 +20,8 @@ mapBase::mapBase(uint8 width, uint8 height, uint8 depth):
 {
 	m_stairsUp.Set(-1,-1);
 	m_stairsDown.Set(-1,-1);
-	m_bottomRightMaxChanged.Set(0,0);
-	m_topLeftMaxChanged.Set(m_width,m_height);
+
+	ResetChanged();
 	
 	m_tile = new mapTile[width * height];
 	for ( int i = 0; i < width * height; i++ )
@@ -131,6 +131,13 @@ mapBase::Generate()
 }
 
 void
+mapBase::ResetChanged()
+{
+	m_bottomRightChanged.Set(0,0);
+	m_topLeftChanged.Set(m_width,m_height);
+}
+
+void
 mapBase::PrepareVisibility()
 {
 	for ( int j = 0; j < m_height; j++ )
@@ -141,20 +148,18 @@ mapBase::PrepareVisibility()
 }
 
 void
-mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
+mapBase::UpdateVisibility( const hnPoint & position, mapBase * sourceMap )
 {
-	// Reset our visibility bounding box
-	m_bottomRightChanged.Set(position.x,position.y);
-	m_topLeftChanged.Set(position.x,position.y);
-	
-	
+	//-------------------------------------------------------------
+	//
+	//  Reset visibility of last frame, since we're about to
+	//  recalculate it.
+	//
+	//-------------------------------------------------------------
+
 	for ( int i = 0; i < m_width; i++ )
 		for ( int j = 0; j < m_height; j++ )
-		{
 			MapTile(i,j).visible = false;
-		}
-		
-	
 	
 	//-------------------------------------------------------------
 	//
@@ -192,36 +197,7 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 		{
 			for ( int y = where->top-1; y <= where->bottom+1; y++ )
 				for ( int x = where->left-1; x <= where->right+1; x++ )
-				{
-					mapTile *myTile 	= 	&MapTile(x,y);
-					mapTile *realTile 	= 	&sourceMap->MapTile(x,y);
-					
-					bool changed 		= 	false;
-					
-					myTile->visible 	= 	true;
-					
-					
-					if ( myTile->material != realTile->material )
-					{
-						myTile->material = realTile->material;
-						changed = true;
-					}
-					if ( myTile->wall != realTile->wall )
-					{
-						myTile->wall = realTile->wall;
-						changed = true;
-					}
-					entType type = (realTile->entity) ? (realTile->entity->GetType()) : ENTITY_None;
-					
-					if ( myTile->entityType != type )
-					{
-						myTile->entityType = type;
-						changed = true;
-					}
-					
-					if ( changed )
-						MarkPointChanged( x, y );
-				}
+					MapTile(x,y).visible 	= 	true;
 		
 		}
 		else
@@ -236,41 +212,58 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 	        //  Update visibility here.  In a corridor, just update the 3x3 box
 	        //  around the player.
 	        //---------------------------------------------------------------
-		pos.x--;
-		pos.y--;
 
-		for ( int j = 0; j < 3; j++ )
-			for ( int i = 0; i < 3; i++ )
+		for ( int j = -1; j <= 1; j++ )
+			for ( int i = -1; i <= 1; i++ )
 			{
-				int x = pos.x+i;
-				int y = pos.y+j;
-				
-				
-				MapTile(x,y).visible = true;
-				MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
-				hnWallType wt = sourceMap->WallAt( x, y );
-				WallAt( x, y ) = ( wt & WALL_Any ) ? WALL_Unknown : wt;
-				if ( sourceMap->MapTile( x, y ).entity == NULL )
-					MapTile( x, y ).entityType = ENTITY_None;
-				else
-					MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
-				MarkPointChanged( x, y );
+				printf("Wall at relative %d, %d has type %d.\n", i, j, sourceMap->WallAt(pos.x+i,pos.y+j));
+				if ( !(sourceMap->WallAt(pos.x+i,pos.y+j) & WALL_Any) )
+					MapTile(pos.x+i,pos.y+j).visible = true;
 			}
 	}
+}
 
-	// now, do a last minute pass to remove things as required.
 
+void
+mapBase::UpdateMap( mapBase * sourceMap )
+{
 	for ( uint8 y = 0; y < m_height; y++ )
 	{
 		for ( uint8 x = 0; x < m_width; x++ )
 		{
-			mapTile *tile = &MapTile(x,y);
+			mapTile *myTile 	= 	&MapTile(x,y);
 			
-			if ( tile->entityType != ENTITY_None )
+			if ( myTile->visible )
 			{
-				if ( !tile->visible )
+				mapTile *realTile 	= 	&sourceMap->MapTile(x,y);
+				bool changed 		= 	false;
+			
+				if ( myTile->material != realTile->material )
 				{
-					tile->entityType = ENTITY_None;
+					myTile->material = realTile->material;
+					changed = true;
+				}
+				if ( myTile->wall != realTile->wall )
+				{
+					myTile->wall = realTile->wall;
+					changed = true;
+				}
+				entType type = (realTile->entity) ? (realTile->entity->GetType()) : ENTITY_None;
+				
+				if ( myTile->entityType != type )
+				{
+					myTile->entityType = type;
+					changed = true;
+				}
+					
+				if ( changed )
+					MarkPointChanged( x, y );
+			}
+			else
+			{
+				if ( myTile->entityType )
+				{
+					myTile->entityType = ENTITY_None;
 					MarkPointChanged( x, y );
 				}
 			}

@@ -138,7 +138,10 @@ hnPlayer::DoTurn()
 	{
 		case queuedTurn::Move:
 			if ( IsValidMove( m_queuedTurn.move.direction ) )
+			{
 				m_entity->Move( m_queuedTurn.move.direction );
+				RecalculateVision();
+			}
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
@@ -149,19 +152,11 @@ hnPlayer::DoTurn()
 }
 
 void
-hnPlayer::PostTurn()
+hnPlayer::RecalculateVision()
 {
-	// Send an update packet to our player.
-
-	netServer::GetInstance()->StartMetaPacket(m_playerID);
-	netServer::GetInstance()->SendClientLocation( GetPosition() );
-
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
-	
 	assert(realMap);
 
-
-	//  Allocate map storage if we haven't been here before.
 	if ( m_map[ m_entity->GetPosition().z ] == NULL )
 		m_map[ m_entity->GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
 
@@ -173,48 +168,92 @@ hnPlayer::PostTurn()
 	//---------------------------------------------------------------
 	
 	map->UpdateVisibility( m_entity->GetPosition(), realMap );
+}
+
+void
+hnPlayer::UpdateVision()
+{
+	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
+	assert(realMap);
+
+	if ( m_map[ m_entity->GetPosition().z ] == NULL )
+		m_map[ m_entity->GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
+
+	mapBase *map = m_map[ m_entity->GetPosition().z ];
+	assert( map );
+
+	//---------------------------------------------------------------
+	//  Copy visible squares of real map into our vision map
+	//---------------------------------------------------------------
 	
+	map->UpdateMap( realMap );
+}
+
+void
+hnPlayer::SendUpdate()
+{
+	// Send an update packet to our player.
+
+
+	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
+	assert(realMap);
+
+	//  Allocate map storage if we haven't been here before.
+	if ( m_map[ m_entity->GetPosition().z ] == NULL )
+		m_map[ m_entity->GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
+
+	mapBase *map = m_map[ m_entity->GetPosition().z ];
+	assert( map );
+
 	netMapUpdateBBox update;
 	
 	hnPoint2D 	tlpos = map->GetTopLeftChanged();
 	hnPoint2D	brpos = map->GetBottomRightChanged();
-		
-	update.loc.Set( tlpos.x, tlpos.y, m_entity->GetPosition().z );
-	update.width = (brpos.x - tlpos.x) + 1;
-	update.height = (brpos.y - tlpos.y) + 1;
 	
-	update.material = new sint16[update.width * update.height];
-	update.wall = new sint16[update.width * update.height];
-	update.entityType = new sint8[update.width * update.height];
+	if ( tlpos.x <= brpos.x && tlpos.y <= brpos.y )	// if something changed...
+	{
+		map->ResetChanged();
 
-	for ( int j = 0; j < update.height; j++ )
-		for ( int i = 0; i < update.width; i++)
-		{
-			int x = update.loc.x+i;
-			int y = update.loc.y+j;
+		netServer::GetInstance()->StartMetaPacket(m_playerID);
+		netServer::GetInstance()->SendClientLocation( GetPosition() );
+	
+		update.loc.Set( tlpos.x, tlpos.y, m_entity->GetPosition().z );
+		update.width = (brpos.x - tlpos.x) + 1;
+		update.height = (brpos.y - tlpos.y) + 1;
+	
+		update.material = new sint16[update.width * update.height];
+		update.wall = new sint16[update.width * update.height];
+		update.entityType = new sint8[update.width * update.height];
+
+		for ( int j = 0; j < update.height; j++ )
+			for ( int i = 0; i < update.width; i++)
+			{
+				int x = update.loc.x+i;
+				int y = update.loc.y+j;
 			
-       			update.material[i+(j*update.width)] = map->MaterialAt(x,y);
-   			update.wall[i+(j*update.width)] = map->WallAt(x,y);
-			update.entityType[i+(j*update.width)] = map->MapTile(x,y).entityType;
+       				update.material[i+(j*update.width)] = map->MaterialAt(x,y);
+   				update.wall[i+(j*update.width)] = map->WallAt(x,y);
+				update.entityType[i+(j*update.width)] = map->MapTile(x,y).entityType;
+			}
+	
+		netServer::GetInstance()->SendMapUpdateBBox( update );
+
+		delete [] update.material;
+		delete [] update.wall;
+		delete [] update.entityType;
+	
+
+		if ( m_group )
+		{
+			// now we need to send some group data..  (We should always be in a group, even if it's just us!)
+			int groupMembers = m_group->GetPlayerCount();
+			int groupMembersWithTurns = m_group->QueuedTurnCount();
+		
+			netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, HasQueuedTurn() );
 		}
 	
-	netServer::GetInstance()->SendMapUpdateBBox( update );
-
-	delete [] update.material;
-	delete [] update.wall;
-	delete [] update.entityType;
-	
-
-	if ( m_group )
-	{
-		// now we need to send some group data..  (We should always be in a group, even if it's just us!)
-		int groupMembers = m_group->GetPlayerCount();
-		int groupMembersWithTurns = m_group->QueuedTurnCount();
-		
-		netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, HasQueuedTurn() );
+		netServer::GetInstance()->TransmitMetaPacket();	// all done!
 	}
-	
-	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }
 
 void

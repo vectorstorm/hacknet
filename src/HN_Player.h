@@ -74,8 +74,10 @@ public:
 	
 	virtual bool	CanSee( const hnPoint & position );
 	
-	virtual void	DoTurn();	// run our turn now.
-	virtual void	PostTurn();	// send results of our turn now.
+	virtual void	DoTurn();		// run our turn now.
+	virtual void	RecalculateVision();	// calculate what we can see
+	virtual void	UpdateVision();		// check again what's in the squares we previously calculated we could see.
+	virtual void	SendUpdate();		// send all updates to client.
 
 	virtual void	RefreshMap( int level );
 	

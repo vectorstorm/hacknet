@@ -129,7 +129,9 @@ hnGame::ClientJoined(int playerID)
 	
 	hnGroupManager::GetInstance()->AddPlayer( m_player[playerID] );
 	
-	m_player[playerID]->PostTurn();
+	m_player[playerID]->RecalculateVision();
+	m_player[playerID]->UpdateVision();
+	m_player[playerID]->SendUpdate();
 }
 
 void

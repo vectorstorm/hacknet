@@ -75,13 +75,15 @@ public:
 	const hnPoint2D &	GetUpStairs() { return m_stairsUp; }
 	const hnPoint2D &	GetDownStairs() { return m_stairsDown; }
 	
+	void			ResetChanged();	// reset topleft and bottomright changed points, since we just processed the changes.
 	const hnPoint2D &	GetTopLeftChanged() { return m_topLeftChanged; }
 	const hnPoint2D &	GetTopLeftMaxChanged() { return m_topLeftMaxChanged; }
 	const hnPoint2D &	GetBottomRightChanged() { return m_bottomRightChanged; }
 	const hnPoint2D &	GetBottomRightMaxChanged() { return m_bottomRightMaxChanged; }
 	
 	void			PrepareVisibility();
-	void			UpdateVisibility( const hnPoint & position, mapBase *originalMap );
+	void			UpdateVisibility( const hnPoint & position, mapBase * sourceMap );	// calculate what squares are visible
+	void			UpdateMap( mapBase * sourceMap );		// copy contents of sourceMap into our visible squares
 	
 	virtual void		Generate();
 	virtual void		GenerateStairsUp() {}
