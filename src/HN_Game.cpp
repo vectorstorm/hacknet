@@ -127,6 +127,8 @@ hnGame::ClientJoined(int playerID)
 	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 	
+	hnGroupManager::GetInstance()->AddPlayer( m_player[playerID] );
+	
 	m_player[playerID]->PostTurn();
 }
 
@@ -196,6 +198,7 @@ void
 hnGame::ClientQuit(int playerID)
 {
 	// when a client quits, we need to remove his entity.
+	hnGroupManager::GetInstance()->RemovePlayer( m_player[playerID] );
 	
 	delete m_player[playerID];
 	m_player[playerID] = NULL;
@@ -232,6 +235,8 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 				if ( i != playerID && m_player[i] != NULL )
 					if ( m_player[i]->CanSee(iniPos) || m_player[i]->CanSee(endPos) )
 						m_player[i]->PostTurn();
+
+			hnGroupManager::GetInstance()->UpdateGroups();
 		}
 	}else{
 		printf("Tried to move in an illegal direction: %d.\n", dir);

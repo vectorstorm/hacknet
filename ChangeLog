@@ -6,6 +6,14 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 3, 2001:
+  Added initial revision of sorting players into groups.  Groups
+  only exist on a single level.. anyone within 10 squares of another
+  player is pulled into their group.  Currently there's no effect from
+  sharing a group with someone else, but the next step will be synching
+  moves between everyone in a single group, so nobody in a group moves
+  until they all move.
+
 May 2, 2001:
   Changed netServer and netClient in response to feedback that MSG_*
   enumerations weren't compiling successfully under FreeBSD.  As I'd

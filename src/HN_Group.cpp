@@ -1,7 +1,8 @@
 #include <assert.h>
+#include <stdio.h>
 #include "HN_Group.h"
 #include "HN_Player.h"
-
+#include "NET_Server.h"
 
 hnGroupManager * hnGroupManager::s_instance = NULL;
 
@@ -24,14 +25,20 @@ hnGroup::~hnGroup()
 int
 hnGroup::DistanceFromGroup( hnPlayer * player )
 {
-	int distance = 0;
+	int distance = 0;	// return -1 if not eligible to enter group.
+	bool firstTest = true;
 	
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
 	{
-		if ( m_player[i] != player )
+		if ( m_player[i] != NULL && m_player[i] != player )
 		{
 			hnPoint offset = m_player[i]->GetPosition() - player->GetPosition();
-			distance += offset.x + offset.y;	// this isn't correct, but it's fast.  TODO: Fix!
+			
+			if ( firstTest && offset.z != 0 )	// if we're not on the same level as the first guy
+				return -1;			// in this group, we're not allowed in this group.
+			
+			firstTest = false;
+			distance += (offset.x*offset.x) + (offset.y*offset.y);	// this isn't correct, technically.
 		}
 	}
 	
@@ -56,6 +63,7 @@ hnGroup::AddPlayer( hnPlayer * player )
 		if ( m_player[i] == NULL )
 		{
 			m_player[i] = player;
+			m_playerCount++;
 			return;
 		}
 	}
@@ -69,7 +77,10 @@ hnGroup::RemovePlayer( hnPlayer * player )
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
 	{
 		if ( m_player[i] == player )
+		{
 			m_player[i] = NULL;
+			m_playerCount--;
+		}
 	}
 }
 
@@ -107,6 +118,10 @@ hnGroupManager::hnGroupManager( int maxPlayers ):
 	
 	for ( int i = 0; i < m_maxGroupCount; i++ )
 		m_group[i] = new hnGroup(maxPlayers);
+
+	m_player = new (hnPlayer *)[m_maxGroupCount];
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+		m_player[i] = NULL;
 }
 
 hnGroupManager::~hnGroupManager()
@@ -114,6 +129,107 @@ hnGroupManager::~hnGroupManager()
 	for ( int i = 0; i < m_maxGroupCount; i++ )
 		delete m_group[i];
 	delete [] m_group;
+
+	delete [] m_player;
+}
+
+void
+hnGroupManager::AddPlayer( hnPlayer * player )
+{
+	// add player into our list, if he's not already there.
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		if ( m_player[i] == player )
+		{
+			assert(0);
+			return;
+		}
+	}
+
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		if ( m_player[i] == NULL )
+		{
+			m_player[i] = player;
+
+			// now put the player into a group.
+			PutPlayerInGroup(i);
+			return;
+		}
+	}
+	assert( 0 );
+}
+
+#define GROUP_DISTANCE_LEEWAY (100)
+
+void
+hnGroupManager::PutPlayerInGroup(int id)
+{
+	hnPlayer *player = m_player[id];
+
+	int minDistance = 20000;	// arbitrary large integer
+	int minGroupID = -1;
+	int distance;
+
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		m_group[i]->RemovePlayer(player);
+		
+		if ( m_group[i]->GetPlayerCount() > 0 )
+		{
+			distance = m_group[i]->DistanceFromGroup(player);
+
+			if ( distance > 0 && distance < minDistance )	// if we're allowed to join this group...
+			{						// and it's a better match than anything else...
+				minDistance = distance;
+				minGroupID = i;
+			}
+		}
+	}
+
+	if ( minDistance < GROUP_DISTANCE_LEEWAY )
+	{
+		char buffer[128];
+		sprintf(buffer, "You're sharing group %d.", minGroupID);
+		netServer::GetInstance()->StartMetaPacket( id );
+		netServer::GetInstance()->SendMessage(buffer);
+		netServer::GetInstance()->TransmitMetaPacket();
+
+		m_group[minGroupID]->AddPlayer(player);
+		return;
+	}
+	else	// no better group for me, so put me in a group all by myself.
+	{
+		for ( int i = 0; i < m_maxGroupCount; i++ )
+		{
+			if ( m_group[i]->GetPlayerCount() == 0 )
+			{
+				char buffer[128];
+		sprintf(buffer, "You're in group %d.", i);
+		netServer::GetInstance()->StartMetaPacket( id );
+		netServer::GetInstance()->SendMessage(buffer);
+		netServer::GetInstance()->TransmitMetaPacket();
+
+				m_group[i]->AddPlayer( player );
+				return;
+			}
+		}
+	}
+	assert(0); // we should never get here!
+}
+
+void
+hnGroupManager::RemovePlayer( hnPlayer *player )
+{
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		m_group[i]->RemovePlayer(player);
+	}
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		if ( m_player[i] == player )
+			m_player[i] = NULL;
+	}
 }
 
 void
@@ -126,4 +242,11 @@ void
 hnGroupManager::UpdateGroups()
 {
 	// reassign players to groups.
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		if ( m_player[i] != NULL )
+		{
+			PutPlayerInGroup(i);
+		}
+	}
 }
