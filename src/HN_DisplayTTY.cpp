@@ -155,11 +155,21 @@ hnDisplayTTY::HandleKeypressTalking( int commandKey )
 	switch ( commandKey )
 	{
 		case '\r':				// other characters I should be checking for here?
-			m_mode = MODE_Normal;		// perhaps I should enable keypad and just look for KEY_ENTER?
+		case KEY_ENTER:
+			m_mode = MODE_Normal;		 
+			m_client->SendTalk( m_talkBuffer );
 			m_talkLength = 0;
 			m_talkBuffer[0]='\0';
 			m_needsRefresh = true;		// get rid of prompts
 			// transmit the string now!
+			break;
+		case KEY_BACKSPACE:
+			if ( m_talkLength > 0 )
+			{
+				m_talkLength--;
+				m_talkBuffer[m_talkLength] = '\0';
+			}
+			m_needsRefresh = true;
 			break;
 		default:
 			// TODO:  Check commandkey is a valid alphanumeric character!

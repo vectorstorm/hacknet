@@ -1,3 +1,11 @@
+---  HackNet changelog
+---  -----------------
+---  
+---  Daily entries, with more recent days on top.  Multiple checkins
+---  on a single day are generally separated by blank lines, with the 
+---  most recent checkins at the bottom.
+---
+
 April 28, 2001:
   Client now sends name to server after connecting, and the server 
   displays the name in its packet trace messages (in addition to the 
@@ -20,6 +28,10 @@ April 28, 2001:
   The client UI for talking has now been put into place.  Hit " to
   begin to speak, and hit enter to finish speaking.  Ain't it great?
   (Backspace isn't yet implemented, because I'm a lazy bastard).  :)
+
+  Backspace now works in the client UI.  Client now sends the talk
+  messages to the server, and the server displays them in its output.
+  Next to be implemented:  Sending 'talk' strings to all clients.
 
 ---
 April 27, 2001:

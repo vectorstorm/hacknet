@@ -265,8 +265,8 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	bool abort = false;
 
 #define MAX_NAME_BYTES (128)
-	char namebuffer[MAX_NAME_BYTES];
-	sint16 nameBufferSize = MAX_NAME_BYTES;
+	char localbuffer[MAX_NAME_BYTES];
+	sint16 bufferSize = MAX_NAME_BYTES;
 	
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
 #if 0	
@@ -283,19 +283,22 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	{
 		sint8 type = packet->PeekChar();
 		sint8 direction;
+		okay = true;
 		
 		switch(type)
 		{
 			case CPT_Move:
 				packet->ClientMove(direction);
 				m_game->ClientMove(clientID, (hnDirection)direction);
-				okay = true;
+				break;
+			case CPT_Talk:
+				packet->ClientTalk(localbuffer, bufferSize);
+				printf("%s says, \"%s\"\n", m_game->GetPlayerName(clientID), localbuffer);
 				break;
 			case CPT_Name:
-				packet->ClientName(namebuffer, nameBufferSize);
-				m_game->ClientName(clientID, namebuffer);
-				printf("Client %d calls himself %s\n", clientID, namebuffer);
-				okay = true;
+				packet->ClientName(localbuffer, bufferSize);
+				m_game->ClientName(clientID, localbuffer);
+				printf("Client %d calls himself %s\n", clientID, localbuffer);
 				break;
 			case CPT_Save:	// no saving code yet -- just quit.
 				packet->ClientSave();
@@ -303,7 +306,6 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				m_game->ClientQuit(clientID);
 				DisconnectClientID(clientID);
 				printf("Disconnected client %d.\n", clientID);
-				okay = true;
 				break;
 			case CPT_Quit:
 				packet->ClientQuit();
@@ -311,7 +313,6 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				m_game->ClientQuit(clientID);
 				DisconnectClientID(clientID);
 				printf("Disconnected client %d.\n", clientID);
-				okay = true;
 				break;
 			default:
 				okay = false;

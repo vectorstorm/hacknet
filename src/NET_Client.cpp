@@ -247,6 +247,15 @@ netClient::SendName(char * name)
 }
 
 void
+netClient::SendTalk(char * talk)
+{
+	sint16 talkLength = strlen(talk);
+	StartMetaPacket();
+	m_packet->ClientTalk(talk, talkLength);
+	TransmitMetaPacket();
+}
+
+void
 netClient::Disconnect()
 {
 	//printf("Disconnecting...\n");

@@ -186,34 +186,21 @@ netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 	bool success = true;
 	
 	sint8 type = CPT_Name;
-	sint16 length;
 	Char(type);
 	String( namebuffer, bufferlength );
-#if 0	
-	if ( Output() ){
-		// creating the packet..
-		length = strlen(namebuffer);
-		if ( length > bufferlength )
-			length = bufferlength;
-			
-		Short(length);
-	}else{
-		// reading packet..
-		Short(length);
-
-		if ( length > bufferlength )
-			length = bufferlength;
-	}
-
-	for ( int i = 0; i < length; i++ )
-		Char((sint8)namebuffer[i]);
 	
-	if ( Input() )
-	{
-		// if we're reading packet, be sure we stick a null on the end, for safety.
-		namebuffer[bufferlength-1] = '\0';
-	}
-#endif	
+	return success;
+}
+
+bool
+netMetaPacket::ClientTalk( char * talkbuffer, sint16 & bufferlength )
+{
+	bool success = true;
+	
+	sint8 type = CPT_Talk;
+	Char(type);
+	String( talkbuffer, bufferlength );
+	
 	return success;
 }
 
@@ -308,12 +295,13 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 	Short(packetStringLength);
 	length = packetStringLength;
 
-	if ( length > stringLength )
-		length = stringLength;	// don't read more from the packet than we can actually read!
+	if ( length > stringLength-1 )
+		length = stringLength-1;	// don't read more from the packet than we can actually read!
 	
 
 	for ( int i = 0; i < length; i++ )
 		Char((sint8)string[i]);
+	string[length] = '\0';
 	
 	// now, in case there's more data in the packet than we have space for,
 	// keep reading chars out of the packet until we reach the end of this
@@ -323,7 +311,7 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 	for ( int i = length; i < packetStringLength; i++ )
 		Char(temp);
 		
-	// if we're reading packet, be sure we stick a null on the end, for safety.
+	// if we're reading a packet, be sure we stick a null on the end, for safety.
 	string[stringLength-1] = '\0';
 	
 	return success;

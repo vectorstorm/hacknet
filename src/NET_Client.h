@@ -40,6 +40,7 @@ public:
 	void		Go();
 	void		SendMove( hnDirection whichWay );
 	void		SendName( char * name );
+	void		SendTalk( char * talk );
 	void		SendQuit( bool save );
 };
 
