@@ -95,7 +95,7 @@ hnDisplayTTY::EventLoop()
 {
 	
 #ifdef __DEBUGGING_NETWORK__
-	m_client->SendMove(DIR_West);
+	MoveCommand(DIR_West);
 	//m_client->SendTalk("Hoi!");
 #endif	
 
@@ -139,41 +139,41 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case 'h':
 		case '4':
-			m_client->SendMove(DIR_West);
+			MoveCommand(DIR_West);
 			break;
 		case 'j':
 		case '2':
-			m_client->SendMove(DIR_South);
+			MoveCommand(DIR_South);
 			break;
 		case 'k':
 		case '8':
-			m_client->SendMove(DIR_North);
+			MoveCommand(DIR_North);
 			break;
 		case '6':
 		case 'l':
-			m_client->SendMove(DIR_East);
+			MoveCommand(DIR_East);
 			break;
 		case '9':
 		case 'u':
-			m_client->SendMove(DIR_NorthEast);
+			MoveCommand(DIR_NorthEast);
 			break;
 		case '7':
 		case 'y':
-			m_client->SendMove(DIR_NorthWest);
+			MoveCommand(DIR_NorthWest);
 			break;
 		case '3':
 		case 'n':
-			m_client->SendMove(DIR_SouthEast);
+			MoveCommand(DIR_SouthEast);
 			break;
 		case '1':
 		case 'b':
-			m_client->SendMove(DIR_SouthWest);
+			MoveCommand(DIR_SouthWest);
 			break;
 		case '>':
-			m_client->SendMove(DIR_Down);
+			MoveCommand(DIR_Down);
 			break;
 		case '<':
-			m_client->SendMove(DIR_Up);
+			MoveCommand(DIR_Up);
 			break;
 		case '.':
 		case ' ':

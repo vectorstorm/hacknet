@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "HN_Display.h"
+#include "NET_Client.h"
 #include "OBJ_Types.h"
 #include "ENT_Types.h"
 
@@ -85,4 +86,10 @@ hnDisplay::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool
 	m_groupMemberCount = groupMemberCount;
 	m_groupMemberTurnCount = groupMemberTurnCount;
 	m_submittedTurn = submittedTurn;
+}
+
+void
+hnDisplay::MoveCommand( hnDirection dir )
+{
+	m_client->SendMove(dir);	
 }

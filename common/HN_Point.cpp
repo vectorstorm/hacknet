@@ -1,5 +1,18 @@
 #include "HN_Point.h"
+#include "HN_Enum.h"
 
+hnPoint offsetVector[DIR_MAX] = {
+	hnPoint(0,-1,0),
+	hnPoint(1,-1,0),
+	hnPoint(1,0,0),
+	hnPoint(1,1,0),
+	hnPoint(0,1,0),
+	hnPoint(-1,1,0),
+	hnPoint(-1,0,0),
+	hnPoint(-1,-1,0),
+	hnPoint(0,0,-1),
+	hnPoint(0,0,1)
+};
 
 hnPoint::hnPoint():
 	x(0),y(0),z(0)
@@ -15,6 +28,14 @@ hnPoint::hnPoint(sint8 x, sint8 y, sint8 z):
 
 hnPoint::~hnPoint()
 {
+}
+
+void
+hnPoint::Increment( hnDirection dir )
+{
+	x += offsetVector[dir].x;
+	y += offsetVector[dir].y;
+	z += offsetVector[dir].z;
 }
 
 hnPoint 

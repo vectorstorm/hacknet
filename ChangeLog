@@ -10,6 +10,9 @@ May 18, 2001:
   * Turns split into two phases:  First actions, then movements.  This means
     you always get to attack before the other guy gets the run away/teleport/etc.
     (Still no combat system, though)
+  * Removed nasty global offsetVector array and rolled that functionality
+    into the hnPoint class.  More minor modifications in preparation for
+    the upcoming combat system.
 
 May 17, 2001:
   * Bug #424181:  Missing #include in HN_Game.cpp

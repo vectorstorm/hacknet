@@ -10,7 +10,6 @@
 #include "HN_Player.h"
 #include "HN_Group.h"
 
-hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
 
 #define LEVEL_WIDTH (78)
@@ -45,17 +44,6 @@ hnGame::hnGame()
 // TODO:  This should be implemented in an entirely different way.
 //        I'm not sure what, yet.
 
-	offsetVector[0].Set(0,-1,0);	// north
-	offsetVector[1].Set(1,-1,0);	// northeast
-	offsetVector[2].Set(1,0,0);	// east
-	offsetVector[3].Set(1,1,0);	// southeast
-	offsetVector[4].Set(0,1,0);	// south
-	offsetVector[5].Set(-1,1,0);	// southwest
-	offsetVector[6].Set(-1,0,0);	// west
-	offsetVector[7].Set(-1,-1,0);	// northwest
-	offsetVector[8].Set(0,0,-1);	// up
-	offsetVector[9].Set(0,0,1);	// down
-	
 	printf("Generating maps\n");
 	hnDungeon::Startup( MAX_LEVELS, LEVEL_WIDTH, LEVEL_HEIGHT );
 	hnGroupManager::Startup( MAX_CLIENTS );

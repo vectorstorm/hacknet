@@ -1,11 +1,10 @@
 #include <string.h>
+#include <stdlib.h>
 #include "ENT_Base.h"
 #include "MAP_Base.h"
 #include "HN_Dungeon.h"
 
 #include "assert.h"
-
-extern hnPoint offsetVector[10];
 
 entBase::entBase( entType type, const hnPoint & pos, bool playerControlled ):
 	m_type(type),
@@ -75,13 +74,13 @@ bool
 entBase::FindMoveDestination( hnPoint &destination, hnDirection dir )
 {
 	bool legalMove = false;
-	hnPoint potentialPos(0,0,0);
+	hnPoint potentialPos = GetPosition();
 	
 	// validate the direction we've been given, and return true if we're
 	// able to go that way; false if not.
 
 	if ( dir >= DIR_North && dir <= DIR_NorthWest )
-		potentialPos = offsetVector[dir] + GetPosition();
+		potentialPos.Increment(dir);
 	else	// dir == DIR_Up || dir == DIR_Down -- we can't get here otherwise.  (hnGame::ClientMove() ignores other 'directions')
 	{
 		hnPoint currentPos = GetPosition();
@@ -121,6 +120,19 @@ entBase::FindMoveDestination( hnPoint &destination, hnDirection dir )
 	return legalMove;
 }
 
+bool
+entBase::RollToHit( entBase *target)
+{
+	int hitChance = 1 + m_status->Level();
+	
+	if ( target->GetStatus()->Paralyzed() )
+		hitChance += 2;
+	
+	bool hit = ( hitChance > (rand() % 20) );
+	
+	return hit;
+}
+
 void
 entBase::Move( hnDirection dir )
 {
@@ -128,7 +140,8 @@ entBase::Move( hnDirection dir )
 	if ( !IsValidMove(dir) )
 		return;
 	
-	hnPoint pos = m_position + offsetVector[dir];
+	hnPoint pos = m_position;
+	pos.Increment(dir);
 	
 	mapBase *origMap = hnDungeon::GetLevel( m_position.z );
 	mapBase *map = hnDungeon::GetLevel( pos.z );

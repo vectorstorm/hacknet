@@ -36,6 +36,8 @@ public:
 	
 	bool		isMapReady( int mapID ) { return (m_map[mapID] != NULL); }
 	
+	void		MoveCommand( hnDirection dir );	// send move or attack, as appropriate
+
 	virtual void	Refresh() {}
 	
 	virtual void	DungeonReset( sint8 levelCount );

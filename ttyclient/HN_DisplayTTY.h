@@ -34,6 +34,7 @@ public:
 	void		EventLoop();
 	void		HandleKeypressNormal( int key );
 	void		HandleKeypressTalking( int key );
+
 	
 	virtual void	Refresh();
 	

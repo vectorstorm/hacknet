@@ -10,8 +10,6 @@
 
 #include "assert.h"
 
-extern hnPoint offsetVector[10];
-
 hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_playerID(playerID),
 	m_lastSentGroupPlayerCount(0),

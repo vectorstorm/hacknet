@@ -2,6 +2,7 @@
 #define __HN_POINT_H__
 
 #include "HN_Types.h"
+#include "HN_Enum.h"
 
 class hnPoint
 {
@@ -13,6 +14,8 @@ public:
 	sint8		x, y, z;
 
 	void		Set(sint8 newx, sint8 newy, sint8 newz) {x=newx;y=newy;z=newz;}
+
+	void		Increment( hnDirection dir );
 
 	hnPoint 	operator+(const hnPoint &) const;
 	hnPoint		operator-(const hnPoint &) const;
