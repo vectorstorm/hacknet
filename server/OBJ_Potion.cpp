@@ -11,6 +11,7 @@ objPotion::objPotion(uint32 id) :
 	objBase(id),
 	m_diluted(false)
 {
+	m_flags |= FLAG_Quaffable;
 }
 
 objPotion::~objPotion()

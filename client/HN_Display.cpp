@@ -368,3 +368,11 @@ hnDisplay::QuaffCommand( uint8 inventorySlot )
 
 	PostTurnSubmit();
 }
+
+void
+hnDisplay::EatCommand( uint8 inventorySlot )
+{
+	m_client->SendEat(&m_inventory[inventorySlot], inventorySlot);
+
+	PostTurnSubmit();
+}

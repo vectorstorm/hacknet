@@ -8,6 +8,7 @@
 #include "OBJ_Amulet.h"
 #include "OBJ_Potion.h"
 #include "OBJ_Ring.h"
+#include "OBJ_Food.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -155,6 +156,9 @@ objManager::RandomItem(uint8 level, objType type)
 						break;
 					case OBJ_TYPE_Potion:
 						result = new objPotion(i);
+						break;
+					case OBJ_TYPE_Food:
+						result = new objFood(i);
 						break;
 					default:
 						result = new objBase(i);

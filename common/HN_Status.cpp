@@ -175,6 +175,12 @@ hnStatus::Heal( uint32 pointsHealed, uint32 extraPoints, bool cureSick, bool cur
 }
 
 void
+hnStatus::Eat( sint16 nutrition )
+{
+	m_hunger -= nutrition;
+}
+
+void
 hnStatus::AdjustSpellPoints( uint32 points )
 {
 	m_spellPoints += points;

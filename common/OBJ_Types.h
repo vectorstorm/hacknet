@@ -63,6 +63,8 @@ enum {
 	FLAG_WieldedSecondary 	= 0x0008,
 	FLAG_Wieldable		= 0x0010,	// set if this object can be wielded right now.  (not set if already wielded)
 						// note that any object can be wielded..  this is a cue that this is a real weapon that should be offered as a selection.
+	FLAG_Eatable		= 0x0020,
+	FLAG_Quaffable		= 0x0040
 };
 #define FLAG_Wielded		(FLAG_WieldedPrimary|FLAG_WieldedSecondary)
 

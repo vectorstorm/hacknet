@@ -61,6 +61,7 @@ public:
 	void		SendWear( objDescription * desc, uint8 inventoryID );
 	void		SendRemove( objDescription * desc, uint8 inventoryID );
 	void		SendQuaff( objDescription * desc, uint8 inventoryID );
+	void		SendEat( objDescription * desc, uint8 inventoryID );
 	
 	// --------  MAINTENANCE REQUESTS  ----------
 

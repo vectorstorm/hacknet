@@ -25,6 +25,7 @@ struct queuedTurn
 		Wear,
 		Remove,
 		Quaff,
+		Eat,
 		UnWield
 	};
 	int type;
@@ -154,6 +155,7 @@ public:
 	virtual void	Wear( const objDescription &desc, uint8 inventorySlot );
 	virtual void	Remove( const objDescription &desc, uint8 inventorySlot );
 	virtual void	Quaff( const objDescription &desc, uint8 inventorySlot );
+	virtual void	Eat( const objDescription &desc, uint8 inventorySlot );
 	virtual void	UnWield( );
 	virtual void	Wait( );
 	

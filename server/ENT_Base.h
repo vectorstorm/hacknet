@@ -59,6 +59,7 @@ public:
 	virtual void		Think() {}			// Called to decide what to do each turn.
 
 	virtual void		DoEffect( uint8 property, uint8 bcstatus, objType type );
+	virtual void		DoEat( sint16 nutrition );
 
 	virtual bool		IsValidMove( hnDirection direction );	// Called to check to see if a move is legal.
 	virtual bool		IsValidMoveDestination( const hnPoint & destination );
@@ -80,6 +81,7 @@ public:
 	virtual bool		Wear( objBase *object );
 	virtual bool		Remove( objBase *object );
 	virtual bool		Quaff( objBase *object );
+	virtual bool		Eat( objBase *object );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

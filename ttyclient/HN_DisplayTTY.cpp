@@ -245,6 +245,9 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 		case 'q':
 			HandleQuaff();
 			break;
+		case 'e':
+			HandleEat();
+			break;
 		case 'd':
 			HandleDrop();
 			break;
@@ -377,6 +380,14 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 						else
 							TextMessage("You can't quaff that!");
 						break;
+					case ISM_Eat:
+						if ( m_inventory[inventorySelected].type == OBJ_TYPE_Food )
+						{
+							EatCommand(inventorySelected);
+							m_mode = MODE_Normal;
+						}
+						else
+							TextMessage("You can't eat that!");
 					case ISM_Drop:
 						m_mode = MODE_Normal;
 						DropCommand(inventorySelected);
@@ -554,12 +565,29 @@ hnDisplayTTY::HandleRemove()
 void
 hnDisplayTTY::HandleQuaff()
 {
-	if ( m_inventoryCount == 0 )
-		TextMessage("You are empty-handed.");
+	int legalItems = CountInventoryItemsWithFlags( FLAG_Quaffable );
+	
+	if ( legalItems == 0 )
+		TextMessage("You don't have anything to drink");
 	else
 	{
 		m_mode = MODE_InventorySelect;
 		m_inventoryMode = ISM_Quaff;
+
+		m_needsRefresh = true;
+	}
+}
+
+void
+hnDisplayTTY::HandleEat()
+{	
+	int legalItems = CountInventoryItemsWithFlags( FLAG_Eatable );
+	if ( legalItems == 0 )
+		TextMessage("You don't have anything to eat.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Eat;
 
 		m_needsRefresh = true;
 	}
@@ -574,7 +602,7 @@ hnDisplayTTY::HandleTakeOff()
 	// TODO: Check to see if there's at least one item in the inventory!
 	
 	if ( m_inventoryCount == 0 )
-		TextMessage("You are empty-handed.");
+		TextMessage("Not wearing any armor.");
 	else
 	{
 		m_mode = MODE_InventorySelect;
@@ -593,7 +621,7 @@ hnDisplayTTY::HandleInventory()
 	// prove that the data is actually being sent.
 
 	if ( m_inventoryCount == 0 )
-		TextMessage("You are empty-handed.");
+		TextMessage("Not carrying anything.");
 	else
 	{
 		m_mode = MODE_InventoryDisplay;
@@ -909,6 +937,10 @@ hnDisplayTTY::Refresh()
 				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wearable|FLAG_Worn,true);	// for whatever reason, NetHack shows both worn and wearable objects when you request to wear something.
 			else if ( m_inventoryMode == ISM_Remove )
 				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Worn,true);
+			else if ( m_inventoryMode == ISM_Quaff )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Quaffable,true);
+			else if ( m_inventoryMode == ISM_Eat )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Eatable,true);
 			else
 				DrawObjectArray(m_inventory,m_inventoryCount,true);
 		}
@@ -961,6 +993,20 @@ hnDisplayTTY::DisplayItems()
                         //Refresh();	// we can't call this here -- we've already locked the Refresh function!
                 }
         }
+}
+
+uint8
+hnDisplayTTY::CountInventoryItemsWithFlags( uint16 flagFilter )
+{
+	uint8 count = 0;
+	
+	for ( int i = 0; i < m_inventoryCount; i++ )
+	{
+		if ( m_inventory[i].flags & flagFilter )
+			count++;
+	}
+
+	return count;
 }
 
 void

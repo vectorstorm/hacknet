@@ -89,6 +89,8 @@ public:
 	bool		Fainting();
 	bool		Polymorphed() { return m_polymorphed; }
 	bool		Paralyzed() { return m_paralyzed; }
+
+	void		Eat( sint16 nutrition );
 	
 	uint16		Hallucinating() { return m_hallucinating; }
 

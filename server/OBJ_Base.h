@@ -44,6 +44,7 @@ public:
 
 	virtual bool		SetWorn(bool);			// returns success
 	virtual bool		Quaff(entBase *entity, hnPlayer *player) { return false; }	// can't quaff most stuff.
+	virtual bool		Eat(entBase *entity, hnPlayer *player) { return false; }	// can't eat most stuff.
 
 	bool			IsWorn() { return m_flags & FLAG_Worn; }
 	bool			IsWielded() { return m_flags & FLAG_Wielded; }

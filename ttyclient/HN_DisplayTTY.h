@@ -22,7 +22,8 @@ class hnDisplayTTY : public hnDisplay
 		ISM_TakeOff,
 		ISM_PutOn,
 		ISM_Remove,
-		ISM_Quaff
+		ISM_Quaff,
+		ISM_Eat
 	};
 
 	inputMode		m_mode;
@@ -68,8 +69,10 @@ public:
 	void		HandlePutOn();
 	void		HandleRemove();
 	void		HandleQuaff();
+	void		HandleEat();
 	void		HandleInventory();
 
+	uint8		CountInventoryItemsWithFlags( uint16 flagFilter );
 	void		DrawObjectArray(objDescription *array, uint8 count, bool inventory);
 	void		DrawObjectArrayFiltered(objDescription *array, uint8 count, uint16 flagFilter, bool inventory);
 	

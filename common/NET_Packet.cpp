@@ -614,6 +614,18 @@ netMetaPacket::ClientQuaff( netInventoryItem &packet )
 	return (!m_error);
 }
 
+bool
+netMetaPacket::ClientEat( netInventoryItem &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_EatObject;
+	Sint8( type );
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
 
 
 /*

@@ -270,6 +270,22 @@ hnPlayer::Quaff( const objDescription &object, uint8 inventorySlot )
 	}
 }
 
+void
+hnPlayer::Eat( const objDescription &object, uint8 inventorySlot )
+{
+	if ( IsValidInventoryItem( object, inventorySlot ) )
+	{
+		m_queuedTurn.type = queuedTurn::Eat;
+		m_queuedTurn.quaff.object = m_clientInventoryMapping[inventorySlot];
+		m_queuedTurn.quaff.desc = object;
+		m_queuedTurn.quaff.inventorySlot = inventorySlot;
+	}
+	else
+	{
+		printf("Received illegal eat request...\n");
+	}
+}
+
 
 
 
@@ -451,6 +467,9 @@ hnPlayer::DoAction()
 			break;
 		case queuedTurn::Quaff:
 			success = m_entity->Quaff( m_queuedTurn.quaff.object );
+			break;
+		case queuedTurn::Eat:
+			success = m_entity->Eat( m_queuedTurn.quaff.object );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

@@ -288,6 +288,13 @@ hnGame::ClientQuaff(int playerID, objDescription &desc, uint8 inventorySlot)
 }
 
 void
+hnGame::ClientEat(int playerID, objDescription &desc, uint8 inventorySlot)
+{
+	m_player[playerID]->Eat( desc, inventorySlot );
+	ClientTurn();
+}
+
+void
 hnGame::ClientQuit(int playerID)
 {
 	// --------------------------------------------------------------

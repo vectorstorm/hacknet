@@ -195,6 +195,16 @@ entBase::DoEffect( uint8 property, uint8 bc, objType type )
 	}
 }
 
+
+void
+entBase::DoEat( sint16 nutrition )
+{
+	m_status->Eat( nutrition );
+
+	if ( m_player )
+		m_player->Listen("Munch munch munch...");
+}
+
 bool
 entBase::IsValidMove( hnDirection dir )
 {
@@ -360,6 +370,17 @@ entBase::Quaff( objBase *object )
 	if ( IsValidInventoryItem(object) )
 	{
 		result = object->Quaff(this,m_player);
+	}
+	return result;
+}
+
+bool
+entBase::Eat( objBase *object )
+{
+	bool result = false;
+	if ( IsValidInventoryItem(object) )
+	{
+		result = object->Eat(this,m_player);
 	}
 	return result;
 }

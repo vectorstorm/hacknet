@@ -24,6 +24,12 @@ November 9, 2002:
     to the NH3.3.1 object list while integrating it into HackNet.  I've
     fixed things up so those changes don't need to be made again --
     future object lists should be quite easily imported.
+  * OBJ_Food.cpp/h:  Added to source control
+  * ENT_Base.cpp:  Added ability to eat
+  * HN_Player.cpp:  Added ability to receive eat commands
+  * HN_DisplayTTY.cpp:  Added ability to send eat commands.  Also fixed
+    things so that in eat and drink commands, appropriate messages are
+    given to the player if they don't have anything to eat or drink.
   
 April 6, 2002:
   * HN_DisplayTTY.cpp:  Added mutex to protect 'Refresh()' function

@@ -40,6 +40,7 @@ public:
 	void			ClientWear(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientRemove(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientQuaff(int clientID, objDescription &desc, uint8 inventorySlot );
+	void			ClientEat(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientRequestRefresh( int clientID, int level );
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);

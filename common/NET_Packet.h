@@ -78,12 +78,6 @@ struct netInventoryItem
 	uint8		inventorySlot;
 };
 
-struct netClientWield
-{
-	objDescription 	object;
-	uint8		inventorySlot;
-};
-
 struct netMapTile
 {
 	hnPoint loc;
@@ -167,6 +161,7 @@ enum
 	CPT_WearObject,
 	CPT_RemoveObject,
 	CPT_QuaffObject,
+	CPT_EatObject,
 	CPT_RequestRefresh,	// request refreshed information on this level
 	CPT_Save,	// Save and quit
 	CPT_Quit,	// Quit without saving.
@@ -229,10 +224,10 @@ public:
 	bool			ClientTake( netClientTake &packet );
 	bool			ClientDrop( netInventoryItem &packet );
 	bool			ClientWield( netInventoryItem &packet );
-	//bool			ClientWield( netClientWield &packet );
 	bool			ClientWear( netInventoryItem &packet );
 	bool			ClientRemove( netInventoryItem &packet );
 	bool			ClientQuaff( netInventoryItem &packet );
+	bool			ClientEat( netInventoryItem &packet );
 	bool			ClientRequestRefresh( sint8 & level );
 	bool			ClientSave();
 	bool			ClientQuit();
