@@ -14,7 +14,7 @@ enum
 
 	OBJECT_MAX
 };
-typedef uint8 objType;
+typedef uint16 objType;
 
 enum {
 	BC_Unknown,

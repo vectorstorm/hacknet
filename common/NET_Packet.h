@@ -4,6 +4,7 @@
 #include "HN_Types.h"
 #include "HN_Point.h"
 #include "HN_Enum.h"
+#include "OBJ_Types.h"
 
 
 enum{
@@ -82,15 +83,23 @@ struct netMapReset		// we've moved to a new map.. init a map with this width/hei
 	sint8 depth;
 };
 
-struct netMapUpdateBBox
+class netMapUpdateBBox
 {
-	hnPoint loc;
-	sint8 width;
-	sint8 height;
+public:
+	
+	hnPoint		loc;
+	sint8 		width;
+	sint8 		height;
 
-	sint16 *material;  // width-first material array (top row, then next row, etc)
-	sint16 *wall;
-	sint8 *entityType;
+	sint16 		*material;  // width-first material array (top row, then next row, etc)
+	sint16 		*wall;
+	sint8 		*entityType;
+	
+	uint16		*objectCount;	// number of objects in each square
+	objDescription 	**object;	// arrays of objects in each square
+
+	netMapUpdateBBox();
+	~netMapUpdateBBox();
 };
 
 struct netMapObjectList

@@ -409,6 +409,9 @@ hnPlayer::SendUpdate()
 		update.wall = new sint16[update.width * update.height];
 		update.entityType = new sint8[update.width * update.height];
 
+		update.object = new (objDescription *)[update.width * update.height];
+		update.objectCount = new uint16[update.width * update.height];
+		
 		for ( int j = 0; j < update.height; j++ )
 			for ( int i = 0; i < update.width; i++)
 			{
@@ -418,13 +421,25 @@ hnPlayer::SendUpdate()
        				update.material[i+(j*update.width)] = map->MaterialAt(x,y);
    				update.wall[i+(j*update.width)] = map->WallAt(x,y);
 				update.entityType[i+(j*update.width)] = map->MapTile(x,y).entity;
+				
+				int objectCount = map->MapTile(x,y).objectCount;
+
+				objDescription * list = NULL;
+				if ( objectCount > 0 )
+					list = new objDescription[objectCount];
+					
+				update.objectCount[i+(j*update.width)] = objectCount;
+				update.object[i+(j*update.width)] = list;
+
+				for ( int k = 0; k < objectCount; k++ )
+					update.object[i+(j*update.width)][k] = map->MapTile(x,y).object[k];
 			}
 	
 		netServer::GetInstance()->SendMapUpdateBBox( update );
 
-		delete [] update.material;
-		delete [] update.wall;
-		delete [] update.entityType;
+		//delete [] update.material;
+		//delete [] update.wall;
+		//delete [] update.entityType;
 	
 	}
 	

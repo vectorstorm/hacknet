@@ -176,13 +176,13 @@ netMetaPacket::MapReset( netMapReset &packet )
 //------------------------------------------------------
 //  TODO:  This is an ugly hack.  This code (if we're
 //    reading data out of the packet) news space to
-//    store the data we're reading.  The calling code
-//    needs to manually delete it.  This is BAD design,
-//    and is just begging for trouble!  I really need
-//    to find a clean way around this!  (Perhaps make
-//    the netMapUpdateBBox a class, instead of a struct,
-//    and have it delete the appropriate arrays when
-//    it's deleted?)
+//    store the data we're reading.  It gets deleted
+//    automatically when the netMapUpdateBBox gets
+//    deleted, but this isn't particularly intuitive.
+//    Need to revamp this system, so we don't new data
+//    inside the netMapUpdateBBox anywhere outside of
+//    that class, so it can be fully responsible for
+//    its own memory usage.
 //------------------------------------------------------
 bool
 netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
@@ -204,6 +204,8 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 		packet.material = new sint16[nTiles];
 		packet.wall = new sint16[nTiles];
 		packet.entityType = new sint8[nTiles];		
+		packet.objectCount = new uint16[nTiles];
+		packet.object = new (objDescription *)[nTiles];
 	}
 	
 	for ( int i = 0; i < nTiles; i++ )
@@ -212,6 +214,22 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 		Sint16( packet.wall[i] );
 	for ( int i = 0; i < nTiles; i++ )
 		Sint8( packet.entityType[i] );
+	
+	for ( int i = 0; i < nTiles; i++ )
+	{
+		Uint16( packet.objectCount[i] );
+		
+		if ( Input() )
+			packet.object[i] = new objDescription[packet.objectCount[i]];
+		
+		for ( int j = 0; j < packet.objectCount[i]; j++ )
+		{
+			// grab this object description
+			Uint16( packet.object[i][j].type );
+			Uint8( packet.object[i][j].blesscurse );
+			Uint8( packet.object[i][j].count );
+		}
+	}
 
 	return (!m_error);
 }
@@ -776,3 +794,33 @@ netMetaPacketOutput::String( char * string, sint16 & stringLength )
 	
 	return (!m_error);
 }
+
+
+//---------------------------------------------------------------------
+//  Individual packet classes, where required.
+//---------------------------------------------------------------------
+
+netMapUpdateBBox::netMapUpdateBBox():
+	material(NULL), 
+	wall(NULL), 
+	entityType(NULL),
+	object(NULL),
+	objectCount(NULL)
+{
+}
+
+netMapUpdateBBox::~netMapUpdateBBox()
+{
+	delete [] material;
+	delete [] wall;
+	delete [] entityType;
+
+	if ( object )
+	{
+		for ( int i = 0; i < width * height; i++ )
+			delete [] object[i];
+	}
+	delete [] object;
+	delete [] objectCount;
+}
+	

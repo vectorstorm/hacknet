@@ -239,9 +239,6 @@ netClient::Go()
 							m_display->UpdateMapTile( hnPoint(bbox.loc.x+i, bbox.loc.y+j, bbox.loc.z), tile);
 						}
 
-					delete [] bbox.material;
-					delete [] bbox.wall;
-					delete [] bbox.entityType;
 					break;
 				case SPT_BadPacketNotice:
 					packet->BadPacketNotice();

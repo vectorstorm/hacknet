@@ -12,6 +12,10 @@ June 20, 2001:
     to an e-mail correspondant whose name I've lost..  (mail me back,
     dammit, so I can give proper credit!)  :)   Initial modifications
     to common code to prepare for object support.
+  * hnPlayer now sends seen objects to client as part of netMapUpdateBBox
+    packets.  Of course, the client doesn't do anything with that data
+    yet, and the hnPlayer doesn't actually see any objects yet.. but
+    once he does, and the client does, it should all work.  :)
 
 June 16, 2001:
   * Switched server to default to no groups -- groups were just too
