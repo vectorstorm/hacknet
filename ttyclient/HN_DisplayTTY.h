@@ -25,12 +25,12 @@ class hnDisplayTTY : public hnDisplay
 
 	bool		m_needsRefresh;
 	bool		m_done;
-	
+
 public:
 			hnDisplayTTY(char * name);
 	virtual		~hnDisplayTTY();
 	virtual bool	Go();
-	
+
 	void		EventLoop();
 	void		HandleKeypressNormal( int key );
 	void		HandleKeypressTalking( int key );

@@ -271,6 +271,19 @@ netMetaPacket::ClientAttack( sint8 & direction )
 	
 	return success;
 }
+
+bool
+netMetaPacket::ClientWait( )
+{
+	bool success = true;
+	
+	sint8 type = CPT_Wait;
+	Char( type );
+	
+	return success;
+}
+
+
 bool
 netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 {

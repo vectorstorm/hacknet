@@ -300,6 +300,14 @@ netClient::SendMove(hnDirection dir)
 }
 
 void
+netClient::SendWait()
+{
+	StartMetaPacket();
+	m_packet->ClientWait();
+	TransmitMetaPacket();
+}
+
+void
 netClient::SendName(char * name)
 {
 	sint16 nameLength = strlen(name);

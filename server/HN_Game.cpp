@@ -263,3 +263,14 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 		netServer::GetInstance()->DisconnectClientID(playerID);
 	}
 }
+
+void
+hnGame::ClientWait( int playerID )
+{
+	hnPlayer *player = m_player[playerID];
+
+	player->Wait();
+	
+	hnGroupManager::GetInstance()->ProcessTurn();
+	hnGroupManager::GetInstance()->UpdateGroups();
+}

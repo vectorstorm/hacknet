@@ -238,7 +238,6 @@ netServer::Go()
 							// aiee!  Illegally large packet!  Kill the client!
 							printf("  Packet size data illegal!  Killing client.\n");
 							SendBadPacketNotice(i);
-							m_game->ClientQuit(i);
 							DisconnectClientID(i);
 						}
 					}
@@ -257,7 +256,6 @@ netServer::Go()
 						// aiee!  Illegal packet!  Kill the client!
 						printf("  Error receiving packet!  Killing client.\n");
 						SendBadPacketNotice(i);
-						m_game->ClientQuit(i);
 						DisconnectClientID(i);
 					}
 					else
@@ -280,7 +278,6 @@ netServer::Go()
 								// aiee!  Illegal packet!  Kill the client!
 								printf("  Packet data illegal!  Killing client.\n");
 								SendBadPacketNotice(i);
-								m_game->ClientQuit(i);
 								DisconnectClientID(i);
 							}
 						}
@@ -325,6 +322,10 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				packet->ClientMove(direction);
 				m_game->ClientMove(clientID, (hnDirection)direction);
 				break;
+			case CPT_Wait:
+				packet->ClientWait();
+				m_game->ClientWait(clientID);
+				break;
 			case CPT_Talk:
 				packet->ClientTalk(localbuffer, bufferSize);
 				m_game->ClientTalk(clientID, localbuffer);
@@ -343,14 +344,12 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 			case CPT_Save:	// no saving code yet -- just quit.
 				packet->ClientSave();
 				SendQuitConfirm(clientID);
-				m_game->ClientQuit(clientID);
 				DisconnectClientID(clientID);
 				printf("Disconnected client %d.\n", clientID);
 				break;
 			case CPT_Quit:
 				packet->ClientQuit();
 				SendQuitConfirm(clientID);
-				m_game->ClientQuit(clientID);
 				DisconnectClientID(clientID);
 				printf("Disconnected client %d.\n", clientID);
 				break;
@@ -361,7 +360,6 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				break;
 		}
 	}
-
 	return okay;
 }
 
@@ -473,6 +471,7 @@ netServer::SendBadPacketNotice(int clientID)
 void
 netServer::DisconnectClientID(int clientID)
 {
+	m_game->ClientQuit(clientID);
 	m_client[clientID].socket = -1;
 	m_client[clientID].incomingPacketSize = 0;
 	m_client[clientID].packetRecv = (char *)&m_client[clientID].packet;
@@ -513,7 +512,12 @@ netServer::TransmitMetaPacket()
 #endif
 		
 		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), 0 ) == -1 )
-			perror("send");
+		{
+			// something's gone wrong here -- presumably the client has disconnected from us
+			// without warning, so first be sure our socket is closed, then disconnect.
+			close( m_client[m_packetClientID].socket );
+			DisconnectClientID(m_packetClientID);
+		}
 
 #ifdef __DISPLAY_PACKET_CONTENT__
 		for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
@@ -523,7 +527,12 @@ netServer::TransmitMetaPacket()
 #endif
 		
 		if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), 0 ) == -1 )
-			perror("send");
+		{
+			// something's gone wrong here -- presumably the client has disconnected from us
+			// without warning, so first be sure our socket is closed, then disconnect.
+			close( m_client[m_packetClientID].socket );
+			DisconnectClientID(m_packetClientID);
+		}
 		
 		delete m_metaPacket;
 		m_metaPacket = NULL;

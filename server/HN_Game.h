@@ -32,6 +32,7 @@ public:
 	void			ClientRequestRefresh( int clientID, int level );
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);
+	void			ClientWait(int clientID);
 	void			ClientAttack(int clientID, hnDirection dir);
 };
 

@@ -21,7 +21,6 @@
 	int color_set(short,void * ){}
 #endif
 
-
 hnDisplayTTY::hnDisplayTTY( char * name ):
 	hnDisplay(name),
 	m_mode(MODE_Normal),
@@ -30,7 +29,6 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 	m_needsRefresh(false),
 	m_done(false)
 {
-
 	m_talkBuffer[0] = '\0';
 
 	for ( int i = 0; i < MAX_MESSAGE_LINES; i++ )
@@ -176,6 +174,10 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case '<':
 			m_client->SendMove(DIR_Up);
+			break;
+		case '.':
+		case ' ':
+			m_client->SendWait( );
 			break;
 		default:
 			//printf("Got unknown keypress.\n");

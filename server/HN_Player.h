@@ -84,6 +84,7 @@ public:
 	
 	//  Queued Actions Beneath This Point ------------------------------------------
 	virtual void	Move( hnDirection dir );
+	virtual void	Wait( );
 	
 };
 

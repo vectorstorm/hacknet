@@ -61,6 +61,12 @@ hnPlayer::Move( hnDirection dir )
 	}
 }
 
+void
+hnPlayer::Wait()
+{
+	m_queuedTurn.type = queuedTurn::Wait;
+}
+
 const hnPoint &
 hnPlayer::GetPosition()
 {

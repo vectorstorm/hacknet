@@ -104,6 +104,7 @@ struct netMapEntity
 enum 
 {
 	CPT_Move,
+	CPT_Wait,
 	CPT_Attack,	// an attack is actually different from a move, so we don't attack people by accident.
 	CPT_Name,
 	CPT_Talk,
@@ -149,6 +150,7 @@ public:
 	/*****************   Client Packets  ******************/
 	bool			ClientMove( sint8 & direction );
 	bool			ClientAttack( sint8 & direction );
+	bool			ClientWait();
 	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientTalk( char * talkbuffer, sint16 & bufferLength );
 	bool			ClientRequestRefresh( sint8 & level );

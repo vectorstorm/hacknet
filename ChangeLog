@@ -11,6 +11,9 @@ May 12, 2001:
   * NET_Packet.h/.cpp:  Added a few new packet types for upcoming combat.
   * HN_Main_Client.cpp:  By request, made the client default to connect to
     localhost if you don't tell it otherwise.
+  * NET_Server.cpp:  Server now deals more cleanly with clients that don't
+    quit in an orderly manner.  (ie: it notices)
+  * Client can now send 'wait' commands to server. (. or space)
 
 May 8, 2001:
   * HN_Group.cpp: Fixed bug so monsters get assigned to groups correctly.
