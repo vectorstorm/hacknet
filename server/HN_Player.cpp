@@ -114,9 +114,26 @@ hnPlayer::IsValidInventoryItem( const objDescription &desc, uint8 inventorySlot 
 }
 
 bool
-hnPlayer::IsValidTake( const objDescription &object, uint8 stackID )
+hnPlayer::IsValidTake( const objDescription &desc, uint8 stackID )
 {
-	return m_entity->IsValidTake(object,stackID);
+	return (GetTakeTarget(desc,stackID) != NULL);
+}
+
+objBase *
+hnPlayer::GetTakeTarget( const objDescription &desc, uint8 stackID )
+{
+	objBase *result = NULL;
+	mapBase *map = hnDungeon::GetLevel( GetPosition().z );
+	
+	if ( map )
+	{
+		hnPoint pos = GetPosition();
+		objBase *realObject = map->MapTile(pos.x,pos.y).object->GetObject(stackID);
+
+		if ( realObject && realObject->PartialMatch(desc) )
+			result = realObject;
+	}
+	return result;
 }
 
 void
@@ -146,13 +163,13 @@ hnPlayer::Wait()
 }
 
 void
-hnPlayer::Take( const objDescription &object, uint8 stackID )
+hnPlayer::Take( const objDescription &desc, uint8 stackID )
 {
-	if ( IsValidTake( object, stackID ) )
+	if ( IsValidTake( desc, stackID ) )
 	{
 		m_queuedTurn.type = queuedTurn::Take;
-		m_queuedTurn.take.object = object;
-		m_queuedTurn.take.stackID = stackID;
+		m_queuedTurn.take.object = GetTakeTarget(desc,stackID);
+		m_queuedTurn.take.takeCount = desc.count;
 	}
 }
 
@@ -325,7 +342,7 @@ hnPlayer::DoAction()
 			//netServer::GetInstance()->TransmitMetaPacket();
 			break;
 		case queuedTurn::Take:
-			m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.stackID );
+			m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.takeCount );
 			break;
 		case queuedTurn::Drop:
 			m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.dropCount );

@@ -32,8 +32,8 @@ struct queuedTurn
 			hnDirection direction;
 		} attack;
 		struct{
-			objDescription object;
-			uint8 stackID;
+			objBase * object;
+			uint8 takeCount;
 		} take;
 		struct{
 			objBase * object;
@@ -91,8 +91,10 @@ public:
 	bool		HasQueuedTurn();	// are we ready to process a turn?
 	virtual bool	IsValidMove( hnDirection dir );
 	virtual bool	IsValidAttack( hnDirection dir );
-	virtual bool	IsValidTake( const objDescription &object, uint8 stackID );
 	virtual bool	IsValidInventoryItem( const objDescription &object, uint8 inventoryDrop );
+
+	virtual bool	IsValidTake( const objDescription &object, uint8 stackID );
+	objBase *	GetTakeTarget( const objDescription &object, uint8 stackID );
 
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );

@@ -6,6 +6,11 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 13, 2001:
+  * Converted Take command to the newly modified system, so entBase
+    should now only use objBase, not objDescription.  (This also
+    means that monster AI won't have to know about objDescriptions)
+    
 July 12, 2001:
   * Finally fixed inventory slot non-sorting issues.  TODO: Convert
     other object-manipulation commands (Take) to the newly modified

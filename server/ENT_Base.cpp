@@ -66,12 +66,33 @@ entBase::IsValidMove( hnDirection dir )
 }
 
 bool
-entBase::IsValidTake( const objDescription &object, uint8 stackID )
+entBase::IsValidTake( objBase *object )
 {
-	return ( GetTakeTarget(object,stackID) != NULL );
+	// check to see if the passed object is in the same
+	// square with us.
+	
+	bool result = false;
+	mapBase *map = hnDungeon::GetLevel( GetPosition().z );
+
+	if ( map )
+	{
+		hnPoint pos = GetPosition();
+		mapTile &tile = map->MapTile( pos.x, pos.y );
+		
+		for ( int i = 0; i < tile.object->ObjectCount(); i++ )
+		{
+			if ( object == tile.object->GetObject(i) )
+			{
+				result = true;
+				break;
+			}
+		}
+	}
+
+	return result;
 }
 
-objBase *
+/*objBase *
 entBase::GetTakeTarget( const objDescription &desc, uint8 stackID )
 {
 	objBase *result = NULL;
@@ -87,22 +108,20 @@ entBase::GetTakeTarget( const objDescription &desc, uint8 stackID )
 			result = realObject;
 	}
 	return result;
-}
+}*/
 
 void
-entBase::Take( const objDescription &desc, uint8 stackID )
+entBase::Take( objBase *object, uint8 count )
 {
-	objBase *object = GetTakeTarget(desc,stackID);
-
-	if ( object )
+	if ( IsValidTake(object) )
 	{
 		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
 	
 		if ( map )	// this should never fail.
 		{
 			hnPoint pos = GetPosition();
-			map->MapTile(pos.x,pos.y).object->RemoveObject(object);
-			m_inventory->AddObject(object);
+			objBase *taken = map->MapTile(pos.x,pos.y).object->RemoveObjectQuantity(object, count);
+			m_inventory->AddObject(taken);
 		}
 		else
 		{

@@ -68,9 +68,8 @@ public:
 	virtual entBase *	GetAttackTarget( hnDirection direction );
 	virtual int		Attack( hnDirection direction );
 
-	virtual bool		IsValidTake( const objDescription &object, uint8 stackID );
-	virtual objBase *	GetTakeTarget( const objDescription &object, uint8 stackID );
-	virtual void		Take( const objDescription &object, uint8 stackID );
+	virtual bool		IsValidTake( objBase *object );
+	virtual void		Take( objBase *object, uint8 count );
 
 	virtual bool		IsValidInventoryItem( objBase *object );
 
