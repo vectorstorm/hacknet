@@ -215,3 +215,11 @@ hnDisplay::DropCommand( uint8 inventorySlot )
 	
 	PostTurnSubmit();
 }
+
+void
+hnDisplay::WieldCommand( uint8 inventorySlot )
+{
+	m_client->SendWield(&m_inventory[inventorySlot], inventorySlot);
+
+	PostTurnSubmit();
+}

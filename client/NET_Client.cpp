@@ -387,6 +387,19 @@ netClient::SendDrop( objDescription *object, uint8 inventoryID )
 }
 
 void
+netClient::SendWield( objDescription *object, uint8 inventoryID )
+{
+	netInventoryItem packet;
+
+	packet.object = *object;
+	packet.inventorySlot = inventoryID;
+
+	StartMetaPacket();
+	m_packet->ClientWield(packet);
+	TransmitMetaPacket();
+}
+
+void
 netClient::Disconnect()
 {
 	//printf("Disconnecting...\n");
