@@ -6,6 +6,28 @@
 ---  most recent checkins at the bottom.
 ---
 
+January 6, 2002:
+  * My birthday -- celebrated by doing more coding. (I really need to
+    sort out my priorities!)
+  * OBJ_Definitions.cpp: Added NetHack bows, missiles, and armour.
+  * OBJ_Convert.h: Additions to support the above.
+  * Added ability to unwield objects by wielding '-'.  (UI incomplete)
+  * TTYClient: Now displays correct symbols for objects.
+  * OBJ_Type.h: objDescription struct's "type" field is now actually
+    used for the 'objType'.. that is, Weapon, Armour, etc.  To find
+    out exactly what the object is, the 'itemID' must be examined.
+    (So what used to be called 'type' is now 'itemID')  This required
+    some big changes in other files, but was the easiest fix for this
+    old problem.
+
+January 4, 2002:
+  * Returned to development after long break for RL purposes (moving,
+    busy work, etc).
+  * OBJ_Convert.h: Added header to convert NetHack-style object
+    declarations to HackNet's format.
+  * OBJ_Definitions.h/.cpp: Added NetHack's full weapon list to
+    HackNet.  Obviously, thrown weapons don't work properly yet.
+
 August 3, 2001:
   * HN_Player.cpp: Fixed old bug which caused inventory to be re-sent
     with every move, instead of only when it changes.

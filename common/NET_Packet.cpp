@@ -50,6 +50,7 @@ bool
 netMetaPacket::ObjDescription( objDescription &object )
 {
 	Uint16(object.type);
+	Uint16(object.itemID);
 	Uint8(object.blesscurse);
 	Uint8(object.count);
 
@@ -576,6 +577,8 @@ netMetaPacket::ClientWield( netClientWield &packet )
 	Sint8( type );
 	ObjDescription( packet.object );
 	Uint8( packet.inventorySlot );
+	
+	return !m_error;
 }
 
 //------------------------------------------------------------------------------------

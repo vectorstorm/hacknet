@@ -21,7 +21,8 @@ struct queuedTurn
 		Attack,
 		Take,
 		Drop,
-		Wield
+		Wield,
+		UnWield
 	};
 	int type;
 
@@ -129,6 +130,7 @@ public:
 	virtual void	Take( const objDescription &desc, uint8 stackID );
 	virtual void	Drop( const objDescription &desc, uint8 inventorySlot );
 	virtual void	Wield( const objDescription &desc, uint8 inventorySlot );
+	virtual void	UnWield( );
 	virtual void	Wait( );
 	
 };

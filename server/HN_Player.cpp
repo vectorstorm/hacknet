@@ -203,12 +203,19 @@ hnPlayer::Wield( const objDescription &object, uint8 inventorySlot )
 	}
 	else
 	{
+		printf("Received unwield request...\n");
 		// unwield instead.
 		m_queuedTurn.type = queuedTurn::Wield;
 		m_queuedTurn.wield.object = NULL;
 		m_queuedTurn.wield.desc.type = Illegal;
 		m_queuedTurn.wield.inventorySlot = inventorySlot;
 	}
+}
+
+void
+hnPlayer::UnWield()
+{
+	printf("AIEEE!\n");
 }
 
 const hnPoint &

@@ -59,11 +59,14 @@ objRegistry::GetInstance()
 void
 objRegistry::SetName(uint16 i, char *name)
 {
-	int length = strlen(name);
+	if ( i < m_nameCount )
+	{
+		int length = strlen(name);
 
-	delete [] m_objectName[i];
-	m_objectName[i] = new char[length+1];
-	strncpy(m_objectName[i],name,length+1);
+		delete [] m_objectName[i];
+		m_objectName[i] = new char[length+1];
+		strncpy(m_objectName[i],name,length+1);
+	}
 }
 
 char *
@@ -99,7 +102,7 @@ objRegistry::GetType(uint16 i)
 void
 objRegistry::GetObjectDescriptionText(const objDescription &desc, char *buffer, uint16 bufferlength)
 {
-	const char * name = GetName(desc.type);
+	const char * name = GetName(desc.itemID);
 	
 	if ( desc.count == 0 )
 		buffer[0]='\0';

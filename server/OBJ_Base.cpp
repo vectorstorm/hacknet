@@ -4,13 +4,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-objBase::objBase( uint32 type ):
-	m_type(type),
+objBase::objBase( uint32 itemID ):
+	m_itemID(itemID),
 	m_blesscurse(BC_Uncursed),
 	m_count(1),
 	m_next(this),
 	m_prev(this)
 {
+        const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
+	m_type = proto.type;
+
 	m_position.Set(0,0,0);
 }
 
@@ -21,7 +24,7 @@ objBase::~objBase()
 sint16
 objBase::RollDamage( entBase *foe )
 {
-        const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetType() );
+        const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
 
         sint16 damage = 0;
         
@@ -69,14 +72,14 @@ objBase::AddObject( objBase * object )
 	//  since we're tracking object counts and stacking items
 	//  properly, we need to actually check this new object
 	//  against our current contents, and only add it if we
-	//  don't have another object of identical type!
+	//  don't have another object of identical itemID!
 	//---------------------------------------------------------
 
 	objBase *shuttle = m_next;
 
 	while ( shuttle != this )
 	{
-		if ( shuttle->m_type == object->m_type &&
+		if ( shuttle->m_itemID == object->m_itemID &&
 			shuttle->m_blesscurse == object->m_blesscurse )
 		{
 			// we're stackable, so just stack us.
@@ -123,7 +126,7 @@ objBase::RemoveObject( objBase * object )
 const char *
 objBase::GetName()
 {
-	const objPrototype &proto = objManager::GetInstance()->GetPrototype(m_type);
+	const objPrototype &proto = objManager::GetInstance()->GetPrototype(m_itemID);
 
 	return proto.name;
 }
@@ -151,7 +154,7 @@ objBase::RemoveObjectQuantity( objBase *object, uint8 count )
 			else if ( object->m_count < count )
 			{
 				object->m_count -= count;
-				result = new objBase(object->m_type);
+				result = new objBase(object->m_itemID);
 				result->m_count = count;
 			}
 			
@@ -181,7 +184,7 @@ objBase::RemoveObjectDescription( const objDescription &desc, uint8 id )
 		{
 			object->m_count -= desc.count;
 
-			result = new objBase(object->m_type, hnPoint(0,0,0));
+			result = new objBase(object->m_itemID, hnPoint(0,0,0));
 		}
 		else
 			printf("ERROR: Object quantity confusion failure in PartialMatch().\n");
@@ -205,7 +208,7 @@ objBase::ExactMatch( const objDescription &desc )
 {
 	bool matches = false;
 	
-	if ( desc.type == m_type )
+	if ( desc.itemID == m_itemID )
 	{
 		if ( desc.blesscurse == BC_Unknown ||
 			desc.blesscurse == m_blesscurse )
@@ -225,7 +228,7 @@ objBase::PartialMatch( const objDescription &desc )
 {
 	bool matches = false;
 	
-	if ( desc.type == m_type )
+	if ( desc.itemID == m_itemID )
 	{
 		if ( desc.blesscurse == BC_Unknown ||
 			desc.blesscurse == m_blesscurse )
@@ -304,7 +307,10 @@ objBase::GetDescription(objDescription &result, int id)
 void
 objBase::FillDescription(objDescription &desc)
 {
+	const objPrototype &proto = objManager::GetInstance()->GetPrototype(m_itemID);
+	
 	desc.type = m_type;
+	desc.itemID = m_itemID;
 	desc.count = m_count;
 	desc.blesscurse = m_blesscurse;
 }

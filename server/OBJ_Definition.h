@@ -49,9 +49,18 @@ enum{
 	COLOR_Metal,
 	COLOR_Wood,
 	COLOR_Silver,
+	COLOR_Cloth,
+	COLOR_Leather,
 	COLOR_Black,
 	COLOR_White,
-	COLOR_Brown
+	COLOR_Brown,
+	COLOR_Green,
+	COLOR_Red,
+	COLOR_Blue,
+	COLOR_Yellow,
+	COLOR_Orange,
+	COLOR_Magenta,
+	COLOR_Gray
 };
 
 typedef uint8 armCategory;
@@ -86,7 +95,7 @@ struct objPrototype
         unsigned int 	direct:2;
 
 	uint8		material;		// lots of bits.
-	uint8		subtype;		// extra information for weapons, spellbooks, tools, etc.
+	sint8		subtype;		// extra information for weapons, spellbooks, tools, etc, generally detailing what skill is exercised by this item.  (Negative == exercised when thrown)
 
 	uint8		property;		// property conveyed (invisibility, etc)
 	

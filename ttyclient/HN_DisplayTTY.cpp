@@ -295,6 +295,15 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 			break;
 		}
 	}
+	if ( m_inventoryMode == ISM_Wield && commandKey == '-')
+	{
+		// we've asked to unwield our weapon, so send an
+		// illegal inventory slot.
+		inventorySelected = -1;
+		WieldCommand(-1);
+		m_mode = MODE_Normal;
+		m_needsRefresh = true;
+	}
 
 	if ( inventorySelected != -1 )
 	{
@@ -302,15 +311,21 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 		{
 			if ( m_inventory[inventorySelected].count > 0 )
 			{
-				m_mode = MODE_Normal;
 				m_needsRefresh = true;
 			
 				switch( m_inventoryMode )
 				{
 					case ISM_Wield:
-						WieldCommand(inventorySelected);
+						if ( m_wieldedItem != inventorySelected )	// if we're not already wielding this item...
+						{
+							WieldCommand(inventorySelected);
+							m_mode = MODE_Normal;
+						}
+						else
+							TextMessage("You're already wielding that!");
 						break;
 					case ISM_Drop:
+						m_mode = MODE_Normal;
 						DropCommand(inventorySelected);
 						break;
 					default:
@@ -333,12 +348,9 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 	
 	switch ( commandKey )
 	{
-		case ' ':
+		default:
 			m_mode = MODE_Normal;
 			m_needsRefresh = true;
-			break;
-		default:
-			// do nothing
 			break;
 	}
 }
@@ -554,8 +566,32 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 		}
 		else if ( tile.objectCount > 0 )
 		{
+			// check the topmost object.
+			objType type =  tile.object[0].type;
+
+			const char objectTile[MAX] = {
+				'#',	// random
+				'#',	// illegal
+				' ',	// none
+				'"',	// amulet
+				')',	// weapon
+				'[',	// armour
+				'!',	// potion
+				'=',	// ring
+				'(',	// tool
+				'%',	// food
+				'?',	// scroll
+				'+',	// spellbook
+				'/',	// wand
+				'$',	// gold
+				'*',	// gem
+				'*',	// rock
+				'O',	// ball
+				'_',	// chain
+				',',	// venom
+			};
 			color_set( COLOR_WHITE, NULL );
-			theChar = ')';
+			theChar = objectTile[type];
 		}
 		mvaddch(y + 3,x,theChar);
 		move(m_position.y + 3,m_position.x);
@@ -826,7 +862,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		
 		for ( int i = 0; i < objectCount; i++ )
 		{
-			if ( objects[i].count > 0 && objRegistry::GetInstance()->GetType(objects[i].type) == categoryValue[j] )
+			if ( objects[i].count > 0 && objRegistry::GetInstance()->GetType(objects[i].itemID) == categoryValue[j] )
 			{
 				if ( !somethingInThisCategory && drawheaders )
 				{

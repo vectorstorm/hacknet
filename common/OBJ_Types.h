@@ -6,6 +6,7 @@
 enum {
         Random,
         Illegal,
+	None,
         Amulet,
         Weapon,
         Armour,
@@ -36,9 +37,10 @@ enum {
 
 struct objDescription
 {
-	objType type;		// what type of object
-	uint8	blesscurse;	// blessed, cursed, or uncursed.
-	uint8	count;		// how many of them?
+	objType		type;
+	uint16		itemID;		// what type of object
+	uint8		blesscurse;	// blessed, cursed, or uncursed.
+	uint8		count;		// how many of them?
 };
 
 #endif //__OBJ_TYPES_H__

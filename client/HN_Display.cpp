@@ -222,14 +222,21 @@ hnDisplay::WieldedItem( const objDescription &desc, int inventoryID )
                 'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
         };
 
-
-	char buffer[256];
-	char nameBuffer[128];
-	objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
-	snprintf(buffer,256,"%c - %s (weapon in hands).", inventoryLetters[inventoryID], nameBuffer);
-	TextMessage(buffer);
-
-	m_wieldedItem = inventoryID;
+	if (desc.type != Illegal )
+	{
+		char buffer[256];
+		char nameBuffer[128];
+		objRegistry::GetInstance()->GetObjectDescriptionText(desc, nameBuffer, 128);
+		snprintf(buffer,256,"%c - %s (weapon in hands).", inventoryLetters[inventoryID], nameBuffer);
+		TextMessage(buffer);
+	
+		m_wieldedItem = inventoryID;
+	}
+	else
+	{
+		TextMessage("You are now empty-handed.\n");
+		m_wieldedItem = -1;
+	}
 }
 
 

@@ -9,7 +9,8 @@ class entBase;
 
 class objBase
 {
-	uint32		m_type;
+	uint32		m_type;		// what type of object are we? (weapon, etc)
+	uint32		m_itemID;	// what are we, exactly?
 	hnPoint		m_position;
 	
 	uint8		m_blesscurse;
@@ -30,6 +31,7 @@ public:
         const hnPoint &		GetPosition();
 	void			SetPosition( const hnPoint & );
 	uint32			GetType() { return m_type; }
+	uint32			GetItemID() { return m_itemID; }
 
 	const char *		GetName();
 	

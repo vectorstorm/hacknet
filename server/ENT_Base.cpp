@@ -176,7 +176,7 @@ bool
 entBase::Wield( objBase *object )
 {
 	bool result = false;
-	if ( IsValidInventoryItem(object) )
+	if ( IsValidInventoryItem(object) || object == NULL )
 	{
 		m_wieldedObject = object;
 		result = true;

@@ -16,7 +16,7 @@ objWeapon::~objWeapon()
 sint16
 objWeapon::RollDamage( entBase * foe )
 {
-        const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetType() );
+        const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
 	
 	sint8 damage = objBase::RollDamage(foe);
 	
