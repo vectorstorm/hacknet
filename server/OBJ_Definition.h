@@ -1,5 +1,5 @@
-#ifndef __OBJ_DEFINITION_H__
-#define __OBJ_DEFINITION_H__
+#ifndef OBJ_DEFINITION_H
+#define OBJ_DEFINITION_H
 
 #include "HN_Types.h"
 #include "OBJ_Types.h"
@@ -44,6 +44,16 @@ enum {
         MAT_Mineral
 };
 
+typedef uint8 colorType;
+enum{
+	COLOR_Metal,
+	COLOR_Wood,
+	COLOR_Silver,
+	COLOR_Black,
+	COLOR_White,
+	COLOR_Brown
+};
+
 typedef uint8 armCategory;
 enum
 {
@@ -61,7 +71,9 @@ struct objPrototype
 	char *		name;
 	char *		desc;
 	
+	unsigned int	nameknown:1;		//
         unsigned int 	stackable:1;    	// true if this object will stack with similar objects
+	unsigned int	usesknown:1;		// if true, obj->known affects full description.  (FIGURE THIS OUT)
         unsigned int 	prediscovered:1;	// if true, everyone starts out knowing this
 
         unsigned int 	magic:1;		// inherantly magical
@@ -69,25 +81,32 @@ struct objPrototype
         unsigned int 	unique:1;		// one-of-a-kind
         unsigned int 	nowish:1;		// can't be wished for
         unsigned int 	big:1;			// if it's physically large
+	unsigned int	tough:1;		// true for hard gems and rings
 
         unsigned int 	direct:2;
 
-	uint8		skill;			// what skill do we exercise/use?
-	uint8		armcat;			// what sort of armor are we?
-	
 	uint8		material;		// lots of bits.
+	uint8		subtype;		// extra information for weapons, spellbooks, tools, etc.
 
+	uint8		property;		// property conveyed (invisibility, etc)
+	
 	uint16		type;			// object type (armour, weapon, etc.)
 	uint8		delay;			// time taken using object
+	uint8		color;			// what color is this?
 
 	uint16		probability;		// likelihood of generating.. higher numbers make it more likely to be selected.
 	uint16		weight;			// encumbrance (1 cn = 0.1 lb)
 	uint16		cost;			// base cost in shops
 
-	sint8		smallDamage;		// maximum vs-small-monster damage
-	sint8		largeDamage;		// maximum vs-large-monster damage
+	sint8		smallDamage;		// maximum vs-small-monster random damage
+	sint8		smallDamageExtra;	// add this onto a random number from smallDamage
+	sint8		largeDamage;		// maximum vs-large-monster random damage
+	sint8		largeDamageExtra;	// add this onto a random number from largeDamage
 
+	sint8		oc1, oc2;		// oc1 stores 'to-hit' bonus for weapons and AC for armor
+						// oc2 stores spell level and other stuff.
 	
+	uint16		nutrition;
 };
 
 enum skillType

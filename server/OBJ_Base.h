@@ -5,6 +5,8 @@
 #include "HN_Types.h"
 #include "HN_Point.h"
 
+class entBase;
+
 class objBase
 {
 	uint32		m_type;
@@ -23,7 +25,7 @@ public:
 				objBase( uint32 type );
 	virtual 		~objBase();
 
-	virtual sint16		RollDamage();
+	virtual sint16		RollDamage( entBase * );
 	
         const hnPoint &		GetPosition();
 	void			SetPosition( const hnPoint & );

@@ -1,6 +1,7 @@
 #include "OBJ_Manager.h"
 #include "OBJ_Definition.h"
 #include "OBJ_Base.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 objBase::objBase( uint32 type ):
@@ -18,9 +19,32 @@ objBase::~objBase()
 }
 
 sint16
-objBase::RollDamage()
+objBase::RollDamage( entBase *foe )
 {
-	return 1;	// arbitrary object does 1 point of damage.
+        const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetType() );
+
+        sint16 damage = 0;
+        
+        // we should inspect the foe to determine if it's big or
+        // small, whether we do extra damage to it (due to it
+        // being silver fearing and us being silver, etc.)
+
+        if ( 0 )        // if the monster is big...
+        {       
+                if ( proto.largeDamage )
+                        damage = (rand() % proto.largeDamage) + 1;
+                damage += proto.largeDamageExtra;
+        }
+        else            // if the monster is small...
+        {
+                if ( proto.smallDamage )
+                        damage = (rand() % proto.smallDamage) + 1;
+                damage += proto.smallDamageExtra;
+        }
+
+	
+	
+        return damage;
 }
 
 const hnPoint &

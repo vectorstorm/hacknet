@@ -269,7 +269,7 @@ entBase::RollDamage( entBase *foe )
 	int damage = 1;
 	
 	if ( m_wieldedObject )
-		damage = m_wieldedObject->RollDamage();
+		damage = m_wieldedObject->RollDamage(foe);
 
 	// do other stuff in here too, like checking the 
 	// object's damage type and comparing that to

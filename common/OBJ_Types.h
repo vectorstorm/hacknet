@@ -41,7 +41,4 @@ struct objDescription
 	uint8	count;		// how many of them?
 };
 
-const char * 	GetObjectName(objType objectID);
-void		GetObjectDescriptionText(const objDescription &desc, char *buffer, uint16 bufferLen);
-
 #endif //__OBJ_TYPES_H__
