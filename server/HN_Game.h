@@ -25,7 +25,7 @@ public:
 	
 	char *			GetPlayerName(int clientID);	// utility function for server
 
-	
+	void			ClientTurn();
 	void			ClientJoined(int clientID);
 	void			ClientName(int clientID, char * name);
 	void			ClientTalk(int clientID, char * talk);

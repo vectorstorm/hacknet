@@ -62,7 +62,7 @@ public:
 
 	static void		SetMaxGroupDistance(int dist) { s_maxGroupDistanceSq = dist * dist; }
 	
-	void			ProcessTurn();	// somebody's submitted a turn.  Check, and if any group is ready, do them!
+	bool			ProcessTurn();	// somebody's submitted a turn.  Check, and if any group is ready, do them!  Return true if we actually processed a turn.
 	void			UpdateGroups();
 
 	void			AddPlayer( hnPlayer * player );

@@ -221,6 +221,37 @@ hnGame::ClientQuit(int playerID)
 	m_player[playerID] = NULL;
 }
 
+void
+hnGame::ClientTurn()
+{
+	// we've received a turn from somebody and done whatever
+	// was required for it.. now tell the group manager to
+	// check to see if it needs to run a turn.
+	
+	if ( hnGroupManager::GetInstance()->ProcessTurn() )
+	{
+		hnGroupManager::GetInstance()->UpdateGroups();
+
+		// check all players to be sure they're still alive.
+
+		for ( int i = 0; i < MAX_CLIENTS; i++ )
+		{
+			if ( m_player[i] )
+			{
+				if ( !m_player[i]->IsAlive() )
+				{
+					printf("%s (id %d) died!  Killing client...\n", GetPlayerName(i), i);
+					netServer::GetInstance()->SendQuitConfirm(i);
+				}
+			}
+
+			// I should now check all monsters, too, to see if
+			// any of them are dead.. but it's sort of clumsy
+			// to be doing that from here.  Perhaps that belongs
+			// in the attack code?
+		}
+	}
+}
 
 void
 hnGame::ClientMove(int playerID, hnDirection dir)
@@ -244,8 +275,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 	if ( dir >= 0 && dir < DIR_MAX )	// sanity check
 	{	
 		player->Move(dir);
-		hnGroupManager::GetInstance()->ProcessTurn();
-		hnGroupManager::GetInstance()->UpdateGroups();
+		ClientTurn();
 	}else{
 		printf("Tried to move in an illegal direction: %d.\n", dir);
 		netServer::GetInstance()->SendQuitConfirm(playerID);
@@ -275,8 +305,7 @@ hnGame::ClientAttack(int playerID, hnDirection dir)
 	if ( dir >= 0 && dir < DIR_Up )	// sanity check
 	{	
 		player->Attack(dir);
-		hnGroupManager::GetInstance()->ProcessTurn();
-		hnGroupManager::GetInstance()->UpdateGroups();
+		ClientTurn();
 	}else{
 		printf("Tried to attack in an illegal direction: %d.\n", dir);
 		netServer::GetInstance()->SendQuitConfirm(playerID);
@@ -290,7 +319,5 @@ hnGame::ClientWait( int playerID )
 	hnPlayer *player = m_player[playerID];
 
 	player->Wait();
-	
-	hnGroupManager::GetInstance()->ProcessTurn();
-	hnGroupManager::GetInstance()->UpdateGroups();
+	ClientTurn();
 }

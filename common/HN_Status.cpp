@@ -63,6 +63,13 @@ hnStatus::Initialise()
 	m_changedSpellPoints = true;
 }
 
+
+bool
+hnStatus::Alive()
+{
+	return !Dead();
+}
+
 bool
 hnStatus::Dead()
 {

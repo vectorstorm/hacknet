@@ -73,9 +73,7 @@ hnGroup::ProcessTurn()
 					
 			// now our monsters get to move.
 			for ( int i = 0; i < m_monsterCount; i++ )
-			{
 				m_monster[i]->Think();
-			}
 			
 			// now rebuild our monster list.
 			ScanForMonsters();
@@ -88,15 +86,7 @@ hnGroup::ProcessTurn()
 			//----------------------------------------------------------------------
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
-				{
 					m_player[i]->SendUpdate();
-					//int groupMembers = GetPlayerCount();
-					//int groupMembersWithTurns = QueuedTurnCount();
-					
-					//netServer::GetInstance()->StartMetaPacket( m_player[i]->GetID() );
-					//netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, m_player[i]->HasQueuedTurn() );
-					//netServer::GetInstance()->TransmitMetaPacket();
-				}
 		}
 	}
 	return didATurn;
@@ -416,7 +406,7 @@ hnGroupManager::RemovePlayer( hnPlayer *player )
 	}
 }
 
-void
+bool
 hnGroupManager::ProcessTurn()
 {
 	// check each group to see if they're ready to run a turn, and do so if they are.
@@ -441,6 +431,8 @@ hnGroupManager::ProcessTurn()
 			}
 		}
 	}
+
+	return ranATurn;
 }
 
 void

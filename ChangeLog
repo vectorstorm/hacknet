@@ -13,6 +13,8 @@ May 19, 2001:
   * NET_Server.cpp:  Turned off network debugging output again.  One of 
     these days I'll stop forgetting and checking it in with that #define 
     turned on.  :)
+  * HN_Game.cpp (and elsewhere): Server now notices when players die, and
+    disconnects them.  Monsters still can't die.
 
 May 18, 2001:
   * Turns split into two phases:  First actions, then movements.  This means

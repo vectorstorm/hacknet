@@ -51,6 +51,17 @@ hnPlayer::~hnPlayer()
 }
 
 bool
+hnPlayer::IsAlive()
+{
+	if ( m_entity )
+	{
+		return m_entity->IsAlive();
+	}
+
+	return false;
+}
+
+bool
 hnPlayer::IsValidMove( hnDirection dir )
 {
 	return m_entity->IsValidMove( dir );

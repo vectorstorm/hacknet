@@ -61,6 +61,7 @@ public:
 	uint8		Level() { return m_level; }
 	uint16		ExperiencePoints() { return m_experiencePoints; }
 	
+	bool		Alive();		// returns true if I'm not destroyed and I'm not undead.
 	bool		Dead();			// returns true if I've been destroyed or if I'm undead.
 	bool		Destroyed();		// returns true if I've been destroyed.
 	bool		Confused() { return m_confused; }

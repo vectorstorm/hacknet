@@ -62,6 +62,8 @@ public:
 	int		GetID() { return m_playerID; }
 	char *		GetName();
 
+	bool		IsAlive();
+
 	
 	bool		HasQueuedTurn();	// are we ready to process a turn?
 	virtual bool	IsValidMove( hnDirection dir );

@@ -31,6 +31,7 @@ public:
 	char *			GetName();
 
 	bool			IsAPlayer() { return m_playerControlled; }
+	bool			IsAlive() { return m_status->Alive(); }
 	
 	const hnPoint &		GetPosition();
 	entType			GetType() { return m_type; }
