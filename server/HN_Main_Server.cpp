@@ -17,7 +17,8 @@ int main( int argc, char *argv[] )
 	{
 		for ( int i = 1; i < argc; i++ )
 		{
-			if ( strncmp( argv[i], "--no-groups", 11 ) == 0 )
+			if ( strncmp( argv[i], "--no-groups", 11 ) == 0 ||
+				strncmp( argv[i], "--nogroups", 10 ) == 0 )
 			{
 				noGroups = true;
 			}

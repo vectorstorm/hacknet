@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 16, 2001:
+  * HN_Main_Server.cpp:  Server now accepts --nogroups as well as --no-groups.
+
 May 13, 2001:
   * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.
   * NET_Server.cpp/NET_Packet.cpp: Added better detection of bad packets.
