@@ -27,9 +27,11 @@ hnDisplay::~hnDisplay()
 void
 hnDisplay::UpdateMapTile(sint8 x, sint8 y, const mapClientTile &tile)
 {
-	m_map->MaterialAt(x,y) = tile.material;
-	m_map->WallAt(x,y) = tile.wall;
-
+	if ( tile.material != MATERIAL_Unknown )
+		m_map->MaterialAt(x,y) = tile.material;
+	if ( tile.wall != WALL_Unknown )
+		m_map->WallAt(x,y) = tile.wall;
+	
 	m_map->MapTile(x,y).entity = tile.entity;
 }
 

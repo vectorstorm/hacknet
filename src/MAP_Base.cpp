@@ -160,7 +160,7 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 	
 	hnPoint pos = position;
 	
-	if ( WallAt( pos.x, pos.y ) == WALL_Room )
+	if ( sourceMap->WallAt( pos.x, pos.y ) & WALL_WithinRoom )
 	{
 		//---------------------------------------------------------------
 		//  Figure out what room we're in, then update visibility for the
@@ -188,22 +188,43 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 			for ( int y = where->top-1; y <= where->bottom+1; y++ )
 				for ( int x = where->left-1; x <= where->right+1; x++ )
 				{
-					MapTile(x,y).visible = true;
-					MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
-					WallAt( x, y ) = sourceMap->WallAt( x, y );
-					if ( sourceMap->MapTile( x, y ).entity == NULL )
-						MapTile( x, y ).entityType = ENTITY_None;
-					else
-						MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
-	
-					if ( x < m_topLeftVisibility.x )
-						m_topLeftVisibility.x = x;
-					if ( x > m_bottomRightVisibility.x )
-						m_bottomRightVisibility.x = x;
-					if ( y < m_topLeftVisibility.y )
-						m_topLeftVisibility.y = y;
-					if ( y > m_bottomRightVisibility.y )
-						m_bottomRightVisibility.y = y;
+					mapTile *myTile 	= 	&MapTile(x,y);
+					mapTile *realTile 	= 	&sourceMap->MapTile(x,y);
+					
+					bool changed 		= 	false;
+					
+					myTile->visible 	= 	true;
+					
+					
+					if ( myTile->material != realTile->material )
+					{
+						myTile->material = realTile->material;
+						changed = true;
+					}
+					if ( myTile->wall != realTile->wall )
+					{
+						myTile->wall = realTile->wall;
+						changed = true;
+					}
+					entType type = (realTile->entity) ? (realTile->entity->GetType()) : ENTITY_None;
+					
+					if ( myTile->entityType != type )
+					{
+						myTile->entityType = type;
+						changed = true;
+					}
+					
+					if ( changed )
+					{
+						if ( x < m_topLeftVisibility.x )
+							m_topLeftVisibility.x = x;
+						if ( x > m_bottomRightVisibility.x )
+							m_bottomRightVisibility.x = x;
+						if ( y < m_topLeftVisibility.y )
+							m_topLeftVisibility.y = y;
+						if ( y > m_bottomRightVisibility.y )
+							m_bottomRightVisibility.y = y;
+					}
 				}
 		
 		}
@@ -228,9 +249,11 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 				int x = pos.x+i;
 				int y = pos.y+j;
 				
+				
 				MapTile(x,y).visible = true;
 				MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
-				WallAt( x, y ) = sourceMap->WallAt( x, y );
+				hnWallType wt = sourceMap->WallAt( x, y );
+				WallAt( x, y ) = ( wt & WALL_Any ) ? WALL_Unknown : wt;
 				if ( sourceMap->MapTile( x, y ).entity == NULL )
 					MapTile( x, y ).entityType = ENTITY_None;
 				else
@@ -255,6 +278,7 @@ mapTile::mapTile()
 {
 	object = new objBase( OBJECT_None, hnPoint(0,0,0));
 	entity = NULL;
+	entityType = ENTITY_None;
 	visionBlocked = false;
 }
 

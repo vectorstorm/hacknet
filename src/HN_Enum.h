@@ -51,7 +51,7 @@ typedef sint16 hnMaterialType;
 
 enum {	// actually, 'vertical structure' type stuff goes here.
 	
-	WALL_Invalid 	= 	0x000,
+	WALL_Unknown 	= 	0x000,
 	WALL_Room 	= 	0x001,
 	WALL_Corridor 	= 	0x002,
 	WALL_Doorway 	= 	0x004,
@@ -71,6 +71,7 @@ typedef sint16 hnWallType;
 #define WALL_None		(WALL_Room | WALL_Corridor | WALL_Stairs)
 #define WALL_Any		(WALL_Horizontal | WALL_Vertical | WALL_Solid)
 #define WALL_Door		(WALL_OpenDoor | WALL_ClosedDoor)
+#define WALL_WithinRoom		(WALL_Room | WALL_Stairs)
 #define WALL_RoomEntrance	(WALL_Doorway | WALL_Door)
 #define WALL_Cross		(WALL_Horizontal | WALL_Vertical)
 

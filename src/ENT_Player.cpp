@@ -1,4 +1,5 @@
-# include "ENT_Player.h"
+#include <stdio.h>
+#include "ENT_Player.h"
 #include "NET_Server.h"
 #include "HN_Dungeon.h"
 #include "MAP_Base.h"
@@ -102,6 +103,7 @@ entPlayer::PostTurn()
 	
 	if ( m_changedLevel )
 	{
+		printf("Just changed levels.\n");
 		update.loc.Set(0,0,0);
 		update.width = map->GetWidth();
 		update.height = map->GetHeight();

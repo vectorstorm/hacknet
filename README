@@ -1,4 +1,6 @@
-HackNet - version 0.0.1
+HackNet - version 0.0.2
+
+Trevor Powell:  whiterabbit@users.sourceforge.net
 -------
 
 HackNet is a multiplayer roguelike game borrowing heavily from the style and
@@ -9,6 +11,14 @@ players.
 HackNet is in very early development (as you can see from our version number).
 Please see the ChangeLog and the TODO list for project status and playability
 information.  See NOTES for project goals and technical guidelines.
+
+
+What's New?   (See ChangeLog for details)
+-------
+
+New since 0.0.1, communication between players, rudimentary line-of-sight
+(rogue-style), multiple dungeon levels, the ability to run the server and
+clients on different servers.
 
 
 Installation information:
@@ -26,7 +36,11 @@ Caveats:
 --------
 
 Note that currently the HackNet client is hard-wired to connect to a server
-running on localhost, and to connect through port 9274.  All it'll take to
-allow real networked connections between separate computers is some command 
-line argument parsing..  but until the game is more playable, I can't be 
-stuffed to actually write this segment of code.  ;)
+running on port 9274, and the server is hard-wired to use that port.  Is
+there any demand to allow it to use an arbitrary port?  I should probably
+go about adding that functionality..
+
+Note that currently quite a lot of data gets transferred to the client
+when changing levels -- ~7k, which can take some amount of time on modem
+connects.  Minimizing data that must be transferred is going to be a major 
+goal for the next version.

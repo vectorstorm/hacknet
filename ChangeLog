@@ -24,6 +24,15 @@ April 29, 2001:
   in hallways, and the full room when standing inside a room.  Proper
   Line Of Sight code is a very, very big item on the TODO list, now.
 
+  Added some checking into the line-of-sight stuff so that it only marks
+  something as 'visible' for the purpose of sending to the client if
+  that something has changed.. this means that what once was a 540 byte
+  room being transferred every time you moved within the room is now a
+  ~20 or ~30 byte packet each time you move, if nothing else within the
+  room moves.  Much faster and easier on bad net connects!  Level changing
+  still requires sending the whole level.  Expect to see this re-engineered
+  before the release of version 0.0.3.
+
 April 28, 2001:
   Client now sends name to server after connecting, and the server 
   displays the name in its packet trace messages (in addition to the 
