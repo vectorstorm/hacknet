@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+
 #include "HN_Game.h"
 #include "MAP_Hack.h"
 #include "NET_Server.h"
@@ -181,7 +182,7 @@ hnGame::ClientRequestRefresh(int playerID, int level)
 }
 
 void
-hnGame::ClientName(int playerID, char * name)
+hnGame::ClientName(int playerID, char * name, int /*nameBufferLength*/)
 {
 	//------------------------------------------------------------------
 	//   The client has just told us his name, so set it on the player.
@@ -192,7 +193,7 @@ hnGame::ClientName(int playerID, char * name)
 #define MAX_TALK_BUFFER (256)
 
 void
-hnGame::ClientTalk(int playerID, char * talk)
+hnGame::ClientTalk(int playerID, char * talk, int talkBufferLength)
 {
 	//------------------------------------------------------------------
 	//   The client has just tried to say something.  We want to

@@ -31,8 +31,8 @@ public:
 
 	void			ClientTurn();
 	void			ClientJoined(int clientID);
-	void			ClientName(int clientID, char * name);
-	void			ClientTalk(int clientID, char * talk);
+	void			ClientName(int clientID, char * name, int nameBufferLen);
+	void			ClientTalk(int clientID, char * talk, int talkBufferLen);
 	void			ClientTake(int clientID, objDescription &desc, uint8 stackID );
 	void			ClientDrop(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientWield(int clientID, objDescription &desc, uint8 inventorySlot );

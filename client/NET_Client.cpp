@@ -270,6 +270,7 @@ netClient::Go()
 				case SPT_InventoryItem:
 					packet->InventoryItem(item);
 					m_display->UpdateInventoryItem(item.object, item.inventorySlot);
+					break;
 				case SPT_TakenItem:
 					packet->TakenItem(item);
 					m_display->TakenItem(item.object, item.inventorySlot);

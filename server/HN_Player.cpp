@@ -585,8 +585,9 @@ hnPlayer::SendUpdate()
 						{
 							updatedID = j;
 							object->FillDescription( m_clientInventory[j] );
-		//					netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
+							netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
 							inventoryUpdated = true;
+							printf("Sending updated inventory slot %d\n",j);
 						}
 						break;
 					}
@@ -610,7 +611,8 @@ hnPlayer::SendUpdate()
 							m_clientInventory[j] = result;
 							m_clientInventoryMapping[j] = object;
 							slotUsed[j] = true;
-		//					netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
+							netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
+							printf("Sending updated inventory slot %d\n",j);
 							break;
 						}
 					}
@@ -627,7 +629,8 @@ hnPlayer::SendUpdate()
 								finished = true;
 								inventoryUpdated = true;
 								slotUsed[j] = true;
-		//						netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
+								netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
+								printf("Sending updated inventory slot %d\n",j);
 								break;
 							}
 						}
@@ -645,11 +648,12 @@ hnPlayer::SendUpdate()
 			{
 				m_clientInventory[i].count = 0;
 				inventoryUpdated = true;
-		//		netServer::GetInstance()->SendInventoryItem( m_clientInventory[i], i );
+				netServer::GetInstance()->SendInventoryItem( m_clientInventory[i], i );
+							printf("Sending updated inventory slot %d\n",i);
 			}
 		}
 		
-		if ( inventoryUpdated )
+		/*if ( inventoryUpdated )
 		{
 			printf("Updating inventory.\n");
 			netInventory inven(INVENTORY_MAX);
@@ -659,7 +663,7 @@ hnPlayer::SendUpdate()
 
 			netServer::GetInstance()->SendInventory(inven);
 			
-		}
+		}*/
 	}
 
 	//---------------------------------------------------------------

@@ -335,8 +335,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				break;
 			case CPT_Talk:
 				okay = packet->ClientTalk(localbuffer, bufferSize);
-				m_game->ClientTalk(clientID, localbuffer);
-				printf("%s says, \"%s\"\n", m_game->GetPlayerName(clientID), localbuffer);
+				m_game->ClientTalk(clientID, localbuffer, bufferSize);
 				break;
 			case CPT_TakeObject:
 				okay = packet->ClientTake(take);
@@ -352,7 +351,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				break;
 			case CPT_Name:
 				okay = packet->ClientName(localbuffer, bufferSize);
-				m_game->ClientName(clientID, localbuffer);
+				m_game->ClientName(clientID, localbuffer, bufferSize);
 				printf("Client %d calls himself %s\n", clientID, localbuffer);
 				break;
 			case CPT_RequestRefresh:
