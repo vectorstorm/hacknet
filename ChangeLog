@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 12, 2002:
+  * Added objRing and objAmulet classes.
+  * Makefile.am: Reorganized for easy maintenance.
+
 February 10, 2002:
   * OBJ_Armour.cpp/.h: Added to CVS.  Implemented SetWorn()
   * OBJ_Manager.cpp: Create correct class based upon object type.
