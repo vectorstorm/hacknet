@@ -67,7 +67,7 @@ RANLIB = @RANLIB@
 THREADLIB = @THREADLIB@
 VERSION = @VERSION@
 
-SUBDIRS = common server client ttyclient 
+SUBDIRS = common server client ttyclient doc
 EXTRA_DIST = NOTES autogen.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs

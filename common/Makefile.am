@@ -1,4 +1,4 @@
 noinst_LIBRARIES= libpacket.a libpoint.a
 		
-libpacket_a_SOURCES = NET_Packet.cpp
-libpoint_a_SOURCES = HN_Point.cpp
+libpacket_a_SOURCES = NET_Packet.cpp NET_Packet.h HN_Enum.h HN_Types.h ENT_Types.h OBJ_Types.h
+libpoint_a_SOURCES = HN_Point.cpp HN_Point.h

@@ -7,7 +7,10 @@
 ---
 
 May 7, 2001:
-  Updated documentation.
+  * Updated documentation.
+  * Released version 0.0.4.
+  * Updated CVS version number to 0.0.5
+  * Fixed Makefile.am's so that 'make dist' works.
 
 May 6, 2001:
   Added up-stairs to top level of dungeon.  Going up those top-level
