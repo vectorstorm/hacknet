@@ -1,0 +1,14 @@
+TODO:
+
+Obviously, this isn't a comprehensive list of things that need doing.  Rather,
+it's a list of the next things that need implementing.  More will be added to
+the list as current items are removed!  Indented items indicate dependencies --
+indented items rely upon the completion of their parent item before they can
+be achieved!  (ie: we must have monsters before we can write monster AI)
+
+ - UI work.  (Integrate existing NetHack client code to make our own clients?)
+ - Character creation (name, class, alignment, stats, etc)
+ - Objects
+   - Populate initial maps with objects
+ - Monsters
+   - Monster AI

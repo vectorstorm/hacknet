@@ -1,0 +1,101 @@
+HackNet development version 0.0.1
+---------------------------------
+
+  Statement of Purpose:
+
+HackNet is a multiplayer game from the "roguelike" genre of games.  For the
+old-school folks in the crowd, this means that it's a lot like Rogue, Hack, 
+and many other similar games (but currently with a lot less 'stuff'
+available to play with).  For the johnny-come-latelies, this means that it's
+like Diablo, Nox, and many other similar games (but with a lot more 
+'stuff' available to play with).
+
+With only a few exceptions, there have been very few multiplayer "roguelike"
+games released.  Most notable are MAngband and Crossfire (see below for
+URL links).  From my point of view, Crossfire wasn't quite right because it
+felt rather more like an arcade game than I generally like.  I had the same
+problem with the Diablos and Nox.  A true Roguelike is a turn-based game in
+which you can sit and consider your next move for long periods of time,
+without penalty and without risk.  MAngband has timed turns, and has certain 
+other features I don't like -- the regeneration of levels when nobody's left
+on them, for example.  Over the years, I've been spoiled by games like 
+NetHack, which remember levels when you leave them, so you can return to them 
+later, and I expect the same from a multiplayer roguelike game.  This was how 
+the HackNet project began;  to create a a multiplayer game with the depth and 
+the gameplay style of the single-player game NetHack.
+
+A second goal of the project is to provide a "jumping off" point to attract
+new players to roguelike games, and NetHack in particular.  We seek to mirror
+many of the features of that classic game in HackNet, in a multiplayer
+context, so that players can learn by accompanying experienced players on
+HackNet quests.  Early-game survival is one of the most difficult tasks for
+new roguelike players to master, and so having experienced players to look
+to for guidance can only help the newbies!
+
+---------------------------------------
+
+Technical information for prospective developers:
+
+  I decided early on not to build HackNet as a patch on top of the NetHack
+code.  The NetHack codebase has been under development for more than fifteen 
+years, and it shows.  The code has specialised to the point that it would
+not take such a massive change without massive code restructuring.
+
+  So, having made that decision, I also decided also not to follow NetHack's
+policy of making the source code compilable on virtually every piece of
+hardware known to man.  Instead, it's written in ANSI C++ (compilable on
+virtually all modern operating systems).  The dedicated server should run
+under any operating system, but the current client requires a POSIX
+compliant threads library and a curses or ncurses library.  This means
+that the client probably won't compile cleanly under non-UNIX-based
+operating systems (ie: Windows or MacOS).  If someone wants to patch the
+client to run under those and/or other systems, I'd be thrilled to
+integrate the patch into the source base!
+
+  Tabs, naming conventions, and other stylistic things.  This is a bit
+silly, but here's the general policy I'm following to try to keep the
+code style consistant:
+
+  -  Code blocks are tabbed one further in than their enclosing braces
+  (yes, I'd have thought this was obvious, but some people seem to like
+  to tab the enclosing braces in as well.)
+  -  Classes have a two-letter prefix denoting which system they belong
+  to.  'hn' stands for 'hacknet', and denotes a core game system.  'net'
+  denotes a networking class.  'io' denotes an input/output class.  io
+  classes should not talk over the network, net classes should not check
+  for keyboard input, and hn classes shouldn't do either.  This is just
+  to maintain clean code.
+  -  A class's member variables should all be named as m_<variable name>
+  where <variable name> contains no underscores.  The first word in
+  <variable name> should be lowercase, and all subsequent words should
+  be upper case.  (Can you tell I grew up as a Mac programmer?)  :)
+  -  My stance on Hungarian notition;  Just Say No.  Use m_thingCount
+  instead of m_nThings and m_myString instead of m_lpszMyString.
+  -  I've typedefed some integer types -- (u|s)int(8|16|32), which
+  ought to compile into the correct size integer on any system.  Please
+  use these types, rather than char/short/int/longs, which could be
+  virtually any size!  (It's only really critical that they be used in
+  the networking code, but I'd like to encourage their use everywhere
+  else as well.. even if I haven't been particularly good about using
+  them, myself!)
+
+  I'd like to actively encourage the participation of other coders
+who are interested in contributing to the HackNet project!  If you're
+interested in some area of the project, let me know!  Send e-mail to
+whiterabbit@users.sourceforge.net, and the e-mail will be forwarded
+on to me.
+
+LINKS
+-------------------------------------------------------
+
+Homepage for HackNet:
+  http://hacknet.sourceforge.net/
+
+Homepage for NetHack (inspiration for HackNet):
+  http://www.nethack.org/
+  
+Homepage for Crossfire (arcade-style multiplayer Nethack/Gauntlet hybrid):
+  http://crossfire.real-time.com/
+ 
+Homepage for MAngband (multiplayer variant of roguelike 'Angband'):
+  http://mangband.org/

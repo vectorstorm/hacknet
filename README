@@ -1,0 +1,32 @@
+HackNet - version 0.0.1
+-------
+
+HackNet is a multiplayer roguelike game borrowing heavily from the style and
+gameplay of Hack and Nethack.  Our goal is to keep the flavour of Hack intact,
+despite the gameplay changes required by allowing multiple simultaneous
+players.
+
+HackNet is in very early development (as you can see from our version number).
+Please see the ChangeLog and the TODO list for project status and playability
+information.  See NOTES for project goals and technical guidelines.
+
+
+Installation information:
+-------
+
+Run ./autogen.sh to create and execute a standard configure script.  Then
+type 'make' to make the hacknet server and client.  'make install' should
+install them somewhere sensible, but it's probably easier to just run them
+straight out of the src directory -- that's what I do!
+
+'hacknetd' is the server, 'hacknet' is the curses/pthread-based TTY client.
+Run hacknetd first, then up to ten copies of hacknet.
+
+Caveats:
+--------
+
+Note that currently the HackNet client is hard-wired to connect to a server
+running on localhost, and to connect through port 9274.  All it'll take to
+allow real networked connections between separate computers is some command 
+line argument parsing..  but until the game is more playable, I can't be 
+stuffed to actually write this segment of code.  ;)

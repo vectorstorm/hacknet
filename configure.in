@@ -1,0 +1,51 @@
+# This first line initializes autoconf and gives it a file that it can
+# look for to make sure the source distribution is complete.
+AC_INIT(README)
+
+# The AM_INIT_AUTOMAKE macro tells automake the name and version number
+# of the software package so it can generate rules for building a source
+# archive.
+AM_INIT_AUTOMAKE(hacknet, 0.0.1)
+
+# We now have a list of macros which tell autoconf what tools we need to
+# build our software, in this case "make", a C++ compiler, and "install".
+# If we were creating a C program, we would use AC_PROC_CC instead of CXX.
+AC_PROG_MAKE_SET
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+# This is a trick I learned at Loki - the current compiler for the alpha
+# architecture doesn't produce code that works on all versions of the
+# alpha processor.  This bit detects the current compile architecture
+# and sets the compiler flags to produce portable binary code.
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+case "$target" in
+    alpha*-*-linux*)
+        CXXFLAGS="$CXXFLAGS -mcpu=ev4 -Wa,-mall"
+        ;;
+esac
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_LIB(ncurses, initscr, 
+             [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncurses'; ], [ 
+        AC_CHECK_LIB(curses, initscr, 
+                     [ CURSESINC='<curses.h>'; CURSESLIB='-lcurses'; ])
+])
+
+AC_SUBST(CURSESINC)
+AC_SUBST(CURSESLIB)
+
+AC_HEADER_STDC
+AC_CHECK_LIB(pthread, pthread_create,THREADLIB='-lpthread')
+AC_SUBST(THREADLIB)
+
+# Finally create all the generated files
+# The configure script takes "file.in" and substitutes variables to produce
+# "file".  In this case we are just generating the Makefiles, but this could
+# be used to generate any number of automatically generated files.
+AC_OUTPUT([
+Makefile
+src/Makefile
+])
