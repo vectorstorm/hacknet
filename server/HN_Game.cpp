@@ -225,11 +225,14 @@ hnGame::ClientTalk(int playerID, char * talk)
 void
 hnGame::ClientTake(int playerID, objDescription &desc, uint8 stackID)
 {
-	// check to make sure that the description and the stackID match.
-	
-	hnPoint pos = m_player[playerID]->GetPosition();
-	
 	m_player[playerID]->Take( desc, stackID );
+	ClientTurn();
+}
+
+void
+hnGame::ClientDrop(int playerID, objDescription &desc, uint8 inventorySlot)
+{
+	m_player[playerID]->Drop( desc, inventorySlot );
 	ClientTurn();
 }
 

@@ -69,6 +69,18 @@ struct netClientTake
 	uint8		stackID;
 };
 
+struct netClientDrop
+{
+	objDescription 	object;
+	uint8		inventorySlot;
+};
+
+struct netClientWield
+{
+	objDescription 	object;
+	uint8		inventorySlot;
+};
+
 struct netMapTile
 {
 	hnPoint loc;
@@ -147,6 +159,8 @@ enum
 	CPT_Name,
 	CPT_Talk,
 	CPT_TakeObject,
+	CPT_DropObject,
+	CPT_WieldObject,
 	CPT_RequestRefresh,	// request refreshed information on this level
 	CPT_Save,	// Save and quit
 	CPT_Quit,	// Quit without saving.
@@ -201,6 +215,8 @@ public:
 	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientTalk( char * talkbuffer, sint16 & bufferLength );
 	bool			ClientTake( netClientTake &packet );
+	bool			ClientDrop( netClientDrop &packet );
+	bool			ClientWield( netClientWield &packet );
 	bool			ClientRequestRefresh( sint8 & level );
 	bool			ClientSave();
 	bool			ClientQuit();

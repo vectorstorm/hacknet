@@ -42,6 +42,6 @@ void GetObjectDescriptionText(const objDescription &desc, char *buffer, uint16 b
 	}
 	else
 	{
-		snprintf(buffer, bufferLength, "%d %ss.", desc.count, name);
+		snprintf(buffer, bufferLength, "%d %ss", desc.count, name);
 	}
 }

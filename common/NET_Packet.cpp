@@ -478,6 +478,30 @@ netMetaPacket::ClientTake( netClientTake &packet )
 	return (!m_error);
 }
 
+bool
+netMetaPacket::ClientDrop( netClientDrop &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_DropObject;
+	Sint8( type );
+	ObjDescription( packet.object );
+	Uint8( packet.inventorySlot );
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::ClientWield( netClientWield &packet )
+{
+	m_error = false;
+
+	sint8 type = CPT_WieldObject;
+	Sint8( type );
+	ObjDescription( packet.object );
+	Uint8( packet.inventorySlot );
+}
+
 //------------------------------------------------------------------------------------
 //  Input packets are packets which we have just received, so we copy data
 //  FROM the buffer TO the types passed in.

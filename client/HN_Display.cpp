@@ -199,3 +199,11 @@ hnDisplay::TakeCommand( objDescription *desc, uint8 stackID )
 
 	PostTurnSubmit();
 }
+
+void
+hnDisplay::DropCommand( uint8 inventorySlot )
+{
+	m_client->SendDrop(&m_inventory[inventorySlot], inventorySlot);
+	
+	PostTurnSubmit();
+}

@@ -299,6 +299,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	char localbuffer[MAX_NAME_BYTES];
 	sint16 bufferSize = MAX_NAME_BYTES;
 	netClientTake take;
+	netClientDrop drop;
 	
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
 #ifdef __DISPLAY_PACKET_CONTENT__
@@ -339,6 +340,10 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 			case CPT_TakeObject:
 				okay = packet->ClientTake(take);
 				m_game->ClientTake(clientID, take.object, take.stackID);
+				break;
+			case CPT_DropObject:
+				okay = packet->ClientDrop(drop);
+				m_game->ClientDrop(clientID, drop.object, drop.inventorySlot);
 				break;
 			case CPT_Name:
 				okay = packet->ClientName(localbuffer, bufferSize);

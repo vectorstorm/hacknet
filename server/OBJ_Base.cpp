@@ -1,4 +1,5 @@
 #include "OBJ_Base.h"
+#include <stdio.h>
 
 char * objBase::s_name = "BaseObject";
 
@@ -87,6 +88,32 @@ objBase::RemoveObject( objBase * object )
 		}
 		shuttle = shuttle->m_next;
 	}
+}
+
+objBase *
+objBase::RemoveObjectDescription( const objDescription &desc, uint8 id )
+{
+	objBase *object = GetObject(id);
+	objBase *result = NULL;
+
+	if ( object && object->PartialMatch(desc) )
+	{
+		if ( object->m_count == desc.count )
+		{
+			RemoveObject(object);
+			result = object;
+		}
+		else if ( object->m_count < desc.count )
+		{
+			object->m_count -= desc.count;
+
+			result = new objBase(object->m_type, hnPoint(0,0,0));
+		}
+		else
+			printf("ERROR: Object quantity confusion failure in PartialMatch().\n");
+	}
+	
+	return result;
 }
 
 void

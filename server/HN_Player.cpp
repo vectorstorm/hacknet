@@ -95,6 +95,12 @@ hnPlayer::IsValidAttack( hnDirection dir )
 }
 
 bool
+hnPlayer::IsValidInventoryItem( const objDescription &desc, uint8 inventorySlot )
+{
+	return m_entity->IsValidInventoryItem(desc,inventorySlot);
+}
+
+bool
 hnPlayer::IsValidTake( const objDescription &object, uint8 stackID )
 {
 	return m_entity->IsValidTake(object,stackID);
@@ -134,6 +140,17 @@ hnPlayer::Take( const objDescription &object, uint8 stackID )
 		m_queuedTurn.type = queuedTurn::Take;
 		m_queuedTurn.take.object = object;
 		m_queuedTurn.take.stackID = stackID;
+	}
+}
+
+void
+hnPlayer::Drop( const objDescription &object, uint8 inventorySlot )
+{
+	if ( IsValidInventoryItem( object, inventorySlot ) )
+	{
+		m_queuedTurn.type = queuedTurn::Drop;
+		m_queuedTurn.drop.object = object;
+		m_queuedTurn.drop.inventorySlot = inventorySlot;
 	}
 }
 
@@ -292,6 +309,9 @@ hnPlayer::DoAction()
 			break;
 		case queuedTurn::Take:
 			m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.stackID );
+			break;
+		case queuedTurn::Drop:
+			m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.inventorySlot );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

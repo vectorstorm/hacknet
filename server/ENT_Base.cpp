@@ -112,6 +112,39 @@ entBase::Take( const objDescription &desc, uint8 stackID )
 }
 
 bool
+entBase::IsValidInventoryItem( const objDescription &desc, uint8 inventorySlot )
+{
+	bool result = false;
+	if ( inventorySlot < m_inventory->ObjectCount() )
+	{
+		objBase *object = m_inventory->GetObject(inventorySlot);
+
+		if ( object->PartialMatch(desc) )
+			result = true;
+	}
+
+	return result;
+}
+
+void
+entBase::Drop(const objDescription &desc, uint8 inventorySlot)
+{
+	if ( IsValidInventoryItem(desc,inventorySlot) )
+	{
+		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
+		
+		if ( map )	// this should never fail.
+		{
+			objBase *object = m_inventory->RemoveObjectDescription(desc,inventorySlot);
+	
+			hnPoint pos = GetPosition();
+			map->MapTile(pos.x,pos.y).object->AddObject(object);
+		}
+
+	}
+}
+
+bool
 entBase::IsValidMoveDestination( const hnPoint &destination )
 {
 	bool legalMove = false;

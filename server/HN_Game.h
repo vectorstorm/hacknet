@@ -34,6 +34,7 @@ public:
 	void			ClientName(int clientID, char * name);
 	void			ClientTalk(int clientID, char * talk);
 	void			ClientTake(int clientID, objDescription &desc, uint8 stackID );
+	void			ClientDrop(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientRequestRefresh( int clientID, int level );
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);

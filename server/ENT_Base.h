@@ -69,6 +69,10 @@ public:
 	virtual bool		IsValidTake( const objDescription &object, uint8 stackID );
 	virtual objBase *	GetTakeTarget( const objDescription &object, uint8 stackID );
 	virtual void		Take( const objDescription &object, uint8 stackID );
+
+	virtual bool		IsValidInventoryItem( const objDescription &object, uint8 inventorySlot );
+
+	virtual void		Drop( const objDescription &object, uint8 inventorySlot );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

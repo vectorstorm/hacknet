@@ -18,7 +18,8 @@ struct queuedTurn
 		Move,
 		Wait,
 		Attack,
-		Take
+		Take,
+		Drop
 	};
 	int type;
 
@@ -33,6 +34,10 @@ struct queuedTurn
 			objDescription object;
 			uint8 stackID;
 		} take;
+		struct{
+			objDescription object;
+			uint8 inventorySlot;
+		} drop;
 	};
 };
 
@@ -86,6 +91,7 @@ public:
 	virtual bool	IsValidMove( hnDirection dir );
 	virtual bool	IsValidAttack( hnDirection dir );
 	virtual bool	IsValidTake( const objDescription &object, uint8 stackID );
+	virtual bool	IsValidInventoryItem( const objDescription &object, uint8 inventoryDrop );
 
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
@@ -109,6 +115,7 @@ public:
 	virtual void	Move( hnDirection dir );
 	virtual void	Attack( hnDirection dir );
 	virtual void	Take( const objDescription &desc, uint8 stackID );
+	virtual void	Drop( const objDescription &desc, uint8 inventorySlot );
 	virtual void	Wait( );
 	
 };

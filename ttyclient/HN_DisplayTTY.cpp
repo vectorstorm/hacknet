@@ -201,6 +201,9 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			WaitCommand();
 			break;
 		
+		case 'd':
+			HandleDrop();
+			break;
 		case 'i':
 			HandleInventory();
 			break;
@@ -316,6 +319,19 @@ hnDisplayTTY::HandleTake()
 
 		if ( myTile.objectCount > 0 )
 			TakeCommand( myTile.object, 0 );
+	}
+}
+
+void
+hnDisplayTTY::HandleDrop()
+{
+	// we've requested to drop something.  If we have an
+	// inventory, drop the topmost item in it.
+	// TODO: Implement 'drop' properly!
+
+	if ( m_inventoryCount > 0 )
+	{
+		DropCommand(0);
 	}
 }
 

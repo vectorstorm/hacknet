@@ -47,6 +47,7 @@ public:
 	void		HandleKeypressInventorySelect( int key );
 
 	void		HandleTake();
+	void		HandleDrop();
 	void		HandleInventory();
 
 	void		DrawInventory();
