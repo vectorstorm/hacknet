@@ -237,6 +237,13 @@ hnGame::ClientDrop(int playerID, objDescription &desc, uint8 inventorySlot)
 }
 
 void
+hnGame::ClientWield(int playerID, objDescription &desc, uint8 inventorySlot)
+{
+	m_player[playerID]->Wield( desc, inventorySlot );
+	ClientTurn();
+}
+
+void
 hnGame::ClientQuit(int playerID)
 {
 	// --------------------------------------------------------------

@@ -9,6 +9,7 @@
 July 14, 2001:
   * Server-side initial implementation of 'wielding' objects.
   * Added 'wielding' objects to common networking libs.
+  * Wired up 'wielding' networking on server side.
 
 July 13, 2001:
   * Converted Take command to the newly modified system, so entBase
