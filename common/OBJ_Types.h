@@ -14,6 +14,7 @@ enum
 	ARMOUR_Leather,
 
 	/*                 WEAPONS                 */
+	WEAPON_Dagger,
 	WEAPON_LongSword,
 
 	/*                ARTIFACTS                */

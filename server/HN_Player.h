@@ -99,6 +99,7 @@ public:
 	virtual void	SendUpdate();		// send all updates to client.
 
 	virtual void	RefreshMap( int level );
+	void		SendMapData( const hnPoint2D &topLeft, const hnPoint2D &bottomRight, int level );
 	
 	
 	//  Queued Actions Beneath This Point ------------------------------------------

@@ -15,6 +15,9 @@ July 2, 2001:
     class hierarchy in the client.  It's not clean and elegant,
     but it works.  TODO:  Rethink this setup, see if there's a
     nicer way to achieve this.
+  * Cleaned up some map update handling code & fixed a relatively
+    new crash when refreshing level contents (occurred when going
+    up and down levels)
 
 July 1, 2001:
   * Client can now 'pick up' objects with ',' -- no inventory yet,

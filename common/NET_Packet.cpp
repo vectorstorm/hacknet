@@ -227,18 +227,21 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 	
 	for ( int i = 0; i < nTiles; i++ )
 	{
-		Uint16( packet.objectCount[i] );
-		
-		if ( Input() )
-			packet.object[i] = new objDescription[packet.objectCount[i]];
-		
-		for ( int j = 0; j < packet.objectCount[i]; j++ )
+		if ( packet.objectCount )
 		{
-			// grab this object description
-			ObjDescription( packet.object[i][j] );
-			//Uint16( packet.object[i][j].type );
-			//Uint8( packet.object[i][j].blesscurse );
-			//Uint8( packet.object[i][j].count );
+			Uint16( packet.objectCount[i] );
+		
+			if ( Input() )
+				packet.object[i] = new objDescription[packet.objectCount[i]];
+		
+			for ( int j = 0; j < packet.objectCount[i]; j++ )
+			{
+				// grab this object description
+				ObjDescription( packet.object[i][j] );
+				//Uint16( packet.object[i][j].type );
+				//Uint8( packet.object[i][j].blesscurse );
+				//Uint8( packet.object[i][j].count );
+			}
 		}
 	}
 

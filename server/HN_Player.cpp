@@ -374,14 +374,14 @@ hnPlayer::UpdateVision()
 void
 hnPlayer::SendUpdate()
 {
-	//---------------------------------------------------------------
-	// in case we need to send a packet, tell the server to
-	// start building one.  We'll tell it to transmit it at the
-	// end of this function.  If no data is actually put into the
-	// packet, then the server won't actually send anything.
+       	//---------------------------------------------------------------
+      	// in case we need to send a packet, tell the server to
+      	// start building one.  We'll tell it to transmit it at the
+      	// end of this function.  If no data is actually put into the
+      	// packet, then the server won't actually send anything.
 	//---------------------------------------------------------------
 	netServer::GetInstance()->StartMetaPacket(m_playerID);
-	
+
 	//---------------------------------------------------------------
 	//  Sanity checks, and be sure that our vision map has been
 	//  allocated.
@@ -411,53 +411,7 @@ hnPlayer::SendUpdate()
 	// points of a rectangle.  If not, tlpos will be the bottom right corner
 	// of the map, and brpos will be the top left corner of the map.
 	//------------------------------------------------------------------------
-	if ( tlpos.x <= brpos.x && tlpos.y <= brpos.y )	
-	{
-		map->ResetChanged();		// reset our map's memory of what has changed, since we're updating the client.
-
-		netServer::GetInstance()->SendClientLocation( GetPosition() );
-	
-		update.loc.Set( tlpos.x, tlpos.y, m_entity->GetPosition().z );
-		update.width = (brpos.x - tlpos.x) + 1;
-		update.height = (brpos.y - tlpos.y) + 1;
-	
-		update.material = new sint16[update.width * update.height];
-		update.wall = new sint16[update.width * update.height];
-		update.entityType = new sint8[update.width * update.height];
-
-		update.object = new (objDescription *)[update.width * update.height];
-		update.objectCount = new uint16[update.width * update.height];
-		
-		for ( int j = 0; j < update.height; j++ )
-			for ( int i = 0; i < update.width; i++)
-			{
-				int x = update.loc.x+i;
-				int y = update.loc.y+j;
-			
-       				update.material[i+(j*update.width)] = map->MaterialAt(x,y);
-   				update.wall[i+(j*update.width)] = map->WallAt(x,y);
-				update.entityType[i+(j*update.width)] = map->MapTile(x,y).entity;
-				
-				int objectCount = map->MapTile(x,y).objectCount;
-
-				objDescription * list = NULL;
-				if ( objectCount > 0 )
-					list = new objDescription[objectCount];
-					
-				update.objectCount[i+(j*update.width)] = objectCount;
-				update.object[i+(j*update.width)] = list;
-
-				for ( int k = 0; k < objectCount; k++ )
-					update.object[i+(j*update.width)][k] = map->MapTile(x,y).object[k];
-			}
-	
-		netServer::GetInstance()->SendMapUpdateBBox( update );
-
-		//delete [] update.material;
-		//delete [] update.wall;
-		//delete [] update.entityType;
-	
-	}
+	SendMapData( tlpos, brpos, GetPosition().z );
 	
 	if ( m_group )
 	{
@@ -490,22 +444,21 @@ hnPlayer::SendUpdate()
 
 		netServer::GetInstance()->SendStatus( m_entity->GetStatus() );
 	}
+
+       //----------------------------------------------------------------
+       // Send the metapacket now.  The server will recognize if there's
+       // no data in the packet, and will abort the send (returning
+       // false, although we don't really care about that).
+       //----------------------------------------------------------------
 	
-	//----------------------------------------------------------------
-	// Send the metapacket now.  The server will recognize if there's
-	// no data in the packet, and will abort the send (returning
-	// false, although we don't really care about that).
-	//----------------------------------------------------------------
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }
 
 void
 hnPlayer::RefreshMap( int level )
 {
-	// Send our visibility data on this level to our player.
-
 	netServer::GetInstance()->StartMetaPacket(m_playerID);
-
+	// Send our visibility data on this level to our player.
 	mapBase *realMap = hnDungeon::GetLevel( level );
 	
 	assert(realMap);
@@ -518,7 +471,6 @@ hnPlayer::RefreshMap( int level )
 	mapClient *map = m_map[ level ];
 	assert( map );
 
-	netMapUpdateBBox update;
 	
 	//--------------------------------------------------------
 	//  Instead of sending the whole level, send only the
@@ -535,30 +487,57 @@ hnPlayer::RefreshMap( int level )
 	hnPoint2D 	tlpos = map->GetTopLeftMaxChanged();
 	hnPoint2D	brpos = map->GetBottomRightMaxChanged();
 	
-	update.loc.Set( tlpos.x, tlpos.y, level );
-	update.width = ( brpos.x - tlpos.x ) + 1;
-	update.height = ( brpos.y - tlpos.y ) + 1;
-
-	update.material = new sint16[update.width * update.height];
-	update.wall = new sint16[update.width * update.height];
-	update.entityType = new sint8[update.width * update.height];
-
-	for ( int j = 0; j < update.height; j++ )
-		for ( int i = 0; i < update.width; i++)
-		{
-			int x = update.loc.x+i;
-			int y = update.loc.y+j;
-			
-       			update.material[i+(j*update.width)] = map->MaterialAt(x,y);
-   			update.wall[i+(j*update.width)] = map->WallAt(x,y);
-			update.entityType[i+(j*update.width)] = map->MapTile(x,y).entity;
-		}
-	
-	netServer::GetInstance()->SendMapUpdateBBox( update );
-
-	delete [] update.material;
-	delete [] update.wall;
-	delete [] update.entityType;
-
+	SendMapData( tlpos, brpos, level );
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
+}
+
+void
+hnPlayer::SendMapData( const hnPoint2D &tlpos, const hnPoint2D &brpos, int level )
+{
+	// we must start and transmit the metapacket OUTSIDE this call!
+
+	if ( tlpos.x <= brpos.x && tlpos.y <= brpos.y ) 
+	{
+		mapClient *map = m_map[ level ];
+		assert( map );
+		map->ResetChanged();
+	
+		netMapUpdateBBox update;
+
+		update.loc.Set( tlpos.x, tlpos.y, level );
+		update.width = ( brpos.x - tlpos.x ) + 1;
+		update.height = ( brpos.y - tlpos.y ) + 1;
+
+		update.material = new sint16[update.width * update.height];
+		update.wall = new sint16[update.width * update.height];
+		update.entityType = new sint8[update.width * update.height];
+		update.objectCount = new uint16[update.width * update.height];
+		update.object = new objDescription *[update.width * update.height];
+
+		for ( int j = 0; j < update.height; j++ )
+			for ( int i = 0; i < update.width; i++)
+			{
+				int x = update.loc.x+i;
+				int y = update.loc.y+j;
+			
+       				update.material[i+(j*update.width)] = map->MaterialAt(x,y);
+   				update.wall[i+(j*update.width)] = map->WallAt(x,y);
+				update.entityType[i+(j*update.width)] = map->MapTile(x,y).entity;
+	
+				int objectCount = map->MapTile(x,y).objectCount;
+
+				objDescription * list = NULL;
+				if ( objectCount > 0 )
+					list = new objDescription[objectCount];
+					
+				update.objectCount[i+(j*update.width)] = objectCount;
+				update.object[i+(j*update.width)] = list;
+	
+				for ( int k = 0; k < objectCount; k++ )
+					update.object[i+(j*update.width)][k] = map->MapTile(x,y).object[k];
+			}
+	
+		netServer::GetInstance()->SendClientLocation( GetPosition() );
+		netServer::GetInstance()->SendMapUpdateBBox( update );
+	}
 }

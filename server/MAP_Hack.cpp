@@ -4,6 +4,7 @@
 
 #include "ENT_GridBug.h"
 #include "OBJ_LongSword.h"
+#include "OBJ_Dagger.h"
 
 #include <stdio.h>
 
@@ -119,6 +120,23 @@ mapHack::GenerateObjects()
 			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
 			{
 				MapTile(x,y).object->AddObject( new objLongSword( hnPoint(x, y, m_depth) ) );
+				didit = true;
+			}
+		}
+	}
+	for ( int i = 0; i < 10; i++ )
+	{	
+		// make ten swords.
+		bool didit = false;
+
+		while ( !didit )
+		{
+			int x = rand() % GetWidth();
+			int y = rand() % GetHeight();
+
+			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
+			{
+				MapTile(x,y).object->AddObject( new objDagger( hnPoint(x, y, m_depth) ) );
 				didit = true;
 			}
 		}
