@@ -22,6 +22,7 @@ February 14, 2002:
   * ENT_GridBug.cpp:  Sets initial health on hnStatus, instead of
     in unused hit point member variables.
   * Beginning support for exercising statistics.
+  * Fixed numerous bugs with killing players.
 
 February 12, 2002:
   * Added objRing and objAmulet classes.

@@ -4,6 +4,7 @@
 #include "ENT_Base.h"
 #include "OBJ_Base.h"
 #include "MAP_Base.h"
+#include "HN_Game.h"
 #include "HN_Dungeon.h"
 #include "HN_Player.h"
 #include "HN_Group.h"
@@ -412,6 +413,8 @@ entBase::GetAttackTarget( hnDirection dir )
 int
 entBase::Attack( hnDirection dir )
 {
+	int result = AT_Miss;
+
 	if ( !IsValidAttack(dir) )	// perhaps our target has already died?
 		return false;
 	
@@ -429,7 +432,11 @@ entBase::Attack( hnDirection dir )
 	mapBase *map = hnDungeon::GetLevel( target.z );
 
 	entBase *foe = map->MapTile(target.x, target.y).entity;
-
+	
+	char name[128];
+	char buffer[128];
+	foe->GetFullName(name,128);
+	
 	if ( RollToHit(foe) )
 	{
 		// we hit!
@@ -441,22 +448,34 @@ entBase::Attack( hnDirection dir )
 			map->RemoveEntity( foe );
 
 			if ( foe->IsAPlayer() )
-				foe->GetPlayer()->SetEntity(NULL);
+			{
+				//foe->GetPlayer()->SetEntity(NULL);
+				foe->GetPlayer()->Die();
+			}
 			else
 			{
 				hnGroupManager::GetInstance()->RemoveEntity(foe);
 				delete foe;
 			}
 			
-			return AT_Kill;
+			result = AT_Kill;
 		}
 		
-		return AT_Hit;
+		result = AT_Hit;
 	}
 	else
 	{
 		// we missed!
 	}
 
-	return AT_Miss;
+	if ( result == entBase::AT_Hit )
+		snprintf(buffer,128,"hit %s!", name);
+	else if ( result == entBase::AT_Kill )
+		snprintf(buffer,128,"destroyed %s!", name);
+	else
+		snprintf(buffer,128,"missed %s!", name);	
+
+	hnGame::GetInstance()->SeenEvent(this,buffer);	
+	
+	return result;
 }

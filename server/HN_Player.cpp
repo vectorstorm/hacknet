@@ -66,6 +66,15 @@ hnPlayer::~hnPlayer()
 }
 
 void
+hnPlayer::Die()
+{
+	// we've just been killed, so disconnect us.
+	
+	netServer::GetInstance()->SendQuitConfirm(m_playerID);		// tell far end to disconnect
+	netServer::GetInstance()->DisconnectClientID(m_playerID);	// and quietly close the connection.
+}
+
+void
 hnPlayer::SetEntity( entBase * entity )
 {
 	printf("Setting entity...\n");
@@ -313,7 +322,7 @@ hnPlayer::Listen( char * message )
 }
 
 void
-hnPlayer::See( const hnPoint & where, hnPlayer * who, char * message )
+hnPlayer::See( const hnPoint & where, entBase * who, char * message )
 {
 	if ( CanSee( where ) )
 	{
@@ -324,7 +333,7 @@ hnPlayer::See( const hnPoint & where, hnPlayer * who, char * message )
 		char buffer[256];
 		char nameBuffer[128];
 		
-		if ( who == this )
+		if ( who == m_entity )
 			sprintf(nameBuffer,"You");
 		else
 			who->GetFullName(nameBuffer,128);
@@ -354,9 +363,14 @@ hnPlayer::See( const hnPoint & where, char * message )
 bool
 hnPlayer::CanSee( const hnPoint & where )
 {
-	mapClient *map = m_map[ GetPosition().z ];
+	if ( m_entity )	// can't see if we have no entity left.
+	{
+		mapClient *map = m_map[ GetPosition().z ];
 
-	return map->MapTile(where.x, where.y).visible;
+		return map->MapTile(where.x, where.y).visible;
+	}
+	
+	return false;
 }
 
 bool
@@ -411,15 +425,6 @@ hnPlayer::DoAction()
 				entity->GetFullName(name,128);
 			}
 			result = m_entity->Attack( m_queuedTurn.attack.direction );
-			
-			if ( result == entBase::AT_Hit )
-				sprintf(buffer,"hit %s!", name);
-			else if ( result == entBase::AT_Kill )
-				sprintf(buffer,"destroyed %s!", name);
-			else
-				sprintf(buffer,"missed %s!", name);
-			
-			hnGame::GetInstance()->SeenEvent(this,buffer);
 			
 			success = true;
 			break;

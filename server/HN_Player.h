@@ -103,6 +103,8 @@ public:
 			hnPlayer( int playerID, const hnPoint & where );
 	virtual		~hnPlayer();
 	
+	void		Die();
+	
 	void		SetName( char * name );
 	void		SetEntity( entBase *entity );
 	void		SetGroup( hnGroup * group ) { m_group = group; }
@@ -128,7 +130,7 @@ public:
 	virtual void	Listen( char * message );
 	
 	virtual void	See( const hnPoint & position, char * message );
-	virtual void	See( const hnPoint & position, hnPlayer * who, char * message );
+	virtual void	See( const hnPoint & position, entBase * who, char * message );
 	
 	virtual bool	CanSee( const hnPoint & position );
 	
@@ -140,6 +142,7 @@ public:
 
 	virtual void	RefreshMap( int level );
 	void		SendMapData( const hnPoint2D &topLeft, const hnPoint2D &bottomRight, int level );
+	
 	
 	
 	//  Queued Actions Beneath This Point ------------------------------------------

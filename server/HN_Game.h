@@ -7,6 +7,7 @@
 #include "OBJ_Types.h"
 
 class netServer;
+class entBase;
 class hnPlayer;
 
 // hnGame is a singleton.
@@ -26,7 +27,7 @@ public:
 	
 	char *			GetPlayerName(int clientID);	// utility function for server
 
-	void			SeenEvent( hnPlayer * player, char * message );
+	void			SeenEvent( entBase *entity, char * message );
 	void			SeenEvent( const hnPoint & where, char * message );
 
 	void			ClientTurn();

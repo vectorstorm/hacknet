@@ -80,14 +80,14 @@ hnGame::GetPlayerName(int playerID)
 }
 
 void
-hnGame::SeenEvent( hnPlayer *player, char * message )
+hnGame::SeenEvent( entBase *entity, char * message )
 {
-	hnPoint pos = player->GetPosition();
+	hnPoint pos = entity->GetPosition();
 
 	for ( int i = 0; i < MAX_CLIENTS; i++ )
 	{
 		if ( m_player[i] )
-			m_player[i]->See(pos, player, message);
+			m_player[i]->See(pos, entity, message);
 	}
 }
 
