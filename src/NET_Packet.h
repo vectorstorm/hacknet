@@ -73,6 +73,7 @@ struct netMessage
 enum 
 {
 	CPT_Move,
+	CPT_Name,
 	CPT_Save,	// Save and quit
 	CPT_Quit,	// Quit without saving.
 	CPT_MAX
@@ -110,6 +111,7 @@ public:
 	
 	/*****************   Client Packets  ******************/
 	bool			ClientMove( sint8 & direction );
+	bool			ClientName( char * namebuffer, int bufferLength );
 	bool			ClientSave();
 	bool			ClientQuit();
 

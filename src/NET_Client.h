@@ -39,6 +39,7 @@ public:
 	
 	void		Go();
 	void		SendMove( hnDirection whichWay );
+	void		SendName( char * name );
 	void		SendQuit( bool save );
 };
 

@@ -5,14 +5,21 @@
 #include "HN_Point.h"
 #include "ENT_Types.h"
 
+#define MAX_NAME_BYTES (128)
+
 class entBase
 {
-	entType	m_type;
-	hnPoint		m_position;
+	entType			m_type;
+	hnPoint			m_position;
+	
+	char 			m_name[MAX_NAME_BYTES];
 	
 public:
 				entBase( entType type, const hnPoint & );
 	virtual			~entBase();
+	
+	void			SetName( char * name );
+	char *			GetName();
 	
 	const hnPoint &		GetPosition();
 	entType			GetType() { return m_type; }

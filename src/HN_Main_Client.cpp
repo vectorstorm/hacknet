@@ -63,7 +63,7 @@ int main( int argc, char *argv[] )
 		hnDisplay *display = NULL;
 	
 #ifdef TTY_DISPLAY
-		display = new hnDisplayTTY;
+		display = new hnDisplayTTY(name);
 #endif
 
 		if ( display )

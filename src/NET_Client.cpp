@@ -84,7 +84,12 @@ netClient::Go()
 	}
 	//printf("Connected successfully!\n");
 	
+	// Now that we're connected, send the server our name.
+
+	SendName( m_display->GetName() );
+	
 	// now that we've connected, we wait for packets from the server or a key from our hnClient...
+	
 	
 	m_display->Go();
 	
@@ -229,6 +234,14 @@ netClient::SendMove(hnDirection dir)
 	sint8 direction = dir;
 	StartMetaPacket();
 	m_packet->ClientMove(direction);
+	TransmitMetaPacket();
+}
+
+void
+netClient::SendName(char * name)
+{
+	StartMetaPacket();
+	m_packet->ClientName(name, strlen(name));
 	TransmitMetaPacket();
 }
 

@@ -180,6 +180,42 @@ netMetaPacket::ClientMove( sint8 & direction )
 }
 
 bool
+netMetaPacket::ClientName( char * namebuffer, int bufferlength )
+{
+	bool success = true;
+	
+	sint8 type = CPT_Name;
+	sint16 length;
+	Char(type);
+	
+	if ( Output() ){
+		// creating the packet..
+		length = strlen(namebuffer);
+		if ( length > bufferlength )
+			length = bufferlength;
+			
+		Short(length);
+	}else{
+		// reading packet..
+		Short(length);
+
+		if ( length > bufferlength )
+			length = bufferlength;
+	}
+
+	for ( int i = 0; i < length; i++ )
+		Char((sint8)namebuffer[i]);
+	
+	if ( Input() )
+	{
+		// if we're reading packet, be sure we stick a null on the end, for safety.
+		namebuffer[bufferlength-1] = '\0';
+	}
+	
+	return success;
+}
+
+bool
 netMetaPacket::ClientQuit()
 {
 	bool success = true;

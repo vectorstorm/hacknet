@@ -263,6 +263,10 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 {
 	bool okay = false;
 	bool abort = false;
+
+#define MAX_NAME_BYTES (128)
+	char namebuffer[MAX_NAME_BYTES];
+	
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
 #if 0	
 	printf("Received %d bytes.\n", incomingBytes );
@@ -286,12 +290,18 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				m_game->ClientMove(clientID, (hnDirection)direction);
 				okay = true;
 				break;
+			case CPT_Name:
+				packet->ClientName(namebuffer, MAX_NAME_BYTES);
+				m_game->ClientName(clientID, namebuffer);
+				printf("Client %d calls himself %s\n", clientID, namebuffer);
+				okay = true;
+				break;
 			case CPT_Save:	// no saving code yet -- just quit.
 				packet->ClientSave();
 				SendQuitConfirm(clientID);
 				m_game->ClientQuit(clientID);
 				DisconnectClientID(clientID);
-				printf("Disconnected client %d\n",clientID);
+				printf("Disconnected client %d.\n", clientID);
 				okay = true;
 				break;
 			case CPT_Quit:
@@ -299,13 +309,13 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				SendQuitConfirm(clientID);
 				m_game->ClientQuit(clientID);
 				DisconnectClientID(clientID);
-				printf("Disconnected client %d\n",clientID);
+				printf("Disconnected client %d.\n", clientID);
 				okay = true;
 				break;
 			default:
 				okay = false;
 				abort = true;
-				printf("Received unknown packet type %d from client %d.\n", type, clientID);
+				printf("Received unknown packet type %d from %s (id %d).\n", type, m_game->GetPlayerName(clientID), clientID);
 				break;
 		}
 	}
@@ -432,7 +442,8 @@ netServer::TransmitMetaPacket()
 		// here we go -- send our netMetaPacket to the given client!
 		short metapacketdatalength = htons(m_metaPacket->GetBufferLength());	
 		
-		printf("Sending %d byte metapacket to client %d...\n", m_metaPacket->GetBufferLength(), m_packetClientID);
+		printf("Sending %d byte metapacket to %s (id %d)...\n", m_metaPacket->GetBufferLength(), 
+									m_game->GetPlayerName(m_packetClientID), m_packetClientID);
 		
 		
 		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )

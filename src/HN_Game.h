@@ -31,9 +31,11 @@ public:
 	static void		Shutdown();
 	static hnGame *		GetInstance();
 	
+	char *			GetPlayerName(int clientID);	// utility function for server
 
 	
 	void			ClientJoined(int clientID);
+	void			ClientName(int clientID, char * name);
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);
 	void			ClientAttack(int clientID, hnDirection dir);

@@ -7,7 +7,7 @@ class hnDisplayTTY : public hnDisplay
 {
 	bool		m_needsRefresh;
 public:
-			hnDisplayTTY();
+			hnDisplayTTY(char * name);
 	virtual		~hnDisplayTTY();
 	virtual bool	Go();
 

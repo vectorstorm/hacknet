@@ -24,7 +24,6 @@ class entPlayer : public entBase
 
 	int		m_experiencePoints;
 	
-	char *		m_name;					// our name.  zero-terminated.
 public:
 			entPlayer( int playerID, const hnPoint & where );
 			~entPlayer();

@@ -9,8 +9,7 @@ extern hnPoint offsetVector[10];
 
 entPlayer::entPlayer( int playerID, const hnPoint &where ):
 	entBase(ENTITY_Player, where),
-	m_playerID(playerID),
-	m_name("Unnamed")
+	m_playerID(playerID)
 {
 }
 

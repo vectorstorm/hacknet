@@ -6,16 +6,19 @@
 #include "MAP_Client.h"
 #include "ENT_Types.h"
 
+#define MAX_NAME_BYTES (128)
+
 class netClient;
 
 class hnDisplay
 {
 protected:
+	char		m_name[MAX_NAME_BYTES];
 	netClient 	*m_client;
 	hnPoint		m_position;
 	mapClient	*m_map;		// this is our map of the current level...
 public:
-			hnDisplay();
+			hnDisplay( char * name );
 	virtual		~hnDisplay();
 
 	void		SetClient( netClient *client ) { m_client = client; }
@@ -29,6 +32,8 @@ public:
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
 	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapClientTile & tile );
 	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
+
+	char *		GetName() { return m_name; }
 };
 
 #endif

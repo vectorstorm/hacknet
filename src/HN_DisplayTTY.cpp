@@ -11,7 +11,8 @@
 //#define __DEBUGGING_NETWORK__
 
 
-hnDisplayTTY::hnDisplayTTY():
+hnDisplayTTY::hnDisplayTTY( char * name ):
+	hnDisplay(name),
 	m_needsRefresh(false)
 {
 #ifndef __DEBUGGING_NETWORK__

@@ -1,3 +1,4 @@
+#include <string.h>
 #include "ENT_Base.h"
 #include "MAP_Base.h"
 #include "HN_Dungeon.h"
@@ -15,6 +16,19 @@ entBase::entBase( entType type, const hnPoint & pos ):
 
 entBase::~entBase()
 {
+}
+
+void
+entBase::SetName( char * name )
+{
+	strncpy( m_name, name, MAX_NAME_BYTES );
+	m_name[MAX_NAME_BYTES-1] = '\0';
+}
+
+char *
+entBase::GetName()
+{
+	return m_name;
 }
 
 const hnPoint &

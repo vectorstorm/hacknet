@@ -74,6 +74,22 @@ hnGame::~hnGame()
 	hnDungeon::Shutdown();
 }
 
+char *
+hnGame::GetPlayerName(int playerID)
+{
+	static char * unnamed = "Unnamed";
+	
+	if ( playerID < MAX_CLIENTS )
+	{
+		if ( m_player[playerID] )
+		{
+			return m_player[playerID]->GetName();
+		}
+	}
+
+	return unnamed;
+}
+
 void
 hnGame::ClientJoined(int playerID)
 {
@@ -135,6 +151,12 @@ hnGame::ClientJoined(int playerID)
 
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 			
+}
+
+void
+hnGame::ClientName(int playerID, char * name)
+{
+	m_player[playerID]->SetName(name);
 }
 
 void
