@@ -23,7 +23,7 @@ class mapHack : public mapBase
 	void			Wallify();
 
 	void			GenerateMonsters();
-	//void			GenerateObjects();
+	void			GenerateObjects();
 	
 public:
 				mapHack( uint8 width, uint8 height, uint8 depth );

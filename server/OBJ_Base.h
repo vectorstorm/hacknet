@@ -7,16 +7,11 @@
 
 class objBase
 {
-	enum {
-		BC_Uncursed,
-		BC_Blessed,
-		BC_Cursed
-	};
-
 	objType		m_type;
 	hnPoint		m_position;
 	
 	uint8		m_blesscurse;
+	uint8		m_count;	// how many of us are there?
 
 	objBase *	m_next;
 	objBase *	m_prev;
@@ -33,6 +28,7 @@ public:
 
         void		AddObject(objBase *object);     // add us into our circular linked list
 	void		RemoveObject(objBase *object);  // find this object in our circular linked list and remove it
+	objBase *	RemoveObjectDescription( objDescription *objectDescription );	// match the description against one or more objects in our list and remove them, returning the removed object(s).
 		
 	
 	bool		Blessed() { return (m_blesscurse == BC_Blessed); }

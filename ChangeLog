@@ -8,6 +8,8 @@
 
 May 26, 2001:
   * MAP_Hack.cpp:  Adjusted function names.
+  * OBJ_Base.cpp:  Objects should now theoretically stack properly.
+    (theoretically, since they aren't being generated yet)
 
 May 20, 2001:
   * More name adjustments, so new names show up in talk messages and
