@@ -302,7 +302,7 @@ hnDisplay::MoveCommand( hnDirection dir )
 		if ( map == NULL )
 			printf("AIEEE! %d\n",proposedSquare.z);
 		
-		if ( map && map->MapTile(proposedSquare.x,proposedSquare.y).entity != ENTITY_None )
+		if ( map && map->MapTile(proposedSquare.x,proposedSquare.y).entity != Entity_None )
 			attackInstead = true;
 	}
 	if ( attackInstead )

@@ -2,10 +2,11 @@
 #define __ENT_DEFINITION_H__
 
 #include "HN_Types.h"
+#include "HN_Color.h"
 
 int GetEntityDefinitionCount();
 
-typedef uint8 AlignType;
+typedef sint8 AlignType;
 enum {
 	Align_None,
 	Align_Chaotic,
@@ -13,17 +14,35 @@ enum {
 	Align_Lawful
 };
 
-typedef uint8 GenocideFlags;
+typedef uint16 GenocideFlags;
 enum {
-	Geno_Unique = 0x1,
-	Geno_NoHell = 0x2,
-	Geno_Hell = 0x4,
-	Geno_NoGenenerate = 0x8,
-	Geno_SmallGroup = 0x10,
-	Geno_LargeGroup = 0x20,
-	Geno_Genocidable = 0x40,
-	Geno_Genocided = 0x80,
-	Geno_NoCorpse = 0x100
+	Geno_Unique 		= 0x1000,	// generated once only
+	Geno_NoHell		= 0x0800,	// not generated in hell
+	Geno_Hell 		= 0x0400,	// only generated in hell
+	Geno_NoGenerate 	= 0x0200,	// not generated automatically
+	Geno_SmallGroup 	= 0x0080,	// appear in small groups
+	Geno_LargeGroup 	= 0x0040,	// appear in large groups
+	Geno_Genocidable 	= 0x0020,	// can be genocidable
+	Geno_NoCorpse 		= 0x0010,	// no corpse left behind
+	Geno_Frequency 		= 0x0007,	// creation frequency mask
+
+	Geno_Known 		= 0x0004,	// have been encountered
+	Geno_Genocided 		= 0x0002,	// has been genocided
+	Geno_Extinct		= 0x0001,	// under population control
+	Geno_Gone 		= (Geno_Genocided|Geno_Extinct)
+	
+};
+
+typedef uint8 MagicResistance;
+enum {
+	Resist_Fire		= 0x01,
+	Resist_Cold		= 0x02,
+	Resist_Sleep		= 0x04,
+	Resist_Disintegrate	= 0x08,
+	Resist_Electricity	= 0x10,
+	Resist_Poison		= 0x20,
+	Resist_Acid		= 0x40,
+	Resist_Stone		= 0x80
 };
 
 enum AttackType
@@ -100,6 +119,8 @@ enum DamageType
 	Damage_Curse			// random curse
 };
 
+
+
 typedef uint8 MonsterSound;
 enum
 {
@@ -108,7 +129,7 @@ enum
 	Sound_Mew,
 	Sound_Roar,
 	Sound_Growl,
-	Sound_Squeek,
+	Sound_Squeak,
 	Sound_Squawk,
 	Sound_Hiss,
 	Sound_Buzz,
@@ -185,7 +206,7 @@ enum{
 	M1_Regenerate	= 0x00800000,		// regenerates hit points
 	M1_SeeInvisible	= 0x01000000,		// can see invisible creatures
 	M1_Teleport	= 0x02000000,		// can teleport
-	M1_TControl	= 0x04000000,		// controls where teleport to
+	M1_TeleportControl	= 0x04000000,		// controls where teleport to
 	M1_Acid		= 0x08000000,		// acidic to eat
 	M1_Poison	= 0x10000000,		// poisonous to eat
 	M1_Carnivore	= 0x20000000,		// eats corpses
@@ -229,6 +250,21 @@ enum{
 };
 
 enum{
+	M3_WantsAmulet  = 0x00000001,		// would like to steal the amulet
+	M3_WantsBell	= 0x00000002,		// wants the bell
+	M3_WantsBook	= 0x00000004,		// wants the book
+	M3_WantsCandelabrum = 0x00000008,	// wants the candelabrum
+	M3_WantsArtifact =0x00000010,		// wants quest artifacts
+	M3_WantsAll	= 0x0000001f,		// wants any major artifact
+	M3_WaitForYou	= 0x00000040,		// waits to see you or get attacked
+	M3_Close	= 0x00000080,		// lets you close unless attacked
+	M3_Covetous	= 0x0000001f,		// wants something
+	M3_WaitMask	= 0x000000c0,		// waiting...
+	M3_Infravision	= 0x00000100,		// has infravision
+	M3_Infravisable = 0x00000200		// visible by infravision
+};
+
+enum{
 	Color_Black,
 	Color_Red,
 	Color_Green,
@@ -258,16 +294,15 @@ struct attack {
 
 struct entPrototype
 {
-	char *		name;
+	const char *	name;
 
 	uint8		type;			// type, as determined by ENT_Types.h
-	uint8		level;			// default monster level
-	uint8		speed;			// movement speed
-	uint8		ac;			// (base) armor class
-	uint8		mr;			// (base) magic resistance
+	sint8		level;			// default monster level
+	sint8		speed;			// movement speed
+	sint8		ac;			// (base) armor class
+	sint8		mr;			// (base) magic resistance
 	AlignType	alignment;		// basic alignment
 	GenocideFlags	genocide;		// creation/genocide value
-	uint8		spawnFrequency;		// how often do I get created?
 	struct attack	attack[MAX_ATTACKS];	// array of our attacks
 	uint16		corpseWeight;		// how heavy is my corpse?
 	uint16		corpseNutrition;	// how nutritious is our corpse?
@@ -278,8 +313,8 @@ struct entPrototype
 	uint8		corpseIntrinsics;	// intrinsics gained from corpse
 	uint32		flags1;			// boolean flags
 	uint32		flags2;			// more boolean flags
-	uint32		flags3;			// yet more boolean flags
-	uint32		color;			// suggested color
+	uint16		flags3;			// yet more boolean flags
+	uint8		color;			// suggested color
 };
 
 #endif

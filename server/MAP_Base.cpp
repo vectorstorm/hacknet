@@ -319,7 +319,7 @@ mapBase::UpdateMap( mapClient * destMap )
 					myTile->wall = realTile->wall;
 					changed = true;
 				}
-				entType type = (realTile->entity) ? (realTile->entity->GetType()) : ENTITY_None;
+				entType type = (realTile->entity) ? (realTile->entity->GetType()) : Entity_None;
 				
 				if ( myTile->entity != type )
 				{
@@ -374,7 +374,7 @@ mapBase::UpdateMap( mapClient * destMap )
 					//destMap->MarkPointChanged( x, y );
 				if ( myTile->entity )
 				{
-					myTile->entity = ENTITY_None;
+					myTile->entity = Entity_None;
 					destMap->MarkPointChanged( x, y );
 				}
 			}

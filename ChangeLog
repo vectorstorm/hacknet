@@ -6,6 +6,17 @@
 ---  most recent checkins at the bottom.
 ---
 
+November 10, 2002:
+  * ENT_Definition.cpp/.h:  Integrated NetHack's monster database
+    into HackNet.  Not actually being used for anything yet, but
+    it's there!  I've raised the code style issue of whether
+    enumerated values should be of the form CLASS_Value or
+    Class_Value.  I find Class_Value to be more easily readable,
+    and so am likely to convert old code to the new format.
+    (Object code was already written this way).
+  * HN_Color.h:  Standard color #defines have been moved here, for
+    use on both server and client side.
+
 November 9, 2002:
   * General:  It's been a long time, but life has finally slowed down
     again, and development has resumed!

@@ -15,7 +15,7 @@ mapClient::mapClient(uint8 width, uint8 height):
 	{
 		m_tile[i].material 	= 	MATERIAL_Unknown;
 		m_tile[i].wall 		= 	WALL_Solid;
-		m_tile[i].entity 	= 	ENTITY_None;
+		m_tile[i].entity 	= 	Entity_None;
 		m_tile[i].object	=	NULL;
 		m_tile[i].objectCount	=	0;
 	}
@@ -123,7 +123,7 @@ mapClientTile::mapClientTile()
 {
 	object = NULL;
 	objectCount = 0;
-	entity = ENTITY_None;
+	entity = Entity_None;
 }
 
 mapClientTile::~mapClientTile()

@@ -16,6 +16,7 @@ hacknetd_SOURCES =  						\
 		HN_Dungeon.cpp HN_Dungeon.h 			\
 		HN_Config_Server.h 				\
 		HN_Properties.h					\
+		HN_Convert.h					\
 								\
 		NET_Server.cpp NET_Server.h			\
 								\
@@ -23,10 +24,12 @@ hacknetd_SOURCES =  						\
 		MAP_Hack.cpp MAP_Hack.h 			\
 		MAP_Cavern.cpp MAP_Cavern.h 			\
 								\
+		ENT_Convert.h					\
 		ENT_Base.cpp ENT_Base.h 			\
 		ENT_Definition.cpp ENT_Definition.h 		\
 		ENT_GridBug.cpp ENT_GridBug.h 			\
 		ENT_Human.cpp ENT_Human.h			\
+		ENT_Manager.cpp ENT_Manager.h			\
 								\
 		OBJ_Convert.h 					\
 		OBJ_Base.cpp OBJ_Base.h				\

@@ -1,14 +1,68 @@
 #ifndef __ENT_TYPES_H__
 #define __ENT_TYPES_H__
 
+typedef uint8 EntityType;
 enum {
-        ENTITY_None,                    // a mapobjectupdate with this type means nothing's here any more.
-		        
-	ENTITY_Ant,				// types of creatures.
-	ENTITY_GridBug,
-	ENTITY_Human,
-
-        ENTITY_MAX
+	Entity_None,
+	Entity_Ant,
+	Entity_Blob,
+	Entity_Cockatrice,
+	Entity_Dog,
+	Entity_Eye,
+	Entity_Feline,
+	Entity_Gremlin,
+	Entity_Humanoid,
+	Entity_Imp,
+	Entity_Jelly,
+	Entity_Kobold,
+	Entity_Leprechaun,
+	Entity_Mimic,
+	Entity_Nymph,
+	Entity_Orc,
+	Entity_Piercer,
+	Entity_Quadruped,
+	Entity_Rodent,
+	Entity_Spider,
+	Entity_Trapper,
+	Entity_Unicorn,
+	Entity_Vortex,
+	Entity_Worm,
+	Entity_Xan,
+	Entity_Light,		// curses!  We were going so well up until now!
+	Entity_Zruty,
+	Entity_Angel,
+	Entity_Bat,
+	Entity_Centaur,
+	Entity_Dragon,
+	Entity_Elemental,
+	Entity_Fungus,
+	Entity_Gnome,
+	Entity_Giant,		// and now it's just going down the drain..
+	Entity_Jabberwock,
+	Entity_Kop,
+	Entity_Lich,
+	Entity_Mummy,
+	Entity_Naga,
+	Entity_Ogre,
+	Entity_Pudding,
+	Entity_QuantumMechanic,
+	Entity_RustMonster,
+	Entity_Snake,
+	Entity_Troll,
+	Entity_UmberHulk,
+	Entity_Vampire,
+	Entity_Wraith,
+	Entity_Xorn,
+	Entity_Yeti,
+	Entity_Zombie,
+	Entity_Golem,
+	Entity_Human,
+	Entity_Ghost,
+	Entity_Demon,
+	Entity_Eel,
+	Entity_Lizard,
+	Entity_WormTail,
+	Entity_Type_Max
 };
 typedef uint8 entType;
 

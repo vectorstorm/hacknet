@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "ENT_Manager.h"
 #include "HN_Game.h"
 #include "MAP_Hack.h"
 #include "NET_Server.h"
@@ -50,6 +51,8 @@ hnGame::hnGame()
 
 	printf("Initialising objects...\n");
 	objManager::Startup();
+	printf("Initialising monsters...\n");
+	entManager::Startup();
 	printf("Generating maps...\n");
 	hnDungeon::Startup( MAX_LEVELS, LEVEL_WIDTH, LEVEL_HEIGHT );
 	hnGroupManager::Startup( MAX_CLIENTS );
@@ -64,6 +67,8 @@ hnGame::~hnGame()
 {
 	hnGroupManager::Shutdown();
 	hnDungeon::Shutdown();
+	entManager::Shutdown();
+	objManager::Shutdown();
 }
 
 char *

@@ -8,6 +8,7 @@
 #include "OBJ_Types.h"
 #include "OBJ_Definition.h"
 #include "HN_Properties.h"
+#include "HN_Convert.h"
 
 /* Skills */
 
