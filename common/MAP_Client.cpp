@@ -19,7 +19,8 @@ mapClient::mapClient(uint8 width, uint8 height):
 		m_tile[i].material 	= 	MATERIAL_Unknown;
 		m_tile[i].wall 		= 	WALL_Solid;
 		m_tile[i].entity 	= 	ENTITY_None;
-		m_tile[i].object	=	OBJECT_None;
+		m_tile[i].object	=	NULL;
+		m_tile[i].objectCount	=	0;
 	}
 	
 	m_backgroundType.material = MATERIAL_Dirt;
@@ -60,26 +61,6 @@ mapClient::MapTile(uint8 x, uint8 y)
 		return m_tile[x + (y * m_width)];
 
 	return m_backgroundType;
-}
-
-void
-mapClient::RemoveObject( objType object )
-{
-	// no current way to do this.  :)  Oops!
-}
-
-void
-mapClient::PutObjectAt( objType object, uint8 x, uint8 y )
-{
-	mapClientTile & tile = MapTile(x,y);
-	tile.object = object;
-}
-
-void
-mapClient::MoveObjectTo( objType object, uint8 x, uint8 y )
-{
-	RemoveObject(object);
-	PutObjectAt(object,x,y);
 }
 
 void
@@ -143,7 +124,8 @@ mapClient::ResetChanged()
 
 mapClientTile::mapClientTile()
 {
-	object = OBJECT_None;
+	object = NULL;
+	objectCount = 0;
 	entity = ENTITY_None;
 }
 

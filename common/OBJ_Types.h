@@ -17,6 +17,7 @@ enum
 typedef uint8 objType;
 
 enum {
+	BC_Unknown,
 	BC_Uncursed,
 	BC_Blessed,
 	BC_Cursed
