@@ -8,6 +8,7 @@ objBase::objBase( uint32 itemID ):
 	m_itemID(itemID),
 	m_blesscurse(BC_Uncursed),
 	m_count(1),
+	m_flags(0),
 	m_next(this),
 	m_prev(this)
 {
@@ -62,7 +63,14 @@ objBase::SetPosition( const hnPoint & pos )
         m_position = pos;
 }
 
-
+void
+objBase::SetWieldedPrimary( bool wielded )
+{
+	if ( wielded )
+		m_flags |= FLAG_WieldedPrimary;
+	else
+		m_flags &= ~FLAG_WieldedPrimary;
+}
 
 void
 objBase::AddObject( objBase * object )
@@ -213,7 +221,7 @@ objBase::ExactMatch( const objDescription &desc )
 		if ( desc.blesscurse == BC_Unknown ||
 			desc.blesscurse == m_blesscurse )
 		{
-			if ( desc.count == m_count )
+			if ( desc.count == m_count && desc.flags == m_flags )
 			{
 				matches = true;
 			}
@@ -233,7 +241,7 @@ objBase::PartialMatch( const objDescription &desc )
 		if ( desc.blesscurse == BC_Unknown ||
 			desc.blesscurse == m_blesscurse )
 		{
-			if ( desc.count <= m_count )
+			if ( desc.count <= m_count && desc.flags == m_flags )
 			{
 				matches = true;
 			}
@@ -313,4 +321,5 @@ objBase::FillDescription(objDescription &desc)
 	desc.itemID = m_itemID;
 	desc.count = m_count;
 	desc.blesscurse = m_blesscurse;
+	desc.flags = m_flags;
 }

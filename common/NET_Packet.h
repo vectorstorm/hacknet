@@ -26,7 +26,8 @@ enum{
 	SPT_DroppedItem,	// this item was just dropped
 	SPT_WieldedItem,	// this item was just wielded
 	SPT_GroupData,		// sending information on the player's group.
-	SPT_Inventory,
+	SPT_Inventory,		// this contains our full inventory info
+	SPT_InventoryItem,	// update on a single inventory item
 	SPT_ObjectStats,	// object stats packet
 	SPT_ObjectName,		// object name packet
 	SPT_QuitConfirm,	// yes, you're out of the game
@@ -208,6 +209,7 @@ public:
 	bool			MapEntity( netMapEntity &packet );
 	bool			MapObjectList( netMapObjectList &packet );
 	bool			Inventory( netInventory &packet );
+	bool			InventoryItem( netInventoryItem &packet );
 	bool			TakenItem( netInventoryItem &packet );
 	bool			DroppedItem( netInventoryItem &packet );
 	bool			WieldedItem( netInventoryItem &packet );

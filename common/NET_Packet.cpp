@@ -51,6 +51,7 @@ netMetaPacket::ObjDescription( objDescription &object )
 {
 	Uint16(object.type);
 	Uint16(object.itemID);
+	Uint16(object.flags);
 	Uint8(object.blesscurse);
 	Uint8(object.count);
 
@@ -276,6 +277,18 @@ netMetaPacket::Inventory( netInventory &packet )
 	for ( uint16 i = 0; i < count; i++ )
 		ObjDescription( packet.GetObject(i) );
 	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::InventoryItem( netInventoryItem &packet )
+{
+	m_error = false;
+
+	sint8 type = SPT_InventoryItem;
+	Sint8(type);
+	NetInventoryItem(packet);
+
 	return (!m_error);
 }
 

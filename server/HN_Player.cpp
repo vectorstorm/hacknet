@@ -379,6 +379,8 @@ hnPlayer::DoAction()
 			break;
 		case queuedTurn::Wield:
 			success = m_entity->Wield( m_queuedTurn.wield.object );
+			if ( m_queuedTurn.wield.object )
+				m_queuedTurn.wield.object->FillDescription(m_queuedTurn.wield.desc);
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
@@ -583,6 +585,7 @@ hnPlayer::SendUpdate()
 						{
 							updatedID = j;
 							object->FillDescription( m_clientInventory[j] );
+		//					netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
 							inventoryUpdated = true;
 						}
 						break;
@@ -607,6 +610,7 @@ hnPlayer::SendUpdate()
 							m_clientInventory[j] = result;
 							m_clientInventoryMapping[j] = object;
 							slotUsed[j] = true;
+		//					netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
 							break;
 						}
 					}
@@ -623,6 +627,7 @@ hnPlayer::SendUpdate()
 								finished = true;
 								inventoryUpdated = true;
 								slotUsed[j] = true;
+		//						netServer::GetInstance()->SendInventoryItem( m_clientInventory[j], j );
 								break;
 							}
 						}
@@ -640,6 +645,7 @@ hnPlayer::SendUpdate()
 			{
 				m_clientInventory[i].count = 0;
 				inventoryUpdated = true;
+		//		netServer::GetInstance()->SendInventoryItem( m_clientInventory[i], i );
 			}
 		}
 		
@@ -652,6 +658,7 @@ hnPlayer::SendUpdate()
 				inven.SetObject(i, m_clientInventory[i]);
 
 			netServer::GetInstance()->SendInventory(inven);
+			
 		}
 	}
 
@@ -668,7 +675,7 @@ hnPlayer::SendUpdate()
 			netServer::GetInstance()->SendDroppedItem( m_completedTurn.drop.desc );
 			break;
 		case queuedTurn::Wield:
-			netServer::GetInstance()->SendWieldedItem( m_completedTurn.wield.desc, m_completedTurn.wield.inventorySlot );
+			//netServer::GetInstance()->SendWieldedItem( m_completedTurn.wield.desc, m_completedTurn.wield.inventorySlot );
 			break;
 	}
 	m_completedTurn.type = queuedTurn::None;

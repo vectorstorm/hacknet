@@ -16,6 +16,7 @@ class objBase
 	uint8		m_blesscurse;
 	uint8		m_count;	// how many of us are there?
 
+	uint16		m_flags;
 
 	objBase *	m_next;
 	objBase *	m_prev;
@@ -34,6 +35,9 @@ public:
 	uint32			GetItemID() { return m_itemID; }
 
 	const char *		GetName();
+
+	void			SetWieldedPrimary(bool);
+	void			SetWieldedSecondary(bool);
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it

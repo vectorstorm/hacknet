@@ -163,7 +163,7 @@ entBase::Drop( objBase *object, uint8 count )
 		if ( map )	// this should never fail.
 		{
 			objBase *dropped = m_inventory->RemoveObjectQuantity(object,count);
-			
+			dropped->SetWieldedPrimary(false);
 			hnPoint pos = GetPosition();
 			map->MapTile(pos.x,pos.y).object->AddObject(dropped);
 			result = true;
@@ -178,6 +178,11 @@ entBase::Wield( objBase *object )
 	bool result = false;
 	if ( IsValidInventoryItem(object) || object == NULL )
 	{
+		for ( int i = 0; i < m_inventory->ObjectCount(); i++ )
+			m_inventory->GetObject(i)->SetWieldedPrimary(false);
+			
+		if ( object != NULL )
+			object->SetWieldedPrimary(true);
 		m_wieldedObject = object;
 		result = true;
 	}

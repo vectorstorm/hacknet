@@ -317,7 +317,7 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 				switch( m_inventoryMode )
 				{
 					case ISM_Wield:
-						if ( m_wieldedItem != inventorySelected )	// if we're not already wielding this item...
+						if ( !(m_inventory[inventorySelected].flags & FLAG_WieldedPrimary) )	// if we're not already wielding this item...
 						{
 							WieldCommand(inventorySelected);
 							m_mode = MODE_Normal;
@@ -887,15 +887,23 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 					color_set( COLOR_WHITE, NULL );
 					somethingInThisCategory = true;
 				}
-				objRegistry::GetInstance()->GetObjectDescriptionText(objects[i],buffer,256);
 				move(y++,x);
 				
-				if ( inventory && m_wieldedItem == i )
+				/*if ( inventory && m_wieldedItem == i )
 					printw("%c - %s (weapon in hands)", inventoryLetters[i], buffer);
 				else if ( drawletters )
 					printw("%c - %s", inventoryLetters[i], buffer);
-				else
+				*/
+				if ( drawletters )
+				{
+					GetInventoryItemText(i,buffer,256);
 					printw("%s", buffer);
+				}	
+				else
+				{
+					objRegistry::GetInstance()->GetObjectDescriptionText(objects[i],buffer,256);
+					printw("%s", buffer);
+				}
 			}
 		}
 	}

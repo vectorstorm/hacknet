@@ -77,6 +77,7 @@ public:
 	void		SendMapTile( const hnPoint & loc, const mapTile & floorType );  // new floortype
 	void		SendMapUpdateBBox( netMapUpdateBBox & bbox );
 	void		SendInventory( netInventory &inven );
+	void		SendInventoryItem( const objDescription &desc, int id );
 	void		SendMapObjectList( const hnPoint & loc, int numObjects, entType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
 	void		SendDungeonReset( sint8 levelCount );
 	void		SendMapReset( int width, int height, int depth );

@@ -418,6 +418,18 @@ netServer::SendInventory( netInventory &inven )
 }
 
 void
+netServer::SendInventoryItem( const objDescription &desc, int id )
+{
+	assert( m_metaPacket );
+	
+	netInventoryItem packet;
+	packet.object = desc;
+	packet.inventorySlot = id;
+	
+	m_metaPacket->InventoryItem(packet);
+}
+
+void
 netServer::SendGroupData( int groupMemberCount, int groupMemberTurns, bool clientSubmitted )
 {
 	netGroupData packet;

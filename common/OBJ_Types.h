@@ -29,18 +29,24 @@ typedef uint16 objType;
 
 
 enum {
-	WORN_Suit,
-	WORN_Helmet,
-	WORN_Shield,
-	WORN_Boots,
-	WORN_Gloves,
-	WORN_Amulet,
-	WORN_LeftRing,
-	WORN_RightRing,
-	WORN_MAX
-};
-typedef uint16 wornType;
+	FLAG_Worn_Suit 		= 0x0001,
+	FLAG_Worn_Helm 		= 0x0002,
+	FLAG_Worn_Shield 	= 0x0004,
+	FLAG_Worn_Boots 	= 0x0008,
+	FLAG_Worn_Gloves 	= 0x0010,
+	FLAG_Worn_Amulet 	= 0x0020,
+	FLAG_Worn_LeftRing 	= 0x0040,
+	FLAG_Worn_RightRing 	= 0x0080,
 	
+	FLAG_WieldedPrimary 	= 0x0100,
+	FLAG_WieldedSecondary 	= 0x0200,
+};
+#define FLAG_Worn		(FLAG_Worn_Suit|FLAG_Worn_Helm|FLAG_Worn_Shield \
+				|FLAG_Worn_Boots|FLAG_Worn_Gloves \
+				|FLAG_Worn_Amulet|FLAG_Worn_Amulet \
+				|FLAG_Worn_LeftRing|FLAG_Worn_RightRing)
+#define FLAG_Wielded		(FLAG_WieldedPrimary|FLAG_WieldedSecondary)
+
 
 enum {
 	BC_Unknown,
@@ -53,6 +59,7 @@ struct objDescription
 {
 	objType		type;
 	uint16		itemID;		// what type of object
+	uint16		flags;
 	uint8		blesscurse;	// blessed, cursed, or uncursed.
 	uint8		count;		// how many of them?
 };

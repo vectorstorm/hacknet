@@ -125,9 +125,6 @@ objManager::RandomItem(uint8 level, objType type)
 		type = g_objProbs[entry].type;
 	}
 
-	if ( type == OBJ_TYPE_Ring )
-		printf("GENERATED A RING!  HOORAY!\n");
-	
 	int value = rand() % m_objectTotalProbability[type];
 	
 	// walk through our list of objects until we find the one referred to by 'value'.
