@@ -107,9 +107,12 @@ hnGame::ClientJoined(int playerID)
 		y = (rand() % LEVEL_HEIGHT);
 
 		if ( count++ > 500 )
-			break;			// AIEE!!!
-
-	}while ( hnDungeon::GetLevel(z)->WallAt(x,y) & WALL_Any );
+		{
+			netServer::GetInstance()->DisconnectClientID(playerID);
+			return;			// AIEE!!!  Couldn't place the player!
+		}
+		
+	}while ( hnDungeon::GetLevel(z)->WallAt(x,y) & WALL_Any || hnDungeon::GetLevel(z)->MapTile(x,y).entity != NULL );
 
 	printf("Setting playerID %d initial position to: (%d,%d,%d)\n", playerID, x, y, z);
 	m_player[playerID] = new entPlayer( playerID, hnPoint(x,y,z) );

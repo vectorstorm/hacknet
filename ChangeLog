@@ -18,6 +18,14 @@ April 30, 2001:
   the first monster implemented?)  :)  TODO:  Implement a factory method
   to create monsters without the map having to create them explicitly.
 
+  Bugfix so server hopefully won't crash if it fails to place a new player
+  onto level 1 after 500 attempts, but will instead disconnect the new
+  player (This shouldn't ever happen, of course).  Another bugfix so
+  the server won't place a new player on top of an existing entity
+  (including either a player or a monster).  Honestly, it ought to place
+  the player as near the up-stairs as possible, but since there's currently
+  no up-stairs on the top level, this isn't done yet.
+
 April 29, 2001:
   Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
   a bug in the NetHack level generation code, involving the creation of
