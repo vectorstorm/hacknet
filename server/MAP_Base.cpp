@@ -339,7 +339,42 @@ mapBase::UpdateMap( mapClient * destMap )
 					myTile->entity = type;
 					changed = true;
 				}
+				
+				bool reconstructDesc = false;
+				int realObjectCount = realTile->object->ObjectCount();
+				
+				if ( realObjectCount != myTile->objectCount )
+				{
+					reconstructDesc = true;
+				}
+				else
+				{
+					for ( int i = 0; i < myTile->objectCount; i++ )
+					{
+						objBase *object = realTile->object->GetObject(i);
+						if ( !object->ExactMatch( &myTile->object[i] ) )
+						{
+							reconstructDesc = true;
+						}
+					}
+				}
+				if ( reconstructDesc )
+				{
+					// delete our current descriptions.
+					delete [] myTile->object;
 					
+					myTile->object = new objDescription[ realObjectCount ];
+
+					for ( int i = 0; i < realObjectCount; i++ )
+					{
+						realTile->object->GetDescription( myTile->object[i], i );
+					}
+
+					myTile->objectCount = realObjectCount;
+					
+					changed = true;
+				}
+				
 				if ( changed )
 					destMap->MarkPointChanged( x, y );
 			}

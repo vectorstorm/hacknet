@@ -349,10 +349,15 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 			color_set( COLOR_WHITE, NULL );
 			theChar = '@';			// draw '@' instead of ground.  This is a HACK!
 		}
-		if ( tile.entity == ENTITY_GridBug )
+		else if ( tile.entity == ENTITY_GridBug )
 		{
 			color_set( COLOR_MAGENTA, NULL );
 			theChar = 'x';
+		}
+		else if ( tile.objectCount > 0 )
+		{
+			color_set( COLOR_WHITE, NULL );
+			theChar = ')';
 		}
 		mvaddch(y + 3,x,theChar);
 		move(m_position.y + 3,m_position.x);

@@ -5,11 +5,12 @@
 
 class objLongSword : public objBase
 {
+	static char *	s_name;
 public:
 			objLongSword( const hnPoint &where );
 	virtual 	~objLongSword();
 
-	
+	virtual const char *	GetName() { return s_name; }
 };
 
 #endif // __OBJ_LONGSWORD_H__

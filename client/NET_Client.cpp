@@ -236,7 +236,12 @@ netClient::Go()
 							tile.wall = bbox.wall[i+(j*bbox.width)];
 							point.Set(bbox.loc.x+i, bbox.loc.y+j, 0);
 							tile.entity = bbox.entityType[i+(j*bbox.width)];
+							tile.objectCount = bbox.objectCount[i+(j*bbox.width)];
+							tile.object = new objDescription[tile.objectCount];
+							for ( int k = 0; k < tile.objectCount; k++ )
+								tile.object[k] = bbox.object[i+(j*bbox.width)][k];
 							m_display->UpdateMapTile( hnPoint(bbox.loc.x+i, bbox.loc.y+j, bbox.loc.z), tile);
+							delete [] tile.object;
 						}
 
 					break;

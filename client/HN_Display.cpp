@@ -40,12 +40,22 @@ hnDisplay::UpdateMapTile(const hnPoint &point, const mapClientTile &tile)
 {
 	if ( m_map[point.z] != NULL )
 	{
+		mapClientTile *myTile = &m_map[point.z]->MapTile(point.x,point.y);
+		
 		if ( tile.material != MATERIAL_Unknown )
 			m_map[point.z]->MaterialAt(point.x,point.y) = tile.material;
 		if ( tile.wall != WALL_Unknown )
 			m_map[point.z]->WallAt(point.x,point.y) = tile.wall;
 		
-		m_map[point.z]->MapTile(point.x,point.y).entity = tile.entity;
+		myTile->entity = tile.entity;
+
+		delete [] myTile->object;
+		myTile->object = new objDescription[tile.objectCount];
+
+		for ( int i = 0; i < tile.objectCount; i++ )
+			myTile->object[i] = tile.object[i];
+
+		myTile->objectCount = tile.objectCount;
 	}
 }
 

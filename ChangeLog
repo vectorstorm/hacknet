@@ -6,6 +6,16 @@
 ---  most recent checkins at the bottom.
 ---
 
+June 26, 2001:
+  * Finished initial basic implementation of objects.  The server now
+    adds visible objects to the player's copy of the map data, transmits
+    them to the client, and the client displays them.  The server even
+    sends 'You see a long sword here' messages (hardcoded).  TODO:
+    Client should generate those 'You see a...' messages by itself,
+    rather than have the server transmit them.  TODO:  Client needs a
+    way to get an object 'name' string from the enumerated constant,
+    without including the whole OBJ_Base hierarchy.
+
 June 20, 2001:
   * Finally made a decision about how to have server and client talk
     to each other about objects (only about six weeks late!)  Thanks
