@@ -29,24 +29,6 @@ class hnPlayer
 {
 	int		m_playerID;				// the ID the server assigns to us.  NOT TO BE SAVED.
 	entBase *	m_entity;
-
-	int		m_strength;
-	int		m_dexterity;
-	int		m_constitution;
-	int		m_intelligence;
-	int		m_wisdom;
-	int		m_charisma;
-
-	int		m_hitPointMax;
-	int		m_hitPoints;
-
-	int		m_spellPointMax;
-	int		m_spellPoints;
-
-	
-	int		m_level;
-
-	int		m_experiencePoints;
 	
 	mapBase **	m_map;
 	int		m_mapCount;

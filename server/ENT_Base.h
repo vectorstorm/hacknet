@@ -4,6 +4,7 @@
 #include "HN_Enum.h"
 #include "HN_Point.h"
 #include "ENT_Types.h"
+#include "HN_Status.h"
 
 #define MAX_NAME_BYTES (128)
 
@@ -11,6 +12,8 @@ class entBase
 {
 	entType			m_type;
 	hnPoint			m_position;
+
+	hnStatus		*m_status;
 	
 	bool			m_playerControlled;
 	

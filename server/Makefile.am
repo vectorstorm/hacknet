@@ -1,6 +1,6 @@
 bin_PROGRAMS= hacknetd
 
-hacknetd_LDADD = ../common/libpacket.a ../common/libpoint.a
+hacknetd_LDADD = ../common/libpacket.a ../common/libpoint.a ../common/libstatus.a
 hacknetd_SOURCES = HN_Main_Server.cpp ENT_Base.cpp ENT_Base.h ENT_GridBug.cpp ENT_GridBug.h \
 		ENT_Human.cpp ENT_Human.h OBJ_Base.cpp OBJ_Base.h HN_Group.cpp HN_Group.h \
 		HN_Game.cpp HN_Game.h HN_Player.cpp HN_Player.h HN_Dungeon.cpp HN_Dungeon.h \

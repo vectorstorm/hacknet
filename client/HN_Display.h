@@ -5,6 +5,7 @@
 #include "HN_Point.h"
 #include "MAP_Client.h"
 #include "ENT_Types.h"
+#include "HN_Status.h"
 
 #define MAX_NAME_BYTES (128)
 
@@ -14,10 +15,12 @@ class hnDisplay
 {
 protected:
 	char		m_name[MAX_NAME_BYTES];
-	netClient 	*m_client;
+	netClient *	m_client;
 	hnPoint		m_position;
-	mapClient	**m_map;	// this is our map of all the levels...
+	mapClient **	m_map;	// this is our map of all the levels...
 	int		m_levelCount;
+
+	hnStatus *	m_status;	// status of our player.
 
 	int		m_groupMemberCount;		// how many members in my group.
 	int		m_groupMemberTurnCount;		// how many members of my group have submitted turns so far.

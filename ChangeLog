@@ -13,6 +13,8 @@ May 16, 2001:
     aborts sending empty packets, instead of actually sending them.
   * ENT_GridBug.cpp, ENT_Human.cpp:  Entities now set their names during
     construction.  This in preparation for a combat system.
+  * HN_Status.cpp/.h:  Added common source/header files for a class to
+    manage player/monster statistics and status ailments.
 
 May 13, 2001:
   * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.

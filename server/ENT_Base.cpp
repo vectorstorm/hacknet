@@ -15,6 +15,7 @@ entBase::entBase( entType type, const hnPoint & pos, bool playerControlled ):
 	m_maxHitPoints(1),	// the proper amount on us.
 	m_changedLevel(false)
 {
+	m_status = new hnStatus;
 }
 
 entBase::~entBase()

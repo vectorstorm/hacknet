@@ -20,6 +20,8 @@ hnDisplay::hnDisplay(char * name):
 		strncpy( m_name, "Unknown", MAX_NAME_BYTES );
 		m_name[MAX_NAME_BYTES-1] = '\0';
 	}
+
+	m_status = new hnStatus;
 }
 
 hnDisplay::~hnDisplay()
