@@ -121,8 +121,11 @@ hnDisplay::Refresh()
 				if ( objCount > 1 )
 					snprintf(buffer, 256, "There are several objects here.");
 				else
-					snprintf(buffer, 256, "You see here a %s.", GetObjectName(topObject.type) );
-
+				{
+					char objectDesc[256];
+					GetObjectDescriptionText(topObject,objectDesc,256);
+					snprintf(buffer, 256, "You see here %s.", objectDesc );
+				}
 				TextMessage(buffer);
 
 				Refresh();
@@ -193,4 +196,6 @@ void
 hnDisplay::TakeCommand( objDescription *desc, uint8 stackID )
 {
 	m_client->SendTake(desc,stackID);
+
+	PostTurnSubmit();
 }

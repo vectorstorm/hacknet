@@ -24,6 +24,9 @@
 	int color_set(short,void * ){}
 #endif
 
+#define min(x,y) ((x<y)?x:y)
+
+
 hnDisplayTTY::hnDisplayTTY( char * name ):
 	hnDisplay(name),
 	m_mode(MODE_Normal),
@@ -116,6 +119,12 @@ hnDisplayTTY::EventLoop()
 				else
 					HandleKeypressNormal( commandkey );
 				break;
+			case MODE_InventoryDisplay:
+				HandleKeypressInventoryDisplay( commandkey );
+				break;
+			case MODE_InventorySelect:
+				HandleKeypressInventorySelect( commandkey );
+				break;
 			case MODE_Talking:
 				HandleKeypressTalking( commandkey );
 				break;
@@ -199,6 +208,7 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			HandleTake();
 			break;
 		default:
+			TextMessage("Unknown keypress.\n");
 			//printf("Got unknown keypress.\n");
 			break;
 	}
@@ -227,6 +237,32 @@ hnDisplayTTY::HandleKeypressMore( int commandKey )
 		m_awaitingMore = false;
 	}
 	m_needsRefresh = true;		// need to show next line.
+}
+
+void
+hnDisplayTTY::HandleKeypressInventoryDisplay( int commandKey )
+{
+	switch ( commandKey )
+	{
+		default:
+			// TODO:  Check commandkey is a valid alphanumeric character!
+			m_mode = MODE_Normal;
+			m_needsRefresh = true;
+			break;
+	}
+}
+
+void
+hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
+{
+	switch ( commandKey )
+	{
+		default:
+			// TODO:  Check commandkey is a valid alphanumeric character!
+			m_mode = MODE_Normal;
+			m_needsRefresh = true;
+			break;
+	}
 }
 
 void
@@ -293,9 +329,8 @@ hnDisplayTTY::HandleInventory()
 		TextMessage("You are empty-handed.");
 	else
 	{
-		char buffer[256];
-		snprintf(buffer,256,"You are carrying a %s.", GetObjectName( m_inventory[0].type ) );
-		TextMessage(buffer);
+		m_mode = MODE_InventoryDisplay;
+		m_needsRefresh = true;
 	}
 }
 
@@ -565,12 +600,42 @@ hnDisplayTTY::Refresh()
 			// now put our cursor back onto us, when in normal mode.
 			move(m_position.y + 3,m_position.x);
 		}
+
+		if ( m_mode == MODE_InventoryDisplay ||
+			m_mode == MODE_InventorySelect )
+		{
+			DrawInventory();
+		}
 	
 		refresh();
 #endif
 		m_needsRefresh = false;
 	}
 	hnDisplay::Refresh();
+}
+
+void
+hnDisplayTTY::DrawInventory()
+{
+	const char inventoryLetters[56] =
+	{
+		'a','b','c','d','e','f','g','h','i','j','k','l','m',
+		'n','o','p','q','r','s','t','u','v','w','x','y','z',
+		'A','B','C','D','E','F','G','H','I','J','K','L','M',
+		'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+	};
+	int x = 24;
+	int y = 0;
+	char buffer[256];
+
+	for ( int i = 0; i < min(56,m_inventoryCount); i++ )
+	{
+		move(y++,x);
+		GetObjectDescriptionText(m_inventory[i],buffer,256);
+		printw("%c - %s", inventoryLetters[i], buffer);
+	}
+	move(y,x);
+	printw("(end)");
 }
 
 void

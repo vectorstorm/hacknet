@@ -6,8 +6,10 @@
 class hnDisplayTTY : public hnDisplay
 {
 	enum inputMode{
-		MODE_Normal,	// business as usual
-		MODE_Talking	// we're in the middle of trying to speak.
+		MODE_Normal,		// business as usual
+		MODE_InventoryDisplay,	// looking at our inventory
+		MODE_InventorySelect,	// selecting something from our inventory
+		MODE_Talking		// we're in the middle of trying to speak.
 	};
 
 	inputMode	m_mode;
@@ -41,9 +43,13 @@ public:
 	void		HandleKeypressNormal( int key );
 	void		HandleKeypressMore( int key );
 	void		HandleKeypressTalking( int key );
+	void		HandleKeypressInventoryDisplay( int key );
+	void		HandleKeypressInventorySelect( int key );
 
 	void		HandleTake();
 	void		HandleInventory();
+
+	void		DrawInventory();
 	
 	virtual void	PostTurnSubmit();
 	

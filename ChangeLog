@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 8, 2001:
+  * Added basic inventory UI to TTY client.
+  * Added GetObjectDescriptionText to OBJ_Types.
+
 July 7, 2001:
   * Added inventory to ENT_Base.cpp/.h, and Take now moves objects
     into the inventory, instead of deleting them.

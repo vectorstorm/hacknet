@@ -25,7 +25,6 @@ enum
 };
 typedef uint16 objType;
 
-const char * GetObjectName(objType objectID);
 
 enum {
 	BC_Unknown,
@@ -40,5 +39,8 @@ struct objDescription
 	uint8	blesscurse;	// blessed, cursed, or uncursed.
 	uint8	count;		// how many of them?
 };
+
+const char * 	GetObjectName(objType objectID);
+void		GetObjectDescriptionText(const objDescription &desc, char *buffer, uint16 bufferLen);
 
 #endif //__OBJ_TYPES_H__
