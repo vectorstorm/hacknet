@@ -21,7 +21,15 @@ New since 0.0.1, communication between players, rudimentary line-of-sight
 clients on different servers.
 
 
-Installation information:
+Installing from a source package:
+-------
+
+Run ./configure, then type 'make' to make the hacknet server and client.
+'make install' should install them somewhere sensible, but it's probably
+easier to just run them straight out of the src directory -- that's what
+I do!
+
+Installing from CVS sources:
 -------
 
 Run ./autogen.sh to create and execute a standard configure script.  Then
@@ -29,8 +37,28 @@ type 'make' to make the hacknet server and client.  'make install' should
 install them somewhere sensible, but it's probably easier to just run them
 straight out of the src directory -- that's what I do!
 
-'hacknetd' is the server, 'hacknet' is the curses/pthread-based TTY client.
-Run hacknetd first, then up to ten copies of hacknet.
+
+
+Running HackNet:
+--------
+
+As mentioned under 'installing', I recommend running HackNet directly
+from the src directory at the moment, so cd into that directory.
+
+On the server machine, run the hacknetd binary.  You should receive
+several screenfulls of debugging output as five dungeon levels are
+constructed.
+
+On the client, run the hacknet binary, passing the server address
+as the final command line argument.  Hacknet will use your user
+name as your player name, unless you give it a different name with
+the -u option.
+
+Example:  To connect to a server on the local computer with the
+name 'Foo', use the following command line:
+
+./hacknet -uFoo localhost
+
 
 Caveats:
 --------
@@ -38,7 +66,7 @@ Caveats:
 Note that currently the HackNet client is hard-wired to connect to a server
 running on port 9274, and the server is hard-wired to use that port.  Is
 there any demand to allow it to use an arbitrary port?  I should probably
-go about adding that functionality..
+stop being lazy and make it possible.
 
 Note that currently quite a lot of data gets transferred to the client
 when changing levels -- ~7k, which can take some amount of time on modem
