@@ -15,20 +15,20 @@ int main( int argc, char *argv[] )
 	// parse arguments..
 
 	char * host = "localhost";
-	if ( argc > 0 )
+	if ( argc > 1 )
 	{
 		//for (int i = 1; i < argc-1; i++ )
 		//{
 		//	// parse options here
 		//}
-		
 		host = argv[argc-1];
 	}
 
 
 	printf("Starting hacknet client...\n");
-	
+	printf("Contacting %s...\n", host);
 	hnDisplay *display = NULL;
+	
 #ifdef TTY_DISPLAY
 	display = new hnDisplayTTY;
 #endif

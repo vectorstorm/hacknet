@@ -9,6 +9,15 @@ April 24, 2001:
   to UDP is in the cards...  On the other hand, automatic guaranteed 
   delivery is a luxury I'm not eager to throw out.
 
+  Oops.  My mistake -- another checkin so that the client still connects
+  to localhost if called without parameters, instead of trying to
+  connect to ./hacknet (or however you invoke the client).  Until the
+  game is more playable, 99% of the time, connecting to localhost is
+  going to be what you actually want to do, for testing purposes.  Once
+  the game is more playable, I'll remove this default behaviour, and
+  force an explicit hostname.  (Perhaps a ~/.hacknetrc file which lists,
+  among other options, a default server?)
+
 ---
 April 23, 2001:
   Minor adjustment to temporary movement code still in HN_Game.cpp to fix
