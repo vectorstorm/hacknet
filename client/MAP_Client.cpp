@@ -80,7 +80,8 @@ mapClient::MoveObjectTo( objType object, uint8 x, uint8 y )
 void
 mapClient::RemoveEntity( entType entity )
 {
-	/*const hnPoint & point = entity->GetPosition();
+	/*  No current way to do this, either.
+	const hnPoint & point = entity->GetPosition();
 	mapClientTile & tile = MapTile(point.x, point.y);
 	
 	tile.entity = ENTITY_None;*/

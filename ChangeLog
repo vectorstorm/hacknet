@@ -8,6 +8,8 @@
 
 May 8, 2001:
   * HN_Group.cpp: Fixed bug so monsters get assigned to groups correctly.
+  * ENT_Base.cpp: Fixed bug, allowing travel in northwest direction again.
+  * Finished general code cleanup.  Now ready to continue active development.
 
 May 7, 2001:
   * Updated documentation.

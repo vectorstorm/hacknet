@@ -5,6 +5,33 @@
 #include <assert.h>
 #include "NET_Packet.h"
 
+//--------------------------------------------------------------------------
+//
+//  METAPACKET
+//
+//  Metapackets are a method of stuffing more than one 'packet' of data 
+//  into a buffer which will eventually be transmitted over a network.
+//
+//  Points of note:  The packet structure is defined by calls on the
+//  base 'netMetaPacket' class.  Calls of Char(), Long(), String(), etc.
+//  are pure virtual functions, implemented by the derived input and
+//  output functions to read/write the appropriate types.  This means
+//  that we don't have to worry about keeping our packet reading/writing
+//  algorithms in synch with each other!  (Though we really should check
+//  that our version numbers are identical!  This is a big TODO.)
+//
+//  Another point to note is that the functions
+//  Char(), Short(), and Long() use NETWORK chars, shorts, and longs.
+//  That is, 8 bit, 16 bit, and 32 bit, respectively -- not the native
+//  machine's chars, shorts, and longs, which could vary in size across
+//  implementations.  To enforce this, we use uint8/sint8 to denote an
+//  eight bit unsigned/signed int, and similar types for 16 and 32 bit
+//  numbers.  These are typedefed in HN_Types.h from the standard
+//  network integer types u_int8_t (uint8_t, under *BSD).
+//
+//--------------------------------------------------------------------------
+
+
 netMetaPacket::netMetaPacket( char *packet, uint32 packetSize ):
 	m_bufferLength(packetSize),
 	m_bufferDistance(0)
@@ -92,6 +119,18 @@ netMetaPacket::MapReset( netMapReset &packet )
 	return success;
 }
 
+
+//------------------------------------------------------
+//  TODO:  This is an ugly hack.  This code (if we're
+//    reading data out of the packet) news space to
+//    store the data we're reading.  The calling code
+//    needs to manually delete it.  This is BAD design,
+//    and is just begging for trouble!  I really need
+//    to find a clean way around this!  (Perhaps make
+//    the netMapUpdateBBox a class, instead of a struct,
+//    and have it delete the appropriate arrays when
+//    it's deleted?)
+//------------------------------------------------------
 bool
 netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 {
@@ -280,6 +319,9 @@ netMetaPacket::ClientSave()
 }
 
 //------------------------------------------------------------------------------------
+//  Input packets are packets which we have just received, so we copy data
+//  FROM the buffer TO the types passed in.
+//------------------------------------------------------------------------------------
 
 netMetaPacketInput::netMetaPacketInput( char *packet, uint32 packetSize ):
 	netMetaPacket( packet, packetSize )
@@ -417,6 +459,9 @@ netMetaPacketInput::PeekLong()
 }
 
 
+//------------------------------------------------------------------------------------
+//  Output packets are packets which we have just received, so we copy data
+//  FROM the types passed in TO the buffer.
 //------------------------------------------------------------------------------------
 
 	

@@ -15,7 +15,7 @@ hnDisplay::hnDisplay(char * name):
 		strncpy( m_name, name, MAX_NAME_BYTES );
 		m_name[MAX_NAME_BYTES-1] = '\0';
 	}
-	else	// this branch is unnecessary, and will never be executed.  Still,
+	else	// this branch is unnecessary, and should never be executed.  Still,
 	{	// sanity checking is always a good idea!
 		strncpy( m_name, "Unknown", MAX_NAME_BYTES );
 		m_name[MAX_NAME_BYTES-1] = '\0';

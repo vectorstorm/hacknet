@@ -166,8 +166,6 @@ netClient::Go()
 		}
 		printf("\n");
 		
-//		if ( incomingBytes == 7 )
-//			while ( 1 ) {}
 #endif
 		netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
 		
@@ -183,15 +181,12 @@ netClient::Go()
 				case SPT_ClientLocation:
 					packet->ClientLocation(clientLoc);
 					m_display->UpdateLocation( clientLoc.loc );
-					//printf("Client location packet\n");
-					//printf("loc: %d,%d,%d\n",clientLoc.loc.x,clientLoc.loc.y,clientLoc.loc.z);
 					break;
 				case SPT_GroupData:
 					packet->GroupData(groupData);
 					m_display->UpdateGroupData(groupData.memberCount, groupData.memberTurns, groupData.haveTurnFromClient );
 					break;
 				case SPT_MapTile:
-					//printf("Map tile packet\n");
 					packet->MapTile(tileData);
 					if ( m_display->isMapReady( tileData.loc.z ) )
 					{
@@ -218,10 +213,10 @@ netClient::Go()
 					m_display->MapReset(mapReset.width, mapReset.height, mapReset.depth);
 					break;
 				case SPT_MapUpdateBBox:
-					//printf("Map bbox update packet\n");
 					packet->MapUpdateBBox(bbox);
-					//mapClientTile tile;
-					
+
+					//  If we haven't prepared this map yet, ask for a full refresh of
+					//  this map, so we can initialise our map structures.
 					if ( !m_display->isMapReady( bbox.loc.z ) )
 					{
 						SendRefreshRequest( bbox.loc.z );

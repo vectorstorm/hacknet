@@ -55,7 +55,7 @@ entBase::IsValidMove( hnDirection dir )
 	// validate the direction we've been given, and return true if we're
 	// able to go that way; false if not.
 
-	if ( dir >= DIR_North && dir < DIR_NorthWest )
+	if ( dir >= DIR_North && dir <= DIR_NorthWest )
 	{
 		// north->northwest
 		hnPoint potentialPos = offsetVector[dir] + GetPosition();

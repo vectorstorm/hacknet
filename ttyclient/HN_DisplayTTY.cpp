@@ -15,10 +15,9 @@
 
 //#define __DEBUGGING_NETWORK__
 
-#if HAS_COLOR_SET
-#else
+#if !HAS_COLOR_SET
 	// if we don't have a 'color_set' function in curses, provide something for the source code's calls
-	// to bind to.
+	// to link against.
 	int color_set(short,void * ){}
 #endif
 
@@ -124,6 +123,12 @@ hnDisplayTTY::EventLoop()
 void
 hnDisplayTTY::HandleKeypressNormal(int commandkey)
 {
+//----------------------------------------------------------------------
+//  TODO:  There must be a cleaner way to do this than using this massive
+//    switch statement!  (We haven't even got 10% of the eventual list of
+//    commands yet, even!)
+//----------------------------------------------------------------------
+
 	switch( commandkey )
 	{
 		case 'q':
@@ -136,22 +141,18 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case 'h':
 		case '4':
-			//printf("Got move west.\n");
 			m_client->SendMove(DIR_West);
 			break;
 		case 'j':
 		case '2':
-			//printf("Got move south.\n");
 			m_client->SendMove(DIR_South);
 			break;
 		case 'k':
 		case '8':
-			//printf("Got move north.\n");
 			m_client->SendMove(DIR_North);
 			break;
 		case '6':
 		case 'l':
-			//printf("Got move east.\n");
 			m_client->SendMove(DIR_East);
 			break;
 		case '9':
@@ -218,20 +219,21 @@ hnDisplayTTY::HandleKeypressTalking( int commandKey )
 	}
 }
 
+//--------------------------------------------------------------------
+//  This function sets the location where we are within the dungeon.
+//  TODO:  We probably need to change this function name to make it
+//  more obvious what it's doing.
+//--------------------------------------------------------------------
 void
 hnDisplayTTY::UpdateLocation( const hnPoint &point )
 {
 	hnDisplay::UpdateLocation(point);
-
-#ifndef __DEBUGGING_NETWORK__
-	//color_set( COLOR_WHITE,NULL);
-	//mvaddch(m_position.y,m_position.x,'@');
-	//move(m_position.y,m_position.x);
-	// now we need to update our display appropriately...
-//	refresh();
-#endif
 }
 
+
+//--------------------------------------------------------------------
+//  Plot an individual square of the map to the screen.
+//--------------------------------------------------------------------
 void
 hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 {
@@ -239,6 +241,8 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	hnWallType wallType = m_map[m_position.z]->WallAt(x,y);
 	
 	
+	//  TODO:  Make this whole function smarter!  Fewer tables, fewer switch statements!
+
 	/*const char floorTileChar[] ={
 		'?',
 		'.',
@@ -265,6 +269,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 #ifndef __DEBUGGING_NETWORK__
 	
 	char theChar = ' ';
+
 
 	switch (wallType)
 	{
@@ -323,18 +328,18 @@ hnDisplayTTY::UpdateMapTile(const hnPoint &point, const mapClientTile &tile)
 {
 	hnDisplay::UpdateMapTile(point,tile);
 	m_needsRefresh = true;
-	//PlotSquare(x,y);
 }
 
-
+//---  This function isn't actually used any more.  TODO:  Consider removing it.
 void
 hnDisplayTTY::UpdateMapCreature( const hnPoint &point, entType type )
 {
 	hnDisplay::UpdateMapCreature(point,type);
 	m_needsRefresh = true;
-	//PlotSquare(x,y);
 }
 
+//--  Stick the passed message into our message buffer.  TODO:  Consider making this more like NetHack's
+//    message buffer, with cntrl-p to scroll back through previous messages.
 void
 hnDisplayTTY::TextMessage( char * message )
 {
@@ -370,7 +375,7 @@ hnDisplayTTY::Refresh()
 	if ( m_needsRefresh )
 	{
 #ifndef __DEBUGGING_NETWORK__
-		// redraw screen -- this is hackish.. I ought to make a single function that does this,
+		// redraw screen -- this is hackish.. TODO: Make a single function that does a full redraw,
 		// instead of repeatedly calling a single function for every point on the screen.
 		for ( int j = 0; j < m_map[m_position.z]->GetHeight(); j++ )
 			for ( int i = 0; i < m_map[m_position.z]->GetWidth(); i++ )
