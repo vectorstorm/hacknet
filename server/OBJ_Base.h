@@ -42,6 +42,9 @@ public:
 	virtual bool		SetWieldedSecondary(bool);	// returns success
 
 	virtual bool		SetWorn(bool);			// returns success
+
+	bool			IsWorn() { return m_flags & FLAG_Worn; }
+	bool			IsWielded() { return m_flags & FLAG_Wielded; }
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it

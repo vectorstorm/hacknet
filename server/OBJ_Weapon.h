@@ -10,6 +10,9 @@ public:
 				objWeapon( uint32 type );
 	virtual		 	~objWeapon();
 
+	virtual bool		SetWieldedPrimary(bool);
+	virtual bool		SetWieldedSecondary(bool);
+
 	virtual sint16		RollDamage( entBase *foe );
 };
 

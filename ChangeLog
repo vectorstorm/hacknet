@@ -10,6 +10,15 @@ February 10, 2002:
   * OBJ_Armour.cpp/.h: Added to CVS.  Implemented SetWorn()
   * OBJ_Manager.cpp: Create correct class based upon object type.
   * OBJ_Base.cpp: No longer allow non-armour to be worn.
+  * OBJ_Types.h: Added Wearable, Wieldable, and Legal flags to object flags
+  * Modified ttyclient to display only objects wearable and wieldable bits
+    in inventory list for 'wield', 'wear', and 'take off' commands.
+  * Modified server to disallow dropping worn items.  Sends text message
+    to client if client sends an illegal request (such as trying to drop
+    a worn item.. the client should be able to detect this, and not trouble
+    the server with such obvious mistakes!)  TODO: modify the client to
+    be able to detect this, and not trouble the server with such obvious
+    mistakes!
 
 February 9, 2002:
   * HN_Player.cpp: Switched to delta-based inventory updates.

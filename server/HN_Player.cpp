@@ -434,6 +434,13 @@ hnPlayer::DoAction()
 	
 	if ( success )
 		m_completedTurn = m_queuedTurn;
+	else
+	{
+		char *buffer="Request failed.";
+		netServer::GetInstance()->StartMetaPacket(m_playerID);
+		netServer::GetInstance()->SendMessage(buffer);
+		netServer::GetInstance()->TransmitMetaPacket();
+	}
 	
 	m_queuedTurn.type = queuedTurn::None;
 }

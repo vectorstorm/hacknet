@@ -10,7 +10,7 @@ objBase::objBase( uint32 itemID ):
 	m_count(1),
 	m_next(this),
 	m_prev(this),
-	m_flags(0)
+	m_flags(FLAG_Legal)
 {
         const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
 	m_type = proto.type;

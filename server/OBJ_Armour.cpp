@@ -19,6 +19,9 @@ objArmour::objArmour(uint32 id) :
 		case ARM_Helm:
 			m_wearFlag = FLAG_Worn_Helm;
 			break;
+		case ARM_Shield:
+			m_wearFlag = FLAG_Worn_Shield;
+			break;
 		case ARM_Gloves:
 			m_wearFlag = FLAG_Worn_Gloves;
 			break;
@@ -35,6 +38,9 @@ objArmour::objArmour(uint32 id) :
 			printf("Error:  Armour created with id %d and unknown subtype %d!\n", GetItemID(), proto.subtype );
 			assert(0);
 	}
+	
+	if ( !(m_flags & m_wearFlag) )		// if we're not already worn..
+		m_flags |= FLAG_Wearable;	// set us as wearable.
 }
 
 objArmour::~objArmour()
@@ -53,10 +59,15 @@ objArmour::SetWorn(bool worn)
 		if ( alreadyWorn != worn )
 		{
 			if ( worn )
-				m_flags |= m_wearFlag;
+			{
+				m_flags |= m_wearFlag;		// worn
+				m_flags &= ~FLAG_Wearable;	// no longer wearable
+			}
 			else
-				m_flags &= ~m_wearFlag;
-			
+			{
+				m_flags &= ~m_wearFlag;		// not worn
+				m_flags |= FLAG_Wearable;	// wearable again
+			}
 			success = true;
 		}
 	}

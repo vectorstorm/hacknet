@@ -65,6 +65,7 @@ public:
 	void		HandleInventory();
 
 	void		DrawObjectArray(objDescription *array, uint8 count, bool inventory);
+	void		DrawObjectArrayFiltered(objDescription *array, uint8 count, uint16 flagFilter, bool inventory);
 	
 	virtual void	PostTurnSubmit();
 	

@@ -158,15 +158,19 @@ entBase::Drop( objBase *object, uint8 count )
 	bool result = false;
 	if ( IsValidInventoryItem(object) )
 	{
-		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
+		if ( !object->IsWorn() )
+		{	
+			mapBase *map = hnDungeon::GetLevel( GetPosition().z );
 		
-		if ( map )	// this should never fail.
-		{
-			objBase *dropped = m_inventory->RemoveObjectQuantity(object,count);
-			dropped->SetWieldedPrimary(false);
-			hnPoint pos = GetPosition();
-			map->MapTile(pos.x,pos.y).object->AddObject(dropped);
-			result = true;
+			if ( map )	// this should never fail.
+			{
+				objBase *dropped = m_inventory->RemoveObjectQuantity(object,count);
+				dropped->SetWieldedPrimary(false);
+				dropped->SetWieldedSecondary(false);
+				hnPoint pos = GetPosition();
+				map->MapTile(pos.x,pos.y).object->AddObject(dropped);
+				result = true;
+			}
 		}
 	}
 	return result;

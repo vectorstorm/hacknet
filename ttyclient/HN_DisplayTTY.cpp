@@ -528,6 +528,7 @@ hnDisplayTTY::HandleInventory()
 	else
 	{
 		m_mode = MODE_InventoryDisplay;
+		m_inventoryMode = ISM_None;
 		m_needsRefresh = true;
 	}
 }
@@ -827,7 +828,14 @@ hnDisplayTTY::Refresh()
 		if ( m_mode == MODE_InventoryDisplay ||
 			m_mode == MODE_InventorySelect )
 		{
-			DrawObjectArray(m_inventory,m_inventoryCount,true);
+			if ( m_inventoryMode == ISM_Wield )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wieldable,true);
+			else if ( m_inventoryMode == ISM_Wear )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wearable,true);
+			else if ( m_inventoryMode == ISM_TakeOff )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Worn,true);
+			else
+				DrawObjectArray(m_inventory,m_inventoryCount,true);
 		}
 		else if ( m_mode == MODE_FloorObjectDisplay ||
 			m_mode == MODE_FloorObjectSelect )
@@ -879,7 +887,13 @@ hnDisplayTTY::DisplayItems()
 }
 
 void
-hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inventory)
+hnDisplayTTY::DrawObjectArray(objDescription *objects, uint8 objectCount, bool inventory)
+{
+	DrawObjectArrayFiltered(objects, objectCount, 0, inventory);
+}
+
+void
+hnDisplayTTY::DrawObjectArrayFiltered(objDescription *objects,uint8 objectCount,uint16 flagFilter,bool inventory)
 {
 	const char inventoryLetters[56] =
 	{
@@ -940,7 +954,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		
 		for ( int i = 0; i < objectCount; i++ )
 		{
-			if ( objects[i].count > 0 && objRegistry::GetInstance()->GetType(objects[i].itemID) == categoryValue[j] )
+			if ( objects[i].count > 0 && (!flagFilter || objects[i].flags & flagFilter) && objRegistry::GetInstance()->GetType(objects[i].itemID) == categoryValue[j] )
 			{
 				if ( !somethingInThisCategory && drawheaders )
 				{

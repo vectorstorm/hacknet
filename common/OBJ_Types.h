@@ -39,9 +39,14 @@ enum {
 	FLAG_Worn_Amulet 	= 0x0080,
 	FLAG_Worn_LeftRing 	= 0x0100,
 	FLAG_Worn_RightRing 	= 0x0200,
+	FLAG_Wearable		= 0x0400,	// set if this object can be worn right now.  (not set if already worn)
 	
-	FLAG_WieldedPrimary 	= 0x0400,
-	FLAG_WieldedSecondary 	= 0x0800
+	FLAG_WieldedPrimary 	= 0x0800,
+	FLAG_WieldedSecondary 	= 0x1000,
+	FLAG_Wieldable		= 0x2000,	// set if this object can be wielded right now.  (not set if already wielded)
+						// note that any object can be wielded..  this is a cue that this is a real weapon that should be offered as a selection.
+	
+	FLAG_Legal		= 0x8000	// every object should have this bit set.
 };
 #define FLAG_Worn		(FLAG_Worn_Suit|FLAG_Worn_Helm|FLAG_Worn_Shield \
 				|FLAG_Worn_Boots|FLAG_Worn_Gloves \
