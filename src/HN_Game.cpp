@@ -7,6 +7,7 @@
 #include "HN_Point.h"
 #include "HN_Dungeon.h"
 #include "HN_Player.h"
+#include "HN_Group.h"
 
 hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
@@ -61,6 +62,7 @@ hnGame::hnGame()
 	}*/
 	
 	hnDungeon::Startup( MAX_LEVELS, LEVEL_WIDTH, LEVEL_HEIGHT );
+	hnGroupManager::Startup( MAX_CLIENTS );
 	
 	printf("\n");
 }
@@ -71,7 +73,8 @@ hnGame::~hnGame()
 	{
 		delete hnDungeon::GetLevel[i];
 	}*/
-
+	
+	hnGroupManager::Shutdown();
 	hnDungeon::Shutdown();
 }
 

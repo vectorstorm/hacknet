@@ -6,6 +6,26 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 2, 2001:
+  Changed netServer and netClient in response to feedback that MSG_*
+  enumerations weren't compiling successfully under FreeBSD.  As I'd
+  been planning to fix these issues anyway (they'd have led to
+  simple network attacks which could make the server freeze up),
+  I just did the changes now.  Theoretically, it should now compile
+  on FreeBSD and other platforms which were having trouble before.
+  (I'll do some testing on this tomorrow, and will be waiting for
+  reports from others).
+
+  Added HN_Group.cpp/.h.  Beginning to put in the framework for
+  synchronizing turns between multiple players.  We're looking at
+  using a system similar to "SurrealTime", coined by the dearly
+  departed InterHack project.  Players near each other (within
+  ~10 squares) will take turns in synch.  Rather than have idle
+  players revert to AI control (which I dislike), idle players
+  will 'fall out' of time, and turn into statues until they
+  return.  Or perhaps they'll just be disconnected.  I'll cross
+  that bridge when I reach it.
+
 May 1, 2001:
   Moved movement validation code from hnGame into entBase, where it
   belongs.  Talking should be moved into the entPlayer.  I'm now
