@@ -333,3 +333,19 @@ hnDisplay::WieldCommand( uint8 inventorySlot )
 
 	PostTurnSubmit();
 }
+
+void
+hnDisplay::WearCommand( uint8 inventorySlot )
+{
+	m_client->SendWear(&m_inventory[inventorySlot], inventorySlot);
+
+	PostTurnSubmit();
+}
+
+void
+hnDisplay::RemoveCommand( uint8 inventorySlot )
+{
+	m_client->SendRemove(&m_inventory[inventorySlot], inventorySlot);
+
+	PostTurnSubmit();
+}

@@ -222,6 +222,12 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 		case 'w':
 			HandleWield();
 			break;
+		case 'W':
+			HandleWear();
+			break;
+		case 'T':
+			HandleTakeOff();
+			break;
 		case 'd':
 			HandleDrop();
 			break;
@@ -324,6 +330,24 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 						}
 						else
 							TextMessage("You're already wielding that!");
+						break;
+					case ISM_Wear:
+						if ( !(m_inventory[inventorySelected].flags & FLAG_Worn) ) // if we're not already wearing this item...
+						{
+							WearCommand(inventorySelected);
+							m_mode = MODE_Normal;
+						}
+						else
+							TextMessage("You're already wearing that!");
+						break;
+					case ISM_TakeOff:
+						if ( (m_inventory[inventorySelected].flags & FLAG_Worn) ) // if we're wearing this item...
+						{
+							RemoveCommand(inventorySelected);
+							m_mode = MODE_Normal;
+						}
+						else
+							TextMessage("You're not wearing that!");
 						break;
 					case ISM_Drop:
 						m_mode = MODE_Normal;
@@ -453,6 +477,45 @@ hnDisplayTTY::HandleWield()
 		m_needsRefresh = true;
 	}
 }
+
+void
+hnDisplayTTY::HandleWear()
+{
+	// we've requested to drop something.  If we have an
+	// inventory, drop the topmost item in it.
+	// TODO: Check to see if there's at least one item in the inventory!
+	
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Wear;
+
+		m_needsRefresh = true;
+	}
+}
+
+
+void
+hnDisplayTTY::HandleTakeOff()
+{
+	// we've requested to drop something.  If we have an
+	// inventory, drop the topmost item in it.
+	// TODO: Check to see if there's at least one item in the inventory!
+	
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_TakeOff;
+
+		m_needsRefresh = true;
+	}
+}
+
+
 
 void
 hnDisplayTTY::HandleInventory()

@@ -17,7 +17,9 @@ class hnDisplayTTY : public hnDisplay
 		ISM_None,
 		ISM_Take,
 		ISM_Drop,
-		ISM_Wield
+		ISM_Wield,
+		ISM_Wear,
+		ISM_TakeOff
 	};
 
 	inputMode		m_mode;
@@ -58,6 +60,8 @@ public:
 	void		HandleTake();
 	void		HandleDrop();
 	void		HandleWield();
+	void		HandleWear();
+	void		HandleTakeOff();
 	void		HandleInventory();
 
 	void		DrawObjectArray(objDescription *array, uint8 count, bool inventory);

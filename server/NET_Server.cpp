@@ -349,6 +349,14 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				okay = packet->ClientWield(item);
 				m_game->ClientWield(clientID, item.object, item.inventorySlot);
 				break;
+			case CPT_WearObject:
+				okay = packet->ClientWear(item);
+				m_game->ClientWear(clientID, item.object, item.inventorySlot);
+				break;
+			case CPT_RemoveObject:
+				okay = packet->ClientRemove(item);
+				m_game->ClientRemove(clientID, item.object, item.inventorySlot);
+				break;
 			case CPT_Name:
 				okay = packet->ClientName(localbuffer, bufferSize);
 				m_game->ClientName(clientID, localbuffer, bufferSize);

@@ -168,6 +168,8 @@ enum
 	CPT_TakeObject,
 	CPT_DropObject,
 	CPT_WieldObject,
+	CPT_WearObject,
+	CPT_RemoveObject,
 	CPT_RequestRefresh,	// request refreshed information on this level
 	CPT_Save,	// Save and quit
 	CPT_Quit,	// Quit without saving.
@@ -230,7 +232,9 @@ public:
 	bool			ClientTake( netClientTake &packet );
 	bool			ClientDrop( netInventoryItem &packet );
 	bool			ClientWield( netInventoryItem &packet );
-	bool			ClientWield( netClientWield &packet );
+	//bool			ClientWield( netClientWield &packet );
+	bool			ClientWear( netInventoryItem &packet );
+	bool			ClientRemove( netInventoryItem &packet );
 	bool			ClientRequestRefresh( sint8 & level );
 	bool			ClientSave();
 	bool			ClientQuit();

@@ -191,6 +191,33 @@ entBase::Wield( objBase *object )
 
 
 bool
+entBase::Wear( objBase *object )
+{
+	bool result = false;
+	if ( IsValidInventoryItem(object) || object == NULL )
+	{
+		if ( object != NULL )
+			object->SetWorn(true);
+		result = true;
+	}
+	return result;
+}
+
+bool
+entBase::Remove( objBase *object )
+{
+	bool result = false;
+	if ( IsValidInventoryItem(object) || object == NULL )
+	{
+		if ( object != NULL )
+			object->SetWorn(false);
+		result = true;
+	}
+	return result;
+}
+
+
+bool
 entBase::IsValidMoveDestination( const hnPoint &destination )
 {
 	bool legalMove = false;

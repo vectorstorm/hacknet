@@ -22,6 +22,8 @@ struct queuedTurn
 		Take,
 		Drop,
 		Wield,
+		Wear,
+		Remove,
 		UnWield
 	};
 	int type;
@@ -48,6 +50,16 @@ struct queuedTurn
 			objDescription desc;
 			uint8	inventorySlot;
 		} wield;
+		struct{
+			objBase * object;
+			objDescription desc;
+			uint8	inventorySlot;
+		} wear;
+		struct{
+			objBase * object;
+			objDescription desc;
+			uint8	inventorySlot;
+		} remove;
 	};
 };
 
@@ -130,6 +142,8 @@ public:
 	virtual void	Take( const objDescription &desc, uint8 stackID );
 	virtual void	Drop( const objDescription &desc, uint8 inventorySlot );
 	virtual void	Wield( const objDescription &desc, uint8 inventorySlot );
+	virtual void	Wear( const objDescription &desc, uint8 inventorySlot );
+	virtual void	Remove( const objDescription &desc, uint8 inventorySlot );
 	virtual void	UnWield( );
 	virtual void	Wait( );
 	

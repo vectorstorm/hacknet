@@ -58,6 +58,8 @@ public:
 	void		SendTake( objDescription * desc, uint8 stackID );	// send description and stack ID (position in array of current location) of object(s) to pick up.  If they match on the server side too, we'll successfully pick up the objects.
 	void		SendDrop( objDescription * desc, uint8 inventoryID );
 	void		SendWield( objDescription * desc, uint8 inventoryID );
+	void		SendWear( objDescription * desc, uint8 inventoryID );
+	void		SendRemove( objDescription * desc, uint8 inventoryID );
 	
 	// --------  MAINTENANCE REQUESTS  ----------
 

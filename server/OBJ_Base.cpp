@@ -73,6 +73,24 @@ objBase::SetWieldedPrimary( bool wielded )
 }
 
 void
+objBase::SetWieldedSecondary( bool wielded )
+{
+	if ( wielded )
+		m_flags |= FLAG_WieldedSecondary;
+	else
+		m_flags &= ~FLAG_WieldedSecondary;
+}
+
+void
+objBase::SetWorn( bool worn )
+{
+	if ( worn )
+		m_flags |= FLAG_Worn_Suit;
+	else
+		m_flags &= ~FLAG_Worn_Suit;
+}
+
+void
 objBase::AddObject( objBase * object )
 {
 	//---------------------------------------------------------

@@ -46,6 +46,8 @@ public:
 	void		TakeCommand( objDescription *desc, uint8 stackID );
 	void		DropCommand( uint8 inventorySlot );
 	void		WieldCommand( uint8 inventorySlot );
+	void		WearCommand( uint8 inventorySlot );
+	void		RemoveCommand( uint8 inventorySlot );
 	
 	virtual void	PostTurnSubmit() {}		// called after submittting a turn.
 

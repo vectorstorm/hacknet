@@ -38,6 +38,8 @@ public:
 
 	void			SetWieldedPrimary(bool);
 	void			SetWieldedSecondary(bool);
+
+	void			SetWorn(bool);
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it

@@ -36,6 +36,8 @@ public:
 	void			ClientTake(int clientID, objDescription &desc, uint8 stackID );
 	void			ClientDrop(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientWield(int clientID, objDescription &desc, uint8 inventorySlot );
+	void			ClientWear(int clientID, objDescription &desc, uint8 inventorySlot );
+	void			ClientRemove(int clientID, objDescription &desc, uint8 inventorySlot );
 	void			ClientRequestRefresh( int clientID, int level );
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);

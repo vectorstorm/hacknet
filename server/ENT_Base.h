@@ -77,6 +77,8 @@ public:
 
 	virtual bool		Drop( objBase *object, uint8 count );
 	virtual bool		Wield( objBase *object );
+	virtual bool		Wear( objBase *object );
+	virtual bool		Remove( objBase *object );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

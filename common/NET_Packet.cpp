@@ -582,6 +582,33 @@ netMetaPacket::ClientWield( netInventoryItem &packet )
 }
 
 bool
+netMetaPacket::ClientWear( netInventoryItem &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_WearObject;
+	Sint8( type );
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+
+bool
+netMetaPacket::ClientRemove( netInventoryItem &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_RemoveObject;
+	Sint8( type );
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+
+/*
+bool
 netMetaPacket::ClientWield( netClientWield &packet )
 {
 	m_error = false;
@@ -593,7 +620,7 @@ netMetaPacket::ClientWield( netClientWield &packet )
 	
 	return !m_error;
 }
-
+*/
 //------------------------------------------------------------------------------------
 //  Input packets are packets which we have just received, so we copy data
 //  FROM the buffer TO the types passed in.

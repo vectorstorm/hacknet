@@ -213,6 +213,40 @@ hnPlayer::Wield( const objDescription &object, uint8 inventorySlot )
 }
 
 void
+hnPlayer::Wear( const objDescription &object, uint8 inventorySlot )
+{
+	if ( IsValidInventoryItem( object, inventorySlot ) )
+	{
+		m_queuedTurn.type = queuedTurn::Wear;
+		m_queuedTurn.wear.object = m_clientInventoryMapping[inventorySlot];
+		m_queuedTurn.wear.desc = object;
+		m_queuedTurn.wear.inventorySlot = inventorySlot;
+	}
+	else
+	{
+		printf("Received illegal wear request...\n");
+	}
+}
+
+void
+hnPlayer::Remove( const objDescription &object, uint8 inventorySlot )
+{
+	if ( IsValidInventoryItem( object, inventorySlot ) )
+	{
+		m_queuedTurn.type = queuedTurn::Remove;
+		m_queuedTurn.remove.object = m_clientInventoryMapping[inventorySlot];
+		m_queuedTurn.remove.desc = object;
+		m_queuedTurn.remove.inventorySlot = inventorySlot;
+	}
+	else
+	{
+		printf("Received illegal remove request...\n");
+	}
+}
+
+
+
+void
 hnPlayer::UnWield()
 {
 	printf("AIEEE!\n");
@@ -381,6 +415,17 @@ hnPlayer::DoAction()
 			success = m_entity->Wield( m_queuedTurn.wield.object );
 			if ( m_queuedTurn.wield.object )
 				m_queuedTurn.wield.object->FillDescription(m_queuedTurn.wield.desc);
+			break;
+		case queuedTurn::Wear:
+			success = m_entity->Wear( m_queuedTurn.wear.object );
+			if ( m_queuedTurn.wear.object )
+				m_queuedTurn.wear.object->FillDescription(m_queuedTurn.wear.desc);
+			break;
+		case queuedTurn::Remove:
+			printf("Performing remove...\n");
+			success = m_entity->Remove( m_queuedTurn.wear.object );
+			if ( m_queuedTurn.remove.object )
+				m_queuedTurn.remove.object->FillDescription(m_queuedTurn.remove.desc);
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

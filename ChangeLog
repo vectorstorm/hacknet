@@ -10,6 +10,7 @@ February 9, 2002:
   * HN_Player.cpp: Switched to delta-based inventory updates.
   * NET_Server.cpp: Added missing 'break' statement to delta-based
     inventory update packet handling.
+  * Added basic wear/remove functionality.
 
 February 7, 2002:
   * Switched objects to use flags to store wielded/worn status, instead

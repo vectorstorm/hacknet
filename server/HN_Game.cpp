@@ -263,6 +263,21 @@ hnGame::ClientWield(int playerID, objDescription &desc, uint8 inventorySlot)
 }
 
 void
+hnGame::ClientWear(int playerID, objDescription &desc, uint8 inventorySlot)
+{
+	m_player[playerID]->Wear( desc, inventorySlot );
+	ClientTurn();
+}
+
+void
+hnGame::ClientRemove(int playerID, objDescription &desc, uint8 inventorySlot)
+{
+	printf("hnGame::ClientRemove() called.\n");
+	m_player[playerID]->Remove( desc, inventorySlot );
+	ClientTurn();
+}
+
+void
 hnGame::ClientQuit(int playerID)
 {
 	// --------------------------------------------------------------

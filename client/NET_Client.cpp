@@ -426,6 +426,32 @@ netClient::SendWield( objDescription *object, uint8 inventoryID )
 	m_packet->ClientWield(packet);
 	TransmitMetaPacket();
 }
+	
+void
+netClient::SendWear( objDescription *object, uint8 inventoryID )
+{
+	netInventoryItem packet;
+
+	packet.object = *object;
+	packet.inventorySlot = inventoryID;
+
+	StartMetaPacket();
+	m_packet->ClientWear(packet);
+	TransmitMetaPacket();
+}
+	
+void
+netClient::SendRemove( objDescription *object, uint8 inventoryID )
+{
+	netInventoryItem packet;
+
+	packet.object = *object;
+	packet.inventorySlot = inventoryID;
+
+	StartMetaPacket();
+	m_packet->ClientRemove(packet);
+	TransmitMetaPacket();
+}
 
 void
 netClient::Disconnect()
