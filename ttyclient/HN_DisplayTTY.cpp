@@ -7,8 +7,11 @@
     #error "No curses library found!"
   #endif
 #endif
-#include <pthread.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <pthread.h>
+#include <strings.h>
 #include "HN_DisplayTTY.h"
 #include "NET_Client.h"
 #include "HN_Enum.h"
@@ -198,7 +201,7 @@ hnDisplayTTY::HandleKeypressMore( int commandKey )
 	//  Currently, ANY key will advance to the next line.
 	//----------------------------------------------------------
 
-	if ( ++m_messageDisplayLine < m_messageLines )
+	if ( ++m_messageDisplayLine < m_messageLines-1 )
 	{
 		//----------------------------------------------------------
 		// we have yet another 'more' line.
@@ -212,6 +215,7 @@ hnDisplayTTY::HandleKeypressMore( int commandKey )
 	{
 		m_awaitingMore = false;
 	}
+	m_needsRefresh = true;		// need to show next line.
 }
 
 void
@@ -375,10 +379,23 @@ void
 hnDisplayTTY::TextMessage( char * message )
 {
 	//----------------------------------------------------------------
-	//  TODO:  Concatonate messages if we can fit the new one onto
-	//         the end of the current one.
+	//  If we're currently looking at a line, consider appending the
+	//  new message to whatever's the most recent line.  Otherwise, go
+	//  through the cases below, and just make this message a new line.
 	//----------------------------------------------------------------
-
+	if ( m_messageDisplayLine < m_messageLines )
+	{
+		size_t messageLength = strlen( message );
+		size_t currentLineLength = strlen( m_messageBuffer[m_messageLines-1] );
+	
+		if ( currentLineLength + messageLength <= 78 )
+		{
+			sprintf( m_messageBuffer[m_messageLines-1], "%s  %s", m_messageBuffer[m_messageLines-1], message );
+			m_needsRefresh = true;
+			return;
+		}
+	}
+	
 	if ( m_messageLines < MAX_MESSAGE_SCROLLBACK )
 	{
 		// we haven't filled up our set of lines yet, so just add us...
@@ -396,8 +413,11 @@ hnDisplayTTY::TextMessage( char * message )
 	// if we're looking at a line further along than the new one
 	// (which means that we're not actually looking at anything),
 	// then reset us to look at this new line.
-	if ( m_messageDisplayLine >= m_messageLines )
+	// otherwise, set our 'more' prompt.
+	if ( m_messageDisplayLine >= m_messageLines-1 )
 		m_messageDisplayLine = m_messageLines-1;
+	else
+		m_awaitingMore = true;
 	
 	m_needsRefresh = true;
 }

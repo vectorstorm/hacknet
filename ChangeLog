@@ -9,6 +9,7 @@
 May 27, 2001:
   * Lots of adjustments to ttyclient to switch towards a NetHack style
     message display system.  (Only partly implemented so far)
+  * NetHack-style message display fully implemented (I think!)
 
 May 26, 2001:
   * MAP_Hack.cpp:  Adjusted function names.
