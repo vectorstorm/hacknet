@@ -16,6 +16,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_playerID(playerID),
 	m_lastSentGroupPlayerCount(0),
 	m_lastSentGroupPlayerQueuedTurns(0),
+	m_movePending(false),
 	m_statsChanged(true),
 	m_hitPointsChanged(true),
 	m_spellPointsChanged(true)
@@ -153,7 +154,7 @@ hnPlayer::GetName()
 
 
 void
-hnPlayer::DoTurn()
+hnPlayer::DoAction()
 {
 	switch ( m_queuedTurn.type )
 	{
@@ -161,18 +162,7 @@ hnPlayer::DoTurn()
 			// this 'IsValidMove' call is not strictly necessary, since 'Move' checks
 			// whether the move is valid before executing it.  However, by explicitly
 			// checking here, we can avoid recalculating our visible set of tiles.
-			if ( IsValidMove( m_queuedTurn.move.direction ) )
-			{
-				m_entity->Move( m_queuedTurn.move.direction );
-
-				if ( m_entity->GetPosition().z < 0 )
-				{
-					printf("%s left the dungeon!\n", GetName() );
-					netServer::GetInstance()->SendQuitConfirm(m_playerID);
-				}
-				else
-					RecalculateVision();
-			}
+			m_movePending = m_entity->FindMoveDestination( m_moveDestination, m_queuedTurn.move.direction );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
@@ -180,6 +170,30 @@ hnPlayer::DoTurn()
 	}
 
 	m_queuedTurn.type = queuedTurn::None;
+}
+
+void
+hnPlayer::DoMove()
+{
+	// if we're moving in response to the turn we just took, then
+	// move us!
+
+	if ( m_movePending )
+	{
+		if ( m_moveDestination.z < 0 )
+		{
+			printf("%s left the dungeon!\n", GetName() );
+			netServer::GetInstance()->SendQuitConfirm(m_playerID);
+		}
+		else
+		{
+			m_entity->MoveTo( m_moveDestination );
+			RecalculateVision();
+
+			m_movePending = false;
+		}
+	}
+
 }
 
 void

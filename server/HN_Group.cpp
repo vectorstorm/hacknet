@@ -65,8 +65,12 @@ hnGroup::ProcessTurn()
 			
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
-					m_player[i]->DoTurn();
+					m_player[i]->DoAction();
 			
+			for ( int i = 0; i < m_maxPlayerCount; i++ )
+				if ( m_player[i] )
+					m_player[i]->DoMove();
+					
 			// now our monsters get to move.
 			for ( int i = 0; i < m_monsterCount; i++ )
 			{

@@ -39,6 +39,10 @@ class hnPlayer
 	
 	int		m_lastSentGroupPlayerCount;
 	int		m_lastSentGroupPlayerQueuedTurns;
+
+	hnPoint		m_moveDestination;			// where will we be going?
+	bool		m_movePending;				// are we moving this turn?
+	
 	bool		m_statsChanged;
 	bool		m_hitPointsChanged;
 	bool		m_spellPointsChanged;
@@ -63,7 +67,8 @@ public:
 	
 	virtual bool	CanSee( const hnPoint & position );
 	
-	virtual void	DoTurn();		// run our turn now.
+	virtual void	DoAction();		// process our turn.
+	virtual void	DoMove();		// do any movement associated with the turn we just processed.
 	virtual void	RecalculateVision();	// calculate what we can see
 	virtual void	UpdateVision();		// check again what's in the squares we previously calculated we could see.
 	virtual void	SendUpdate();		// send all updates to client.

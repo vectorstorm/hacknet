@@ -51,24 +51,37 @@ entBase::SetPosition( const hnPoint & pos )
 bool
 entBase::IsValidMove( hnDirection dir )
 {
+	hnPoint point;
+
+	return FindMoveDestination(point,dir);
+}
+
+bool
+entBase::IsValidMoveDestination( const hnPoint &destination )
+{
 	bool legalMove = false;
-	bool blocked = false;
+	
+	if ( destination.z < 0 )
+		return true;	// it's legal to leave the dungeon.. but don't go checking those negative levels for walls!
+	
+	if ( hnDungeon::GetLevel(destination.z)->WallAt(destination.x,destination.y) & WALL_Passable )
+		if ( hnDungeon::GetLevel(destination.z)->MapTile(destination.x,destination.y).entity == NULL )
+			legalMove = true;
+
+	return legalMove;
+}
+
+bool
+entBase::FindMoveDestination( hnPoint &destination, hnDirection dir )
+{
+	bool legalMove = false;
+	hnPoint potentialPos(0,0,0);
+	
 	// validate the direction we've been given, and return true if we're
 	// able to go that way; false if not.
 
 	if ( dir >= DIR_North && dir <= DIR_NorthWest )
-	{
-		// north->northwest
-		hnPoint potentialPos = offsetVector[dir] + GetPosition();
-
-		if ( hnDungeon::GetLevel(potentialPos.z)->WallAt(potentialPos.x,potentialPos.y) & WALL_Passable )
-			if ( hnDungeon::GetLevel(potentialPos.z)->MapTile(potentialPos.x,potentialPos.y).entity == NULL )
-			{
-				legalMove = true;
-			}
-			else
-				blocked = true;
-	}
+		potentialPos = offsetVector[dir] + GetPosition();
 	else	// dir == DIR_Up || dir == DIR_Down -- we can't get here otherwise.  (hnGame::ClientMove() ignores other 'directions')
 	{
 		hnPoint currentPos = GetPosition();
@@ -78,18 +91,14 @@ entBase::IsValidMove( hnDirection dir )
 			{
 				if ( currentPos.z-1 >= 0 )	// if we're not leaving the dungeon...
 				{
-					hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
-					if ( hnDungeon::GetLevel(currentPos.z-1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
-					{
-						legalMove = true;       // nobody standing where we want to go.
-					}
-					else
-						blocked = true;
+					hnPoint2D stairPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
+					potentialPos.Set( stairPos.x, stairPos.y, currentPos.z-1 );
 				}
 				else
 				{
 					// we're leaving the dungeon, so don't worry about looking for the stairs to
 					// be clear on the other side.
+					potentialPos.z = currentPos.z-1;
 					legalMove = true;
 				}
 			}
@@ -98,16 +107,16 @@ entBase::IsValidMove( hnDirection dir )
 		{
 			if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsDown )
 			{
-				hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z+1)->GetUpStairs();
-				if ( hnDungeon::GetLevel(currentPos.z+1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
-				{
-					legalMove = true;       // nobody standing where we want to go.
-				}
-				else
-					blocked = true;
+				hnPoint2D stairPos = hnDungeon::GetLevel(currentPos.z+1)->GetUpStairs();
+				potentialPos.Set( stairPos.x, stairPos.y, currentPos.z+1 );
 			}
 		}
 	}
+	
+	legalMove = IsValidMoveDestination( potentialPos );
+	
+	if ( legalMove )
+		destination = potentialPos;
 	
 	return legalMove;
 }
@@ -141,6 +150,25 @@ entBase::Move( hnDirection dir )
 		pos.y = stairsPos.y;
 		m_changedLevel = true;
 	}
+	
+	origMap->RemoveEntity(this);
+	if ( map )
+		map->PutEntityAt(this, pos.x, pos.y);
+	
+	m_position = pos;
+}
+
+void
+entBase::MoveTo( const hnPoint & pos )
+{
+	//------------------------------------------------
+	// TODO: check to be sure that this is a legal position!
+	//------------------------------------------------
+	if ( !IsValidMoveDestination( pos ) )
+		return;
+		
+	mapBase *origMap = hnDungeon::GetLevel( m_position.z );
+	mapBase *map = hnDungeon::GetLevel( pos.z );
 	
 	origMap->RemoveEntity(this);
 	if ( map )

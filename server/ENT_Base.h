@@ -41,13 +41,15 @@ public:
 	virtual void		Think() {}			// Called to decide what to do each turn.
 
 	virtual bool		IsValidMove( hnDirection direction );	// Called to check to see if a move is legal.
+	virtual bool		IsValidMoveDestination( const hnPoint & destination );
+	virtual bool		FindMoveDestination( hnPoint & destination, hnDirection direction );  // pass in the direction and a place to store the destination point.  Returns true if it's a legal move.
 	virtual void		Move( hnDirection direction );
+	virtual void		MoveTo( const hnPoint & position );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn
 	
 	//virtual void		Move( const hnPoint & offset ) {}
-	//virtual void		MoveTo( const hnPoint & position ) {}
 	
 protected:
 	
