@@ -10,6 +10,8 @@ July 7, 2001:
   * Added inventory to ENT_Base.cpp/.h, and Take now moves objects
     into the inventory, instead of deleting them.
   * Fixed minor memory leak when deleting entities.
+  * Oops.  Added OBJ_Dagger.cpp/.h to CVS.  Looks like nobody but me
+    is tracking CVS development.  :)
     
 July 6, 2001:
   * Finally added 'OBJ_Types.cpp' to CVS repository.  Oops!  :)
