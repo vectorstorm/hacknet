@@ -45,10 +45,7 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 		init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
 	}
 	
-	bool done = false;
-	//mvaddch(posy,posx,'@');
 	refresh();	
-	//setvbuf( stdin, NULL, _IONBF, 0 );
 #endif
 	
 }
@@ -221,7 +218,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	hnMaterialType floorType = m_map->MaterialAt(x,y);
 	hnWallType wallType = m_map->WallAt(x,y);
 	
-	const char floorTileChar[] ={
+	/*const char floorTileChar[] ={
 		'?',
 		'.',
 		' ',
@@ -230,7 +227,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 		'{',
 		'^',
 		' '
-	};
+	};*/
 
 	const char floorTileColor[] ={
 		COLOR_WHITE,

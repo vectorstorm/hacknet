@@ -22,7 +22,9 @@
 //#define __DEBUGGING_NETWORK__
 
 netClient::netClient(hnDisplay *display, char *serverAddress):
-	m_display(display), m_done(false), m_packet(NULL)
+	m_display(display), 
+	m_packet(NULL),
+	m_done(false)
 {
 	m_serverAddress = new sockaddr_in;
 	m_display->SetClient(this);
@@ -74,15 +76,14 @@ netClient::Go()
 	netMapReset mapReset;
 	netClientLocation clientLoc;
 	hnPoint	point;
-	char 		buffer[MAX_DATA_SIZE];
-	int		byteCount;
-	//printf("Trying to connect...\n");
+	
+	m_display->TextMessage("Trying to connect to server...\n");
 	if ( connect( m_socket, (sockaddr *)m_serverAddress, sizeof(sockaddr) ) == -1 )
 	{
 		perror("connect");
 		cleanexit(1);
 	}
-	//printf("Connected successfully!\n");
+	m_display->TextMessage("Connected!\n");
 	
 	// Now that we're connected, send the server our name.
 

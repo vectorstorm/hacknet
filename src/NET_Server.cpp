@@ -106,7 +106,6 @@ netServer::StartServer()
 void
 netServer::Go()
 {
-	int newSocket;
 	sockaddr_in their_addr;
 	// now we start listening for connections on our port, and send data to the game..
 	bool exiting = false;
@@ -455,7 +454,7 @@ netServer::TransmitMetaPacket()
 		short metapacketdatalength = htons(m_metaPacket->GetBufferLength());	
 
 #ifdef __DEBUG_NETWORKING__
-		printf("Sending %d byte metapacket to %s (id %d)...\n", m_metaPacket->GetBufferLength(), 
+		printf("Sending %ld byte metapacket to %s (id %d)...\n", m_metaPacket->GetBufferLength(), 
 									m_game->GetPlayerName(m_packetClientID), m_packetClientID);
 #endif
 		

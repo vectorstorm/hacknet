@@ -49,10 +49,10 @@ protected:
 
 	mapTile *		m_tile;			// map tiles.  Array is [width*height] long.
 	mapTile			m_backgroundType;	// if we ask for something outside the map, what type do we call it?
-	sint8			m_width;
-	sint8			m_height;
+	uint8			m_width;
+	uint8			m_height;
 	mapRoom *		m_room[MAX_ROOMS];	// pointers to our rooms.  Yay!
-	sint8			m_roomCount;		// how many rooms in this map?
+	uint8			m_roomCount;		// how many rooms in this map?
 
 	hnPoint2D		m_stairsUp;		// where our up stairs are located.
 	hnPoint2D		m_stairsDown;		// where our down stairs are located.
@@ -61,11 +61,11 @@ protected:
 	hnPoint2D		m_bottomRightVisibility;
 	
 public:
-				mapBase( sint8 width, sint8 height );
+				mapBase( uint8 width, uint8 height );
 	virtual			~mapBase();
 
-	sint8			GetWidth() { return m_width; }
-	sint8			GetHeight() { return m_height; }
+	uint8			GetWidth() { return m_width; }
+	uint8			GetHeight() { return m_height; }
 
 	const hnPoint2D &	GetUpStairs() { return m_stairsUp; }
 	const hnPoint2D &	GetDownStairs() { return m_stairsDown; }
@@ -81,16 +81,16 @@ public:
 	virtual void		GenerateStairsDown() {}
 	
 	void			RemoveObject( objBase *object );					// remove object from map
-	void			PutObjectAt( objBase *object, sint8 x, sint8 y );			// put object at given coords
-	void			MoveObjectTo( objBase *object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
+	void			PutObjectAt( objBase *object, uint8 x, uint8 y );			// put object at given coords
+	void			MoveObjectTo( objBase *object, uint8 x, uint8 y );			// remove object from map, then put it at given coords
 	
 	void			RemoveEntity( entBase *object );					// remove object from map
-	void			PutEntityAt( entBase *object, sint8 x, sint8 y );			// put object at given coords
-	void			MoveEntityTo( entBase *object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
+	void			PutEntityAt( entBase *object, uint8 x, uint8 y );			// put object at given coords
+	void			MoveEntityTo( entBase *object, uint8 x, uint8 y );			// remove object from map, then put it at given coords
 	
-	hnMaterialType &	MaterialAt( sint8 x, sint8 y );
-	hnWallType &  		WallAt( sint8 x, sint8 y );
-	mapTile &		MapTile( sint8 x, sint8 y );
+	hnMaterialType &	MaterialAt( uint8 x, uint8 y );
+	hnWallType &  		WallAt( uint8 x, uint8 y );
+	mapTile &		MapTile( uint8 x, uint8 y );
 };
 
 #endif // __HN_MAP_H__

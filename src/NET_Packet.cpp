@@ -10,7 +10,7 @@ netMetaPacket::netMetaPacket( char *packet, uint32 packetSize ):
 	m_buffer = new char[packetSize];
 	m_bufferPoint = m_buffer;
 
-	for ( int i = 0; i < packetSize; i++ )
+	for ( unsigned int i = 0; i < packetSize; i++ )
 	{
 		m_buffer[i] = packet[i];
 	}
@@ -293,6 +293,8 @@ netMetaPacketInput::Long( sint32 & result )
 		m_bufferDistance += sizeof(sint32);
 		success = true;
 	}
+
+	return success;
 }
 
 bool
@@ -310,9 +312,13 @@ netMetaPacketInput::String( char * string, sint16 & stringLength )
 	if ( length > stringLength-1 )
 		length = stringLength-1;	// don't read more from the packet than we can actually read!
 	
-
+	
 	for ( int i = 0; i < length; i++ )
-		Char((sint8)string[i]);
+	{
+		sint8 thebyte;
+		Char(thebyte);
+		string[i] = thebyte;
+	}
 	string[length] = '\0';
 	
 	// now, in case there's more data in the packet than we have space for,
@@ -444,7 +450,9 @@ netMetaPacketOutput::String( char * string, sint16 & stringLength )
 	Short(length);
 	
 	for ( int i = 0; i < length; i++ )
-		Char((sint8)string[i]);
-	
+	{
+		sint8 thebyte = string[i];
+		Char(thebyte);
+	}
 	return success;
 }

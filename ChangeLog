@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+April 30, 2001:
+  Minor bugfixes to clean up some sloppy coding that was revealed when I
+  finally remembered to build with -Wall.  Oops!
+
 April 29, 2001:
   Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
   a bug in the NetHack level generation code, involving the creation of

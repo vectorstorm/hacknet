@@ -8,7 +8,7 @@
 #define min(x,y) ( (x>y)?y:x )
 #define max(x,y) ( (x<y)?y:x )
 
-mapHack::mapHack(unsigned int width, unsigned int height):
+mapHack::mapHack(uint8 width, uint8 height):
 	mapBase(width,height)
 {
 }
@@ -62,7 +62,7 @@ mapHack::MakeRooms()
 	
 	while( m_roomCount < MAX_ROOMS && !done )
 	{
-		if (!CreateRoom(-1,-1,-1,-1,-1,-1,-1))
+		if (!CreateRoom(-1,-1,-1,-1,-1,-1,true))
 			done = true;
 		else
 			m_roomCount++;
@@ -124,7 +124,7 @@ mapHack::MakeCorridors()
 //  so we can do mean things like putting boulders in the corridor
 //  or not make the corridor at all.
 void
-mapHack::Join(char roomA, char roomB, bool extraCorridor)
+mapHack::Join(uint8 roomA, uint8 roomB, bool extraCorridor)
 {
 	bool success = false;
 	
@@ -422,7 +422,7 @@ mapHack::SortRooms()
 }
 
 bool
-mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, char lit)
+mapHack::CreateRoom(uint8 x, uint8 y, uint8 w, uint8 h, uint8 xalign, uint8 yalign, bool lit)
 {
 
 	if ( m_roomCount >= MAX_ROOMS )
@@ -433,8 +433,7 @@ mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, ch
 	bool exit = false;
 	char trycount = 0;
 	
-	if ( lit < 0 )
-		lit = true;	// always fully lit, for now.
+	lit = true;	// always fully lit, for now.
 	
 	do{
 		char xtmp = x;
@@ -514,7 +513,10 @@ mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, ch
 	{
 		for ( int i = result.left; i <= result.right; i++ )
 			for ( int j = result.top; j <= result.bottom; j++ )
+			{
 				WallAt(i,j) = WALL_Room;
+				MapTile(i,j).lit = lit;
+			}
 		
 		// now make our walls..
 
@@ -552,7 +554,7 @@ mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, ch
 }
 
 bool
-mapHack::OkayForDoor(char x, char y)
+mapHack::OkayForDoor(uint8 x, uint8 y)
 {
 	bool okay = false;
 
@@ -566,7 +568,7 @@ mapHack::OkayForDoor(char x, char y)
 }
 
 bool
-mapHack::NearDoor(char x, char y)
+mapHack::NearDoor(uint8 x, uint8 y)
 {
 	bool nearDoor = false;
 	
@@ -595,16 +597,16 @@ mapHack::CheckRoomOkay( const mapRoom &room )
 }
 
 bool
-mapHack::CheckTileOkayForRoom( unsigned int x, unsigned int y )
+mapHack::CheckTileOkayForRoom( uint8 x, uint8 y )
 {
 	bool tileOkay = true;
 	
 	mapTile &tile = MapTile(x,y);
 	
-	if ( x <= 0 || x >= (m_width-1) )	// make sure we don't generate rooms
+	if ( x >= (m_width-1) )	// make sure we don't generate rooms
 		tileOkay = false;		// with open space on left or right border
 	
-	if ( y <= 0 || y >= (m_height-1) )	// make sure we don't generate rooms
+	if ( y >= (m_height-1) )	// make sure we don't generate rooms
 		tileOkay = false;		// with open space on top or bottom border
 	
 	if ( (!(tile.wall & WALL_Any)) || tile.border )

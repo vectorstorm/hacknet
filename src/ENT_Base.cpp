@@ -9,8 +9,8 @@ extern hnPoint offsetVector[10];
 
 entBase::entBase( entType type, const hnPoint & pos ):
 	m_type(type),
-	m_changedLevel(false),
-	m_position(pos)
+	m_position(pos),
+	m_changedLevel(false)
 {
 	//m_prev = m_next = this;
 }

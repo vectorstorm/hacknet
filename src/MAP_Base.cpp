@@ -11,7 +11,7 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-mapBase::mapBase(sint8 width, sint8 height):
+mapBase::mapBase(uint8 width, uint8 height):
 	m_width(width), m_height(height), m_roomCount(0)
 {
 	m_stairsUp.Set(-1,-1);
@@ -40,27 +40,27 @@ mapBase::~mapBase()
 }
 
 hnMaterialType &
-mapBase::MaterialAt(sint8 x, sint8 y)
+mapBase::MaterialAt(uint8 x, uint8 y)
 {
-	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
+	if ( x < m_width && y < m_height ) // x and y cannot be less than zero, since they're unsigned
 		return m_tile[x + (y * m_width)].material;
 
 	return m_backgroundType.material;
 }
 
 hnWallType &
-mapBase::WallAt(sint8 x, sint8 y)
+mapBase::WallAt(uint8 x, uint8 y)
 {
-	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
+	if ( x < m_width && y < m_height )
 		return m_tile[x + (y * m_width)].wall;
 
 	return m_backgroundType.wall;
 }
 
 mapTile &
-mapBase::MapTile(sint8 x, sint8 y)
+mapBase::MapTile(uint8 x, uint8 y)
 {
-	if ( x < m_width && y < m_height && x >= 0 && y >= 0)
+	if ( x < m_width && y < m_height )
 		return m_tile[x + (y * m_width)];
 
 	return m_backgroundType;
@@ -76,14 +76,14 @@ mapBase::RemoveObject( objBase *object )
 }
 
 void
-mapBase::PutObjectAt( objBase *object, sint8 x, sint8 y )
+mapBase::PutObjectAt( objBase *object, uint8 x, uint8 y )
 {
 	mapTile & tile = MapTile(x,y);
 	tile.object->AddObject( object );
 }
 
 void
-mapBase::MoveObjectTo( objBase *object, sint8 x, sint8 y )
+mapBase::MoveObjectTo( objBase *object, uint8 x, uint8 y )
 {
 	RemoveObject(object);
 	PutObjectAt(object,x,y);
@@ -99,14 +99,14 @@ mapBase::RemoveEntity( entBase *entity )
 }
 
 void
-mapBase::PutEntityAt( entBase *entity, sint8 x, sint8 y )
+mapBase::PutEntityAt( entBase *entity, uint8 x, uint8 y )
 {
 	mapTile & tile = MapTile(x,y);
 	tile.entity = entity;
 }
 
 void
-mapBase::MoveEntityTo( entBase *entity, sint8 x, sint8 y )
+mapBase::MoveEntityTo( entBase *entity, uint8 x, uint8 y )
 {
 	RemoveEntity(entity);
 	PutEntityAt(entity,x,y);
@@ -137,8 +137,6 @@ mapBase::PrepareVisibility()
 void
 mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 {
-	int range = 17;
-	
 	// Reset our visibility bounding box
 	m_bottomRightVisibility.Set(0,0);
 	m_topLeftVisibility.Set(m_width,m_height);

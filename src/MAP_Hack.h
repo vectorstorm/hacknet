@@ -8,22 +8,22 @@
 class mapHack : public mapBase
 {
 	void			MakeRooms();
-	bool			CreateRoom(char x, char y, char w, char h, char xalign, char yalign, char lit);
+	bool			CreateRoom(uint8 x, uint8 y, uint8 w, uint8 h, uint8 xalign, uint8 yalign, bool lit);
 	bool			CheckRoomOkay(const mapRoom &room);
 	void			SortRooms();
 	void			MakeCorridors();
-	void			Join(char roomA, char roomB, bool extraCorridor);
+	void			Join(uint8 roomA, uint8 roomB, bool extraCorridor);
 	void			FindEntranceInRect( hnPoint2D *result, const hnPoint2D &topLeft, const hnPoint2D &botRight  );
 	bool			DigCorridor( const hnPoint2D &from, const hnPoint2D &to );
 	
-	bool			CheckTileOkayForRoom(unsigned int x, unsigned int y);	
-	bool			OkayForDoor(char x, char y);
-	bool			NearDoor(char x, char y);
+	bool			CheckTileOkayForRoom(uint8 x, uint8 y);	
+	bool			OkayForDoor(uint8 x, uint8 y);
+	bool			NearDoor(uint8 x, uint8 y);
 	
 	void			Wallify();
 	
 public:
-				mapHack( unsigned int width, unsigned int height );
+				mapHack( uint8 width, uint8 height );
 	virtual			~mapHack();
 
 	virtual void		Generate();
