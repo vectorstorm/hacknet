@@ -3,8 +3,8 @@
 #include "ENT_GridBug.h"
 
 
-entGridBug::entGridBug(const hnPoint & where, bool hasPlayer):
-	entBase( ENTITY_GridBug, where, hasPlayer )
+entGridBug::entGridBug(const hnPoint & where, hnPlayer *player):
+	entBase( ENTITY_GridBug, where, player )
 {
 	// gridbugs have 1 or 2 hit points.
 	m_hitPoints = (rand() % 1) + 1;

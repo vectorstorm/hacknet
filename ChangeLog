@@ -15,6 +15,8 @@ May 19, 2001:
     turned on.  :)
   * HN_Game.cpp (and elsewhere): Server now notices when players die, and
     disconnects them.  Monsters still can't die.
+  * ENT_*.cpp/.h:  Entities now store a pointer to a hnPlayer, if they
+    are being controlled by a player.
 
 May 18, 2001:
   * Turns split into two phases:  First actions, then movements.  This means

@@ -6,6 +6,8 @@
 #include "ENT_Types.h"
 #include "HN_Status.h"
 
+class hnPlayer;
+
 #define MAX_NAME_BYTES (128)
 
 class entBase
@@ -14,8 +16,7 @@ class entBase
 	hnPoint			m_position;
 
 	hnStatus		*m_status;
-	
-	bool			m_playerControlled;
+	hnPlayer		*m_player;	// if I'm player controlled, this is my player.
 	
 protected:	
 	char 			m_name[MAX_NAME_BYTES];
@@ -24,13 +25,13 @@ protected:
 	bool			m_changedLevel;	// needs to refresh all our vision
 	
 public:
-				entBase( entType type, const hnPoint &, bool playerControlled = false );
+				entBase( entType type, const hnPoint &, hnPlayer * player = NULL );
 	virtual			~entBase();
 	
 	void			SetName( char * name );
 	char *			GetName();
 
-	bool			IsAPlayer() { return m_playerControlled; }
+	bool			IsAPlayer() { return (m_player != NULL); }
 	bool			IsAlive() { return m_status->Alive(); }
 	
 	const hnPoint &		GetPosition();
