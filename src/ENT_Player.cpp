@@ -1,8 +1,7 @@
-#include "ENT_Player.h"
+# include "ENT_Player.h"
 #include "NET_Server.h"
 #include "HN_Dungeon.h"
 #include "MAP_Base.h"
-#include "MAP_Client.h"
 
 #include "assert.h"
 
@@ -13,7 +12,7 @@ entPlayer::entPlayer( int playerID, const hnPoint &where ):
 	m_playerID(playerID)
 {
 	m_mapCount = hnDungeon::GetInstance()->GetLevelCount();
-	m_map = new (mapClient *)[m_mapCount];
+	m_map = new (mapBase *)[m_mapCount];
 
 	for ( int i = 0; i < m_mapCount; i++ )
 		m_map[i] = NULL;
@@ -68,36 +67,20 @@ entPlayer::PostTurn()
 	
 	assert(realMap);
 
-	//---------------------------------------------------------------
-	//  Update visibility here.  For now, just update the 3x3 box
-	//  around the player.
-	//---------------------------------------------------------------
 
+	//  Allocate map storage if we haven't been here before.
 	if ( m_map[ GetPosition().z ] == NULL )
-	{
-		// we're new on this level.
+		m_map[ GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight() );
 
-		m_map[ GetPosition().z ] = new mapClient( realMap->GetWidth(), realMap->GetHeight() );
-	}
+	mapBase *map = m_map[ GetPosition().z ];
+	assert( map );
 
-	mapClient *map = m_map[ GetPosition().z ];
+	//---------------------------------------------------------------
+	//  Calculate visibility
+	//---------------------------------------------------------------
 
-	if ( map )
-	{
-		hnPoint pos = GetPosition() + offsetVector[DIR_NorthWest];
-
-		for ( int j = 0; j < 3; j++ )
-			for ( int i = 0; i < 3; i++ )
-			{
-				map->MaterialAt( pos.x+i, pos.y+j ) = realMap->MaterialAt( pos.x+i, pos.y+j );
-				map->WallAt( pos.x+i, pos.y+j ) = realMap->WallAt( pos.x+i, pos.y+j );
-				if ( realMap->MapTile( pos.x+i, pos.y+j ).entity == NULL )
-					map->MapTile( pos.x+i, pos.y+j ).entity = ENTITY_None;
-				else
-					map->MapTile( pos.x+i, pos.y+j ).entity = realMap->MapTile( pos.x+i, pos.y+j ).entity->GetType();
-			}
-	}
-
+	map->UpdateVisibility( GetPosition(), realMap );
+	
 	//---------------------------------------------------------------
 	//  For now, we're just going to send the 3x3 box around the
 	//  player.  Once true visibility is being cast, we'll send
@@ -118,9 +101,11 @@ entPlayer::PostTurn()
 	}
 	else
 	{
-		update.loc = GetPosition() + offsetVector[DIR_NorthWest];
-		update.width = 3;
-		update.height = 3;
+		hnPoint2D 	tlpos = map->GetTopLeftVisibility();
+		hnPoint2D	brpos = map->GetBottomRightVisibility();
+		update.loc.Set( tlpos.x, tlpos.y, 0 );
+		update.width = (brpos.x - tlpos.x) + 1;
+		update.height = (brpos.y - tlpos.y) + 1;
 	}
 	update.material = new sint16[update.width * update.height];
 	update.wall = new sint16[update.width * update.height];
@@ -129,9 +114,12 @@ entPlayer::PostTurn()
 	for ( int j = 0; j < update.height; j++ )
 		for ( int i = 0; i < update.width; i++)
 		{
-       			update.material[i+(j*update.width)] = map->MaterialAt(update.loc.x+i,update.loc.y+j);
-   			update.wall[i+(j*update.width)] = map->WallAt(update.loc.x+i,update.loc.y+j);
-			update.entityType[i+(j*update.width)] = map->MapTile(update.loc.x+i,update.loc.y+j).entity;
+			int x = update.loc.x+i;
+			int y = update.loc.y+j;
+			
+       			update.material[i+(j*update.width)] = map->MaterialAt(x,y);
+   			update.wall[i+(j*update.width)] = map->WallAt(x,y);
+			update.entityType[i+(j*update.width)] = map->MapTile(x,y).entityType;
 		}
 	
 	netServer::GetInstance()->SendMapUpdateBBox( update );

@@ -3,6 +3,7 @@
 
 #include "HN_Enum.h"
 #include "HN_Types.h"
+#include "ENT_Types.h"
 #include "HN_Point.h"
 
 #define MAX_ROOMS (8)
@@ -18,6 +19,7 @@ public:
 	
 	objBase *		object;			// linked list of objects lying on the floor here.
 	entBase *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
+	entType			entityType;		// for use if we aren't the authoritative map and so don't want to store the actual pointer.
 	
 	hnMaterialType		material;		// what type of material makes up this tile?
 	hnWallType		wall;			// am I a wall?
@@ -49,6 +51,9 @@ protected:
 
 	hnPoint2D		m_stairsUp;		// where our up stairs are located.
 	hnPoint2D		m_stairsDown;		// where our down stairs are located.
+
+	hnPoint2D		m_topLeftVisibility;
+	hnPoint2D		m_bottomRightVisibility;
 	
 public:
 				mapBase( sint8 width, sint8 height );
@@ -59,6 +64,11 @@ public:
 
 	const hnPoint2D &	GetUpStairs() { return m_stairsUp; }
 	const hnPoint2D &	GetDownStairs() { return m_stairsDown; }
+	
+	const hnPoint2D &	GetTopLeftVisibility() { return m_topLeftVisibility; }
+	const hnPoint2D &	GetBottomRightVisibility() { return m_bottomRightVisibility; }
+	
+	void			UpdateVisibility( const hnPoint & position, mapBase *originalMap );
 	
 	virtual void		Generate();
 	virtual void		GenerateStairsUp() {}

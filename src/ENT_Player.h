@@ -3,7 +3,7 @@
 
 #include "ENT_Base.h"
 
-class mapClient;
+class mapBase;
 
 class entPlayer : public entBase
 {
@@ -26,7 +26,7 @@ class entPlayer : public entBase
 
 	int		m_experiencePoints;
 	
-	mapClient **	m_map;
+	mapBase **	m_map;
 	int		m_mapCount;
 public:
 			entPlayer( int playerID, const hnPoint & where );

@@ -19,7 +19,7 @@
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
 
-#define __DEBUG_NETWORKING__
+//#define __DEBUG_NETWORKING__
 //#define __DISPLAY_PACKET_CONTENT__
 
 netServer * netServer::s_instance = NULL;

@@ -89,8 +89,8 @@ hnDisplayTTY::EventLoop()
 {
 	
 #ifdef __DEBUGGING_NETWORK__
-	//m_client->SendMove(DIR_West);
-	m_client->SendTalk("Hoi!");
+	m_client->SendMove(DIR_West);
+	//m_client->SendTalk("Hoi!");
 #endif	
 
 	while ( !m_done )

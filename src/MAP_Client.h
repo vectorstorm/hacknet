@@ -7,6 +7,8 @@
 #include "ENT_Types.h"
 #include "OBJ_Types.h"
 
+class mapBase;
+
 class mapClientTile
 {
 public:
@@ -48,7 +50,7 @@ public:
 	void			RemoveEntity( entType object );					// remove object from map
 	void			PutEntityAt( entType object, sint8 x, sint8 y );			// put object at given coords
 	void			MoveEntityTo( entType object, sint8 x, sint8 y );			// remove object from map, then put it at given coords
-	
+
 	hnMaterialType &	MaterialAt( sint8 x, sint8 y );
 	hnWallType &  		WallAt( sint8 x, sint8 y );
 	mapClientTile &		MapTile( sint8 x, sint8 y );

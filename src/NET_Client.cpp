@@ -124,8 +124,8 @@ netClient::Go()
 		}
 		printf("\n");
 		
-		if ( incomingBytes == 7 )
-			while ( 1 ) {}
+//		if ( incomingBytes == 7 )
+//			while ( 1 ) {}
 #endif
 		netMetaPacketInput *packet = new netMetaPacketInput(buffer, incomingBytes);
 		
@@ -162,6 +162,7 @@ netClient::Go()
 				case SPT_MapReset:
 					packet->MapReset(mapReset);
 					m_display->MapReset(mapReset.width, mapReset.height);
+					break;
 				case SPT_MapUpdateBBox:
 					//printf("Map bbox update packet\n");
 					packet->MapUpdateBBox(bbox);

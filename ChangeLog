@@ -68,6 +68,16 @@ April 28, 2001:
   process..  (But that's 350k, which can take a lot of time to
   transfer on slow modem connections, even if it's only done once!)
 
+  Moved Visibility code into the mapBase class..  currently you call
+  UpdateVisibility for a map to update its own visibility information
+  based upon the map you pass in as a parameter, but I might reverse
+  that so that particular classes of maps can override visibility
+  calculating functions..  (This would be useful for the different
+  visibility algorithm that will need to be used in the Rogue level,
+  for example!)  This also means that the entPlayer won't need to
+  change when correct visibility is moved into the code -- it'll
+  automatically send the right visibility update data to the client.
+
 ---
 April 27, 2001:
   Adjusted client argument parsing.  Client still defaults to 'localhost'

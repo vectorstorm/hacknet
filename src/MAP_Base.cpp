@@ -123,6 +123,47 @@ mapBase::Generate()
 	}
 }
 
+void
+mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
+{
+        //---------------------------------------------------------------
+        //  Update visibility here.  For now, just update the 3x3 box
+        //  around the player.
+        //---------------------------------------------------------------
+	
+        m_bottomRightVisibility.Set(0,0);
+        m_topLeftVisibility.Set(m_width,m_height);
+	
+	hnPoint pos = position;
+	pos.x--;
+	pos.y--;
+
+        for ( int j = 0; j < 3; j++ )
+                for ( int i = 0; i < 3; i++ )
+                {
+                        int x = pos.x+i;
+                        int y = pos.y+j;
+
+                        MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
+                        WallAt( x, y ) = sourceMap->WallAt( x, y );
+                        if ( sourceMap->MapTile( x, y ).entity == NULL )
+                                MapTile( x, y ).entityType = ENTITY_None;
+                        else
+                                MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
+
+                        if ( x < m_topLeftVisibility.x )
+                                m_topLeftVisibility.x = x;
+                        if ( x > m_bottomRightVisibility.x )
+                                m_bottomRightVisibility.x = x;
+                        if ( y < m_topLeftVisibility.y )
+                                m_topLeftVisibility.y = y;
+                        if ( y > m_bottomRightVisibility.y )
+                                m_bottomRightVisibility.y = y;
+		}
+}
+
+
+//---------------------------------
 
 mapTile::mapTile()
 {
@@ -134,3 +175,6 @@ mapTile::~mapTile()
 {
 	delete object;
 }
+
+
+

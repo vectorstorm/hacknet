@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "MAP_Base.h"
 #include "MAP_Client.h"
 #include "HN_Point.h"
-
+#include "ENT_Base.h"
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
@@ -58,12 +59,7 @@ mapClient::MapTile(sint8 x, sint8 y)
 void
 mapClient::RemoveObject( objType object )
 {
-	// no current way to do this.  :)
-	
-	/*const hnPoint & point = object->GetPosition();
-	mapClientTile & tile = MapTile(point.x, point.y);
-	
-	tile.object->RemoveObject( object );*/
+	// no current way to do this.  :)  Oops!
 }
 
 void
