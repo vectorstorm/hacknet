@@ -207,6 +207,9 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			WaitCommand();
 			break;
 		
+		case 'w':
+			HandleWield();
+			break;
 		case 'd':
 			HandleDrop();
 			break;
@@ -292,7 +295,17 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 				m_mode = MODE_Normal;
 				m_needsRefresh = true;
 			
-				DropCommand(inventorySelected);
+				switch( m_inventoryMode )
+				{
+					case ISM_Wield:
+						WieldCommand(inventorySelected);
+						break;
+					case ISM_Drop:
+						DropCommand(inventorySelected);
+						break;
+					default:
+						break;
+				}
 			}
 		}
 		else	// we're in take mode, so check against objects on floor.
@@ -388,11 +401,34 @@ hnDisplayTTY::HandleDrop()
 	// we've requested to drop something.  If we have an
 	// inventory, drop the topmost item in it.
 	// TODO: Check to see if there's at least one item in the inventory!
+	
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Drop;
 
-	m_mode = MODE_InventorySelect;
-	m_inventoryMode = ISM_Drop;
+		m_needsRefresh = true;
+	}
+}
 
-	m_needsRefresh = true;
+void
+hnDisplayTTY::HandleWield()
+{
+	// we've requested to drop something.  If we have an
+	// inventory, drop the topmost item in it.
+	// TODO: Check to see if there's at least one item in the inventory!
+	
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Wield;
+
+		m_needsRefresh = true;
+	}
 }
 
 void

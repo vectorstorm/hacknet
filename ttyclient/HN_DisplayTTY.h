@@ -57,6 +57,7 @@ public:
 
 	void		HandleTake();
 	void		HandleDrop();
+	void		HandleWield();
 	void		HandleInventory();
 
 	void		DrawObjectArray(objDescription *array, uint8 count);
