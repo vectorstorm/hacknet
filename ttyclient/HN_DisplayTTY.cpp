@@ -529,6 +529,7 @@ hnDisplayTTY::Refresh()
 #endif
 		m_needsRefresh = false;
 	}
+	hnDisplay::Refresh();
 }
 
 void

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "HN_Display.h"
 #include "NET_Client.h"
@@ -9,7 +10,8 @@ hnDisplay::hnDisplay(char * name):
 	m_map(NULL),
 	m_groupMemberCount(1),
 	m_groupMemberTurnCount(0),
-	m_submittedTurn(0)
+	m_submittedTurn(false),
+	m_moved(false)
 {
 	if ( name )
 	{
@@ -82,6 +84,46 @@ hnDisplay::MapReset(sint8 width, sint8 height, sint8 depth)
 	if ( m_map[depth] )
 		delete m_map[depth];
 	m_map[depth] = new mapClient( width, height );
+}
+
+void
+hnDisplay::UpdateLocation( const hnPoint &point )
+{
+	if ( m_position != point )
+	{
+		m_moved = true;
+		m_position = point;
+	}
+}
+
+void
+hnDisplay::Refresh()
+{
+	if ( m_moved )
+	{
+		m_moved = false;
+		// check to see if there's an object under us.  If so,
+		// print a message about it.
+
+		if ( m_map[m_position.z] )
+		{
+			int objCount = m_map[m_position.z]->MapTile(m_position.x, m_position.y).objectCount;
+			if ( objCount > 0 )
+			{
+				// hardcode to long sword, since that's all we have right now.
+				char buffer[256];
+
+				if ( objCount > 1 )
+					snprintf(buffer, 256, "There are several objects here.");
+				else
+					snprintf(buffer, 256, "You see here a %s.", "long sword");
+
+				TextMessage(buffer);
+
+				Refresh();
+			}
+		}
+	}
 }
 
 void

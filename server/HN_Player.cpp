@@ -296,27 +296,6 @@ hnPlayer::DoMove()
 		{
 			m_entity->MoveTo( m_moveDestination );
 			RecalculateVision();
-			
-			// now check to see if we're standing on an object.
-
-			hnPoint pos = GetPosition();
-			int objCount = m_map[ pos.z ]->MapTile( pos.x, pos.y ).objectCount;
-			if (  objCount > 0 )
-			{
-#define BUFLEN (256)
-				char buffer[BUFLEN];
-				
-				if ( objCount > 1 )
-				{
-					snprintf(buffer, BUFLEN, "You see many objects here.");
-				}
-				else
-				{
-					snprintf(buffer, BUFLEN, "You see here a long sword." );
-				}
-				See(pos,buffer);
-			}
-			
 			m_movePending = false;
 		}
 	}

@@ -25,6 +25,7 @@ protected:
 	int		m_groupMemberCount;		// how many members in my group.
 	int		m_groupMemberTurnCount;		// how many members of my group have submitted turns so far.
 	bool		m_submittedTurn;		// have I submitted my turn yet?
+	bool		m_moved;			// true if we've moved since the last time we refreshed.
 public:
 			hnDisplay( char * name );
 	virtual		~hnDisplay();
@@ -40,11 +41,11 @@ public:
 	void		WaitCommand();			// send wait command.
 	virtual void	PostTurnSubmit() {}		// called after submittting a turn.
 
-	virtual void	Refresh() {}
+	virtual void	Refresh();
 	
 	virtual void	DungeonReset( sint8 levelCount );
 	virtual void	MapReset( sint8 width, sint8 height, sint8 depth );
-	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
+	virtual void	UpdateLocation( const hnPoint &point );
 	virtual void	UpdateMapTile( const hnPoint &point, const mapClientTile & tile );
 	virtual void	UpdateMapCreature( const hnPoint &point, entType type );
 	virtual void	UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool submittedTurn );

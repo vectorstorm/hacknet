@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+June 27, 2001:
+  * Client now generates 'You see a...' messages by itself.  TODO:
+    client still needs a way to get an object's "name" string from
+    the enumerated constant, without including the whole OBJ_Base
+    hierarchy.
+
 June 26, 2001:
   * Finished initial basic implementation of objects.  The server now
     adds visible objects to the player's copy of the map data, transmits
