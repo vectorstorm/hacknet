@@ -12,7 +12,8 @@ In order to run HackNet, you'll need two things.  First, you need a
 server.  If there isn't already a server you want to use, you'll need
 to run your own.
 
-To run the server, use the following command line from the src/ directory:
+To run the server, use the following command line from the server/ 
+directory:
 
 ./hacknetd
 
@@ -26,9 +27,9 @@ extra debug output which is useful for debugging networking code.
 
 Second, you need to run the hacknet client, and connect to a running
 server -- either one on your own system, or elsewhere on the network.
-The command line (again, from the src/ directory) is as follows:
+The command line (from the ttyclient/ directory) is as follows:
 
-./hacknet [-u name] host
+./hacknet.tty [-u name] host
 
 Where 'name' is the name you want to use in the game, and 'host' is
 the network address where the server is being run.
@@ -58,5 +59,5 @@ exclamation point, in which case everyone in the game will
 hear what you say.
 
 That's all there is to it!  Currently there's no combat, so the
-various grid bugs sitting around the map are nothing but
+various grid bugs wandering around the map are nothing but
 obstacles.. but this will be entering the game soon!

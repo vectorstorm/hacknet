@@ -35,10 +35,22 @@ PPC 	- Debian GNU/Linux 2.2
 Sparc	- Debian GNU/Linux 2.2
 
 Known problems exist for the following platforms:
-Compaq Tru64
-Sun Solaris
+Sun Solaris:  The current codebase will actually compile and link on the
+  Solaris machines in SourceForge's compile farm, but won't run.  I suspect
+  that this is due to a misconfigured dev environment on those machines,
+  but I won't move this platform to the 'success' category above until I
+  receive word from someone saying that they've had it compile and run
+  properly.  If you have access to a Solaris box, I'd be quite grateful if
+  you could test HackNet on it, and let me know the results!  (Note that
+  you may need to export an environment variable of CC=gcc in order to
+  make the configure script work properly)
+Compaq Tru64:  The Tru64 machine in SourceForge's compile farm has no C++
+  compiler installed on it.  Presumably, if you were to install the
+  GNU utilities onto it, Hacknet would compile and run.  As with
+  Solaris, I'd be glad to hear from anyone who's experimented with
+  getting HackNet to run on a Tru64 machine.
 
-... more, as they're reported to me!  If you get it to compile on something
+...and more, as they're reported to me!  If you get it to compile on something
 that isn't listed here, or get it compiling on one of the currently unworking
 platforms, or have a lead on how to get it working, please let me know!  
 Please submit any patches to me at: 
@@ -59,10 +71,14 @@ I do!
 Installing from CVS sources:
 -------
 
-Run ./autogen.sh to create and execute a standard configure script.  Then
-type 'make' to make the hacknet server and client.  'make install' should
-install them somewhere sensible, but it's probably easier to just run them
-straight out of the src directory -- that's what I do!
+As per standard GNU guidelines, configure scripts and makefiles are NOT
+checked into CVS.  The configure script will be generated and executed
+automatically when you run ./autogen.sh.
+
+After the configure script has executed, type 'make' to make the hacknet 
+server and client.  'make install' should then install them somewhere 
+sensible, but it's probably easier to just run them straight out of their
+build directories -- that's what I do!
 
 
 
@@ -70,13 +86,16 @@ Running HackNet:
 --------
 
 As mentioned under 'installing', I recommend running HackNet directly
-from the src directory at the moment, so cd into that directory.
+from the build directories at the moment, so cd into those directories.
 
 On the server machine, run the hacknetd binary.  You should receive
 several screenfulls of debugging output as five dungeon levels are
-constructed.
+constructed.  If you dislike the 'grouping' behaviour in which
+nearby players are forced to take turns simultaneously, you can
+disable that with a command-line argument of '--no-groups' when
+starting the server.
 
-On the client, run the hacknet binary, passing the server address
+On the client, run the hacknet.tty binary, passing the server address
 as the final command line argument.  Hacknet will use your user
 name as your player name, unless you give it a different name with
 the -u option.
@@ -84,7 +103,7 @@ the -u option.
 Example:  To connect to a server on the local computer with the
 name 'Foo', use the following command line:
 
-./hacknet -uFoo localhost
+./hacknet.tty -uFoo localhost
 
 
 Caveats:

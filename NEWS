@@ -1,1 +1,13 @@
-First public CVS release of HackNet code!
+New change to the source tree..  this means that we've got lots of
+new directories and suchlike!  You'll find the server in the
+'server' directory, and the client in the 'ttyclient' directory.
+If/when more clients are created, they'll be in their own directories.
+the 'client' directory holds the libclient.a library, which you link
+to your particular client port.  The ttyclient, for example, uses
+curses or ncurses to display the dungeon, but it'd be just as easy
+to make a graphical client, or a client that used (for example)
+DOS control characters to move the cursor around.
+
+The ttyclient still requires POSIX-compliant threads and either
+curses or ncurses.
+
