@@ -16,6 +16,8 @@ class entBase
 	hnPoint			m_position;
 
 	hnStatus		*m_status;
+	objBase			*m_inventory;
+
 	hnPlayer		*m_player;	// if I'm player controlled, this is my player.
 	
 protected:	

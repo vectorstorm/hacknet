@@ -19,10 +19,13 @@ entBase::entBase( entType type, const hnPoint & pos, hnPlayer *player ):
 	m_changedLevel(false)
 {
 	m_status = new hnStatus(1);
+	m_inventory = new objBase(OBJECT_None,hnPoint(0,0,0));
 }
 
 entBase::~entBase()
 {
+	delete m_inventory;
+	delete m_status;
 }
 
 /*void
@@ -95,11 +98,15 @@ entBase::Take( const objDescription &desc, uint8 stackID )
 	{
 		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
 	
-		if ( map )
+		if ( map )	// this should never fail.
 		{
 			hnPoint pos = GetPosition();
 			map->MapTile(pos.x,pos.y).object->RemoveObject(object);
-			printf("Purging picked up item. (TODO: Implement inventory!)\n");
+			m_inventory->AddObject(object);
+		}
+		else
+		{
+			printf("Weird -- GetTakeTarget() worked, but Take() didn't.\n");
 		}
 	}
 }
