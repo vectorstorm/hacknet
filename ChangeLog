@@ -6,6 +6,11 @@
 ---  most recent checkins at the bottom.
 ---
 
+June 16, 2001:
+  * Switched server to default to no groups -- groups were just too
+    annoying!  (Actually, groups of one).  To turn on groups again,
+    use the command line argument --with-groups
+
 June 10, 2001:
   * Found more problems in object model system which would have bitten us
     a few months down the road.  Rethinking the object system now.

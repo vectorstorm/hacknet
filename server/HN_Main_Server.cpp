@@ -11,16 +11,17 @@ int main( int argc, char *argv[] )
 	// parse arguments
 
 	bool legalArgs = true;
-	bool noGroups = false;
+	bool useGroups = false;
 
 	if ( argc > 1 )
 	{
 		for ( int i = 1; i < argc; i++ )
 		{
-			if ( strncmp( argv[i], "--no-groups", 11 ) == 0 ||
-				strncmp( argv[i], "--nogroups", 10 ) == 0 )
+			if ( strncmp( argv[i], "--with-groups", 13 ) == 0 ||
+				strncmp( argv[i], "--withgroups", 12 ) == 0 ||
+				strncmp( argv[i], "--wg", 4 ) == 0 )
 			{
-				noGroups = true;
+				useGroups = true;
 			}
 			else
 				legalArgs = false;
@@ -30,11 +31,11 @@ int main( int argc, char *argv[] )
 	if ( !legalArgs )
 	{
 		printf("HackNet Server version %s\n", VERSION );
-		printf("Usage: hacknetd [--no-groups]\n");
+		printf("Usage: hacknetd [--with-groups]\n");
 		exit(1);
 	}
 
-	if ( noGroups )
+	if ( !useGroups )
 		hnGroupManager::SetMaxGroupDistance(0);
 	
 	printf("HackNet version %s starting up...\n", VERSION );
