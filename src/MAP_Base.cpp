@@ -124,6 +124,16 @@ mapBase::Generate()
 }
 
 void
+mapBase::PrepareVisibility()
+{
+	for ( int j = 0; j < m_height; j++ )
+		for ( int i = 0; i < m_width; i++ )
+		{
+			m_tile[i+(j*m_width)].UpdateVisibility();
+		}
+}
+
+void
 mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 {
         //---------------------------------------------------------------
@@ -131,34 +141,34 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
         //  around the player.
         //---------------------------------------------------------------
 	
-        m_bottomRightVisibility.Set(0,0);
-        m_topLeftVisibility.Set(m_width,m_height);
+	m_bottomRightVisibility.Set(0,0);
+	m_topLeftVisibility.Set(m_width,m_height);
 	
 	hnPoint pos = position;
 	pos.x--;
 	pos.y--;
 
-        for ( int j = 0; j < 3; j++ )
-                for ( int i = 0; i < 3; i++ )
-                {
-                        int x = pos.x+i;
-                        int y = pos.y+j;
+	for ( int j = 0; j < 3; j++ )
+		for ( int i = 0; i < 3; i++ )
+		{
+			int x = pos.x+i;
+			int y = pos.y+j;
 
-                        MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
-                        WallAt( x, y ) = sourceMap->WallAt( x, y );
-                        if ( sourceMap->MapTile( x, y ).entity == NULL )
-                                MapTile( x, y ).entityType = ENTITY_None;
-                        else
-                                MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
+			MaterialAt( x, y ) = sourceMap->MaterialAt( x, y );
+			WallAt( x, y ) = sourceMap->WallAt( x, y );
+			if ( sourceMap->MapTile( x, y ).entity == NULL )
+				MapTile( x, y ).entityType = ENTITY_None;
+			else
+				MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
 
-                        if ( x < m_topLeftVisibility.x )
-                                m_topLeftVisibility.x = x;
-                        if ( x > m_bottomRightVisibility.x )
-                                m_bottomRightVisibility.x = x;
-                        if ( y < m_topLeftVisibility.y )
-                                m_topLeftVisibility.y = y;
-                        if ( y > m_bottomRightVisibility.y )
-                                m_bottomRightVisibility.y = y;
+			if ( x < m_topLeftVisibility.x )
+				m_topLeftVisibility.x = x;
+			if ( x > m_bottomRightVisibility.x )
+				m_bottomRightVisibility.x = x;
+			if ( y < m_topLeftVisibility.y )
+				m_topLeftVisibility.y = y;
+			if ( y > m_bottomRightVisibility.y )
+				m_bottomRightVisibility.y = y;
 		}
 }
 
@@ -169,6 +179,7 @@ mapTile::mapTile()
 {
 	object = new objBase( OBJECT_None, hnPoint(0,0,0));
 	entity = NULL;
+	visionBlocked = false;
 }
 
 mapTile::~mapTile()
@@ -176,5 +187,8 @@ mapTile::~mapTile()
 	delete object;
 }
 
-
-
+void
+mapTile::UpdateVisibility()
+{
+	visionBlocked = !(wall & WALL_Passable);	// if we can't walk through it, we can't see through it.
+}

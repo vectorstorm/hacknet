@@ -6,6 +6,7 @@
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
+#define max(x,y) ( (x<y)?y:x )
 
 mapHack::mapHack(unsigned int width, unsigned int height):
 	mapBase(width,height)
@@ -74,16 +75,21 @@ mapHack::MakeCorridors()
 	bool anyUnconnectedRooms = true;
 	
 	printf("We have %d rooms.\n", m_roomCount);
+
+	// Connect each room to the next room to the right.
 	for ( int i = 0; i < m_roomCount-1; i++ )
 	{
 		Join(i, i+1, false);
 		if ( (rand() % 50) == 0 )	// randomly stop generating corridors
 			break;
 	}
+	// Connect each room to the room two to the right, if not already connected.
 	for ( int i = 0; i < m_roomCount-2; i++ )
 		if ( m_room[i]->glob != m_room[i+2]->glob )
 			Join(i, i+2, false);
 	
+	printf("Sanity checks...\n");
+	// Now make sure that we've connected each room to something.
 	for ( int i = 0; anyUnconnectedRooms && i < m_roomCount; i++ )
 	{
 		anyUnconnectedRooms = false;
@@ -97,12 +103,13 @@ mapHack::MakeCorridors()
 			}
 		}
 	}
-
+	
+	printf("Random extra corridors...\n");
 	if ( m_roomCount > 2 )
 	{
 		// just for fun, add some more corridors at random.
 
-		for (int i = (rand() % m_roomCount) + 4; i > 0; i--)
+		for (int i = (rand() % m_roomCount) + 2; i > 0; i--)
 		{
 			int a = rand() % m_roomCount;
 			int b = rand() % (m_roomCount-2);
@@ -180,7 +187,28 @@ mapHack::Join(char roomA, char roomB, bool extraCorridor)
 	if ( success )
 	{
 		printf("success!\n");
+
+		// this #if 0 is removing a piece of code which was written to emulate
+		// what appears to be a bug in NetHack's level generation code..  Inside 
+		// the #else clause is a version which correctly 'globs' rooms
+		// together function, which is what it appears that NetHack's global array
+		// 'smeq' is intended to do. (But doesn't seem to do correctly)
+		//
+		// I'll be extremely grateful to anyone who can explain to me
+		// the relevance of the name 'smeq' to this room globbing function.  :)
+		// "Simple Map EQuality", perhaps?  I'm baffled.
+#if 0
 		to->glob = from->glob = min( from->glob, to->glob );
+#else
+		int changeFromGlobID = max( to->glob, from->glob );
+		int changeToGlobID = min( to->glob, from->glob );
+		
+		for ( int i = 0; i < m_roomCount; i++ )
+		{
+			if ( m_room[i]->glob == changeFromGlobID )
+				m_room[i]->glob = changeToGlobID;
+		}
+#endif
 	}
 	else
 	{
@@ -612,4 +640,6 @@ mapHack::Generate()
 	SortRooms();
 	MakeCorridors();
 	Wallify();
+
+	PrepareVisibility();
 }

@@ -6,6 +6,18 @@
 ---  most recent checkins at the bottom.
 ---
 
+April 29, 2001:
+  Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
+  a bug in the NetHack level generation code, involving the creation of
+  corridors.  However, the results in HackNet were to cause many more
+  corridors to be generated.  I've modified our intentionally emulated bug
+  to perform the function that it looks like it _ought_ to be doing,
+  and now the HackNet results more closely mirror NetHack's.  Perhaps
+  NetHack was fixing the misbehaviour of the bug elsewhere in the code,
+  or perhaps I was misunderstanding the purpose of the code in the first
+  place (easy to do, with NetHack's codebase!)  Also, I've put in some
+  early scaffolding for the near-future implementation of line-of-sight.
+
 April 28, 2001:
   Client now sends name to server after connecting, and the server 
   displays the name in its packet trace messages (in addition to the 

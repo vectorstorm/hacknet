@@ -16,6 +16,8 @@ class mapTile
 public:
 				mapTile();
 	virtual 		~mapTile();
+
+	void			UpdateVisibility();
 	
 	objBase *		object;			// linked list of objects lying on the floor here.
 	entBase *		entity;			// if a creature/player is standing here, this is a pointer to that creature.
@@ -25,6 +27,7 @@ public:
 	hnWallType		wall;			// am I a wall?
 	int			border;			// are we in the 'border zone' around a room?  (And thus cannot be used
 							// as part of a room)
+	bool			visionBlocked;		// we're blocked if we're a wall or under other conditions.
 };
 
 class mapRoom
@@ -68,6 +71,7 @@ public:
 	const hnPoint2D &	GetTopLeftVisibility() { return m_topLeftVisibility; }
 	const hnPoint2D &	GetBottomRightVisibility() { return m_bottomRightVisibility; }
 	
+	void			PrepareVisibility();
 	void			UpdateVisibility( const hnPoint & position, mapBase *originalMap );
 	
 	virtual void		Generate();
