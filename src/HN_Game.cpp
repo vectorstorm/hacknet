@@ -94,13 +94,13 @@ hnGame::ClientJoined(int playerID)
 	}while ( hnDungeon::GetLevel(z)->WallAt(x,y) & WALL_Any );
 
 	printf("Setting playerID %d initial position to: (%d,%d,%d)\n", playerID, x, y, z);
-	m_player[playerID].entity = new entPlayer( playerID, hnPoint(x,y,z) );
-	hnDungeon::GetLevel(z)->PutEntityAt( m_player[playerID].entity, x, y );
+	m_player[playerID] = new entPlayer( playerID, hnPoint(x,y,z) );
+	hnDungeon::GetLevel(z)->PutEntityAt( m_player[playerID], x, y );
 	
 	netServer::GetInstance()->StartMetaPacket( playerID );
-	netServer::GetInstance()->SendClientLocation( m_player[playerID].entity->GetPosition() );
+	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
 	
-	hnPoint pos = m_player[playerID].entity->GetPosition();
+	hnPoint pos = m_player[playerID]->GetPosition();
 	
 	pos += offsetVector[DIR_NorthWest];
 	netMapUpdateBBox update;
@@ -116,7 +116,12 @@ hnGame::ClientJoined(int playerID)
 		{
 			update.material[i+(j*update.width)] = hnDungeon::GetLevel(pos.z)->MaterialAt(pos.x+i,pos.y+j);
 			update.wall[i+(j*update.width)] = hnDungeon::GetLevel(pos.z)->WallAt(pos.x+i,pos.y+j);
-			update.entityType[i+(j*update.width)] = (hnDungeon::GetLevel(pos.z)->MapTile(pos.x+i,pos.y+j).entity) ? ENTITY_Player : ENTITY_None;
+			entBase *entity = hnDungeon::GetLevel(pos.z)->MapTile(pos.x+i,pos.y+j).entity;
+
+			if ( entity )
+				update.entityType[i+(j*update.width)] = entity->GetType();
+			else
+				update.entityType[i+(j*update.width)] = ENTITY_None;
 		}
 	netServer::GetInstance()->SendMapUpdateBBox( update );
 
@@ -133,16 +138,16 @@ hnGame::ClientQuit(int playerID)
 {
 	// when a client quits, we need to remove his entity.
 	
-	hnDungeon::GetLevel(m_player[playerID].entity->GetPosition().z)->RemoveEntity( m_player[playerID].entity );
-	delete m_player[playerID].entity;
+	hnDungeon::GetLevel(m_player[playerID]->GetPosition().z)->RemoveEntity( m_player[playerID] );
+	delete m_player[playerID];
+	m_player[playerID] = NULL;
 }
 
 
 void
 hnGame::ClientMove(int playerID, hnDirection dir)
 {
-	playerData & data = m_player[playerID];
-	entPlayer *player = m_player[playerID].entity;
+	entPlayer *player = m_player[playerID];
 	if ( dir >= 0 && dir < 10 )	// final sanity check
 	{
 		bool legalMove = false;
@@ -169,49 +174,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			// I'd really like to move most (all?) of this code into hnPlayer::Move() and/or MoveTo().
 			hnPoint iniPos = player->GetPosition();
 			netMapUpdateBBox update;
-#if 0	
-			netServer::GetInstance()->StartMetaPacket(playerID);
 			
-			// first, player moves out of his current square.
-			hnDungeon::GetLevel(m_player[playerID].pos.z)->RemoveEntity(m_player[playerID].entity);
-			// now move the player
-			hnPoint iniPos = m_player[playerID].pos;
-			m_player[playerID].pos += offsetVector[dir];
-			hnPoint endPos = m_player[playerID].pos;
-			hnPoint pos = m_player[playerID].pos;
-			// and put the player object into his new position on the map
-			m_player[playerID].entity->SetPosition(pos);
-			hnDungeon::GetLevel(pos.z)->PutEntityAt(m_player[playerID].entity, pos.x, pos.y);
-			netServer::GetInstance()->SendClientLocation( &m_player[playerID].pos );
-			
-			// now tell the player about what they can see from this new location.
-			// just show him all the ground around himself, at present.
-			pos += offsetVector[DIR_NorthWest];
-			netMapUpdateBBox update;
-			update.loc = pos;
-			update.width = 3;
-			update.height = 3;
-			update.material = new sint16[update.width * update.height];
-			update.wall = new sint16[update.width * update.height];
-			update.entityType = new sint8[update.width * update.height];
-			
-			for ( int j = 0; j < update.height; j++ )
-				for ( int i = 0; i < update.width; i++)
-				{
-					update.material[i+(j*update.width)] = hnDungeon::GetLevel(pos.z)->MaterialAt(pos.x+i,pos.y+j);
-					update.wall[i+(j*update.width)] = hnDungeon::GetLevel(pos.z)->WallAt(pos.x+i,pos.y+j);
-					update.entityType[i+(j*update.width)] = (hnDungeon::GetLevel(pos.z)->MapTile(pos.x+i,pos.y+j).entity) ? ENTITY_Player : ENTITY_None;
-					//if ( update.entityType[i+(j*update.width)] == ENTITY_Player )
-					//	printf("Sending player location.\n");
-				}
-			netServer::GetInstance()->SendMapUpdateBBox( &update );
-		
-			delete [] update.material;
-			delete [] update.wall;
-			delete [] update.entityType;			
-
-			netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
-#endif			
 			player->Move(dir);
 			player->PostTurn();
 			
@@ -229,11 +192,11 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 
 			for ( int i = 0; i < MAX_CLIENTS; i++ )
 			{
-				if ( i != playerID && m_player[i].entity != NULL )
+				if ( i != playerID && m_player[i] != NULL )
 				{
-					if ( abs(m_player[i].entity->GetPosition().x - iniPos.x) <= 1 && 
-						abs(m_player[i].entity->GetPosition().y - iniPos.y) <= 1 &&
-						m_player[i].entity->GetPosition().z == iniPos.z )
+					if ( abs(m_player[i]->GetPosition().x - iniPos.x) <= 1 && 
+						abs(m_player[i]->GetPosition().y - iniPos.y) <= 1 &&
+						m_player[i]->GetPosition().z == iniPos.z )
 					{
 						// if we have a connected nearby player who isn't the one we've just sent an update to...
 						netServer::GetInstance()->StartMetaPacket(i);
@@ -255,9 +218,9 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						delete update.entityType;
 						// send this client info on the moving entity.
 					}
-					if ( abs(m_player[i].entity->GetPosition().x - endPos.x) <= 1 && 
-						abs(m_player[i].entity->GetPosition().y - endPos.y) <= 1 &&
-						m_player[i].entity->GetPosition().z == endPos.z )
+					if ( abs(m_player[i]->GetPosition().x - endPos.x) <= 1 && 
+						abs(m_player[i]->GetPosition().y - endPos.y) <= 1 &&
+						m_player[i]->GetPosition().z == endPos.z )
 					{
 						// if we have a connected nearby player who isn't the one we've just sent an update to...
 						netServer::GetInstance()->StartMetaPacket(i);

@@ -22,6 +22,10 @@ April 22, 2001:
   mistake.  :)   (They'd just be removed in the linking process, but now
   'make hacknet' doesn't have to compile quite so many source files)
 
+  Removed 'playerData' structure from hnGame class.  It just stores pointers
+  to entPlayer classes now -- the entPlayers keep track of their own extra
+  data.  Hooray for object-oriented code!
+
 ---
 April 21, 2001:
   Lots of renamed files, to make a more consistant file naming scheme.  Objects now

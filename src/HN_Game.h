@@ -14,17 +14,11 @@
 class netServer;
 class entPlayer;
 
-struct playerData
-{
-	entPlayer	*entity;
-	//mapBase		*m_visionMap[MAX_LEVELS];
-};
-
 // hnGame is a singleton.
 
 class hnGame
 {
-	playerData		m_player[MAX_CLIENTS];
+	entPlayer *		m_player[MAX_CLIENTS];
 //	mapBase			*m_levelMap[MAX_LEVELS];
 
 	static hnGame *		s_instance;
