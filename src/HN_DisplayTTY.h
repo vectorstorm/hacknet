@@ -21,6 +21,7 @@ class hnDisplayTTY : public hnDisplay
 	int		m_talkLength;
 	
 	char		m_messageBuffer[MAX_MESSAGE_LINES][MAX_MESSAGE_BYTES];
+	int		m_messageLines;
 	
 	bool		m_needsRefresh;
 	bool		m_done;

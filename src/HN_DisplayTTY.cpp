@@ -16,6 +16,7 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 	hnDisplay(name),
 	m_mode(MODE_Normal),
 	m_talkLength(0),
+	m_messageLines(0),
 	m_needsRefresh(false),
 	m_done(false)
 {
@@ -312,10 +313,20 @@ hnDisplayTTY::UpdateMapCreature( sint8 x, sint8 y, entType type )
 void
 hnDisplayTTY::TextMessage( char * message )
 {
-	for ( int i = 0; i < MAX_MESSAGE_LINES-1; i++ )
-		strncpy( m_messageBuffer[i], m_messageBuffer[i+1], MAX_MESSAGE_BYTES );
-	strncpy( m_messageBuffer[MAX_MESSAGE_LINES-1], message, MAX_MESSAGE_BYTES );	
-
+	if ( m_messageLines < MAX_MESSAGE_LINES )
+	{
+		// we haven't filled up our set of lines yet, so just add us...
+		strncpy( m_messageBuffer[m_messageLines], message, MAX_MESSAGE_BYTES );
+		m_messageLines++;
+	}
+	else
+	{
+		// we're full, so scroll the lines up, then add us at the bottom.
+		for ( int i = 0; i < MAX_MESSAGE_LINES-1; i++ )
+			strncpy( m_messageBuffer[i], m_messageBuffer[i+1], MAX_MESSAGE_BYTES );
+		strncpy( m_messageBuffer[MAX_MESSAGE_LINES-1], message, MAX_MESSAGE_BYTES );	
+	}
+	
 	m_needsRefresh = true;
 }
 

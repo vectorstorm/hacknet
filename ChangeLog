@@ -10,6 +10,9 @@ April 30, 2001:
   Minor bugfixes to clean up some sloppy coding that was revealed when I
   finally remembered to build with -Wall.  Oops!
 
+  Adjusted client to put text lines at topmost free line of buffer, instead
+  of always writing to the bottom line and scrolling upwards.
+
 April 29, 2001:
   Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
   a bug in the NetHack level generation code, involving the creation of
