@@ -15,7 +15,6 @@ entBase::entBase( entType type, const hnPoint & pos, bool playerControlled ):
 	m_maxHitPoints(1),	// the proper amount on us.
 	m_changedLevel(false)
 {
-	//m_prev = m_next = this;
 }
 
 entBase::~entBase()
@@ -26,6 +25,7 @@ void
 entBase::SetName( char * name )
 {
 	strncpy( m_name, name, MAX_NAME_BYTES );
+	// make sure that we've got a null at least at the end of our name, if not earlier
 	m_name[MAX_NAME_BYTES-1] = '\0';
 }
 
@@ -55,7 +55,7 @@ entBase::IsValidMove( hnDirection dir )
 	// validate the direction we've been given, and return true if we're
 	// able to go that way; false if not.
 
-	if ( dir >= 0 && dir < 8 )
+	if ( dir >= DIR_North && dir < DIR_NorthWest )
 	{
 		// north->northwest
 		hnPoint potentialPos = offsetVector[dir] + GetPosition();
@@ -68,9 +68,8 @@ entBase::IsValidMove( hnDirection dir )
 			else
 				blocked = true;
 	}
-	else
+	else	// dir == DIR_Up || dir == DIR_Down -- we can't get here otherwise.  (hnGame::ClientMove() ignores other 'directions')
 	{
-		// up or down -- check for appropriate stairways
 		hnPoint currentPos = GetPosition();
 		if ( dir == DIR_Up )
 		{
@@ -88,6 +87,8 @@ entBase::IsValidMove( hnDirection dir )
 				}
 				else
 				{
+					// we're leaving the dungeon, so don't worry about looking for the stairs to
+					// be clear on the other side.
 					legalMove = true;
 				}
 			}
@@ -106,15 +107,7 @@ entBase::IsValidMove( hnDirection dir )
 			}
 		}
 	}
-/*	
-	if ( blocked )
-	{
-		char *buffer = "Someone is blocking the way.";
-		netServer::GetInstance()->StartMetaPacket( playerID );
-		netServer::GetInstance()->SendMessage(buffer);
-		netServer::GetInstance()->TransmitMetaPacket();
-	}
-*/
+	
 	return legalMove;
 }
 

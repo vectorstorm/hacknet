@@ -18,6 +18,12 @@ hnGroup::hnGroup( int maxPlayers ):
 	m_playerCount(0),
 	m_maxPlayerCount(maxPlayers)
 {
+	//---------------------------------------------------------
+	//  Prepare an array of player pointers, to store members
+	//  of our group.  WE DO NOT OWN THESE POINTERS, SO WE DO
+	//  NOT DELETE THEM IN OUR DESTRUCTOR.
+	//---------------------------------------------------------
+	
 	m_player = new (hnPlayer *)[m_maxPlayerCount];
 
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
@@ -33,6 +39,16 @@ bool
 hnGroup::ProcessTurn()
 {
 	bool didATurn = false;
+	
+	//--------------------------------------------------------
+	//  Early out, if we're an empty group
+	//
+	//  TODO:  Early out if the newly submitted turn (which
+	//   caused ProcessTurn to be called) wasn't submitted by
+	//   a member of this group.  This will reduce the number
+	//   of packets being sent, in addition to saving CPU
+	//   time on the server!  (BIG SAVING)
+	//--------------------------------------------------------
 	
 	if ( m_playerCount > 0 )
 	{	
@@ -57,25 +73,20 @@ hnGroup::ProcessTurn()
 				m_monster[i]->Think();
 			}
 			
-			/*for ( int i = 0; i < m_maxPlayerCount; i++ )
-				if ( m_player[i] )
-				{
-					m_player[i]->UpdateVision();
-					m_player[i]->SendUpdate();
-				}
-			*/
 			// now rebuild our monster list.
 			ScanForMonsters();
 		}
-		else
+		else	// some group members still haven't submitted turns.
 		{
+			//----------------------------------------------------------------------
+			// send all group members updated group information on how many people
+			// have submitted turns.
+			//----------------------------------------------------------------------
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
 				{
 					int groupMembers = GetPlayerCount();
 					int groupMembersWithTurns = QueuedTurnCount();
-					
-					//printf("Updating client %d.  %d/%d, %d\n", m_player[i]->GetID(), groupMembersWithTurns, groupMembers, m_player[i]->HasQueuedTurn() );
 					
 					netServer::GetInstance()->StartMetaPacket( m_player[i]->GetID() );
 					netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, m_player[i]->HasQueuedTurn() );
@@ -89,6 +100,24 @@ hnGroup::ProcessTurn()
 void
 hnGroup::ScanForMonsters()
 {
+	m_monsterCount = 0;
+	
+	// -------------------------------------------------
+	//   Scan the map for monsters near to this group.
+	//   Make a list of all of those monsters, so we can
+	//   let those monsters take a move every time the
+	//   players in this group make a move.
+	// -------------------------------------------------
+
+	if ( m_playerCount > 0 )	// early out
+		return;
+
+	// -------------------------------------------------
+	//   By definition, a group does not span multiple
+	//   levels, so find the first player in this group
+	//   and check what level he's on.  We will only
+	//   look for monsters on that level.
+	// -------------------------------------------------
 	int level = -1;
 	
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
@@ -100,14 +129,12 @@ hnGroup::ScanForMonsters()
 		}
 	}
 
-	if ( level != -1 )
+	if ( level != -1 )	// this should always be true.  But it never hurts to check.
 	{
 		mapBase *map = hnDungeon::GetLevel( level );
 		assert(map);
 
 		// now we grab all the monsters within 'x' units of our group.
-
-		m_monsterCount = 0;
 
 		for ( int y = 0; y < map->GetHeight(); y++ )
 			for ( int x = 0; x < map->GetWidth(); x++ )
@@ -117,11 +144,10 @@ hnGroup::ScanForMonsters()
 				if ( DistanceFromGroup( hnPoint(x,y,level) ) <= MONSTER_ATTRACT_DISTANCE_SQ )
 				{
 					entBase *entity = map->MapTile(x,y).entity;
-				
+					
+					//  Add this entity to our list, if the entity isn't a player.
 					if ( entity && !entity->IsAPlayer() )
-					{
 						m_monster[m_monsterCount++] = entity;
-					}
 				}
 			}
 	}
@@ -130,6 +156,12 @@ hnGroup::ScanForMonsters()
 int
 hnGroup::QueuedTurnCount()
 {
+	//--------------------------------------------------------
+	//  Return the number of players in our group who have
+	//  submitted a turn, and so are ready for the group to
+	//  process the next turn.
+	//--------------------------------------------------------
+
 	int turnCount = 0;
 	
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
@@ -142,6 +174,13 @@ hnGroup::QueuedTurnCount()
 int
 hnGroup::DistanceFromGroup( hnPlayer * player )
 {
+	//--------------------------------------------------------
+	//  Find the minimum distance from any of the members of
+	//  this group to the passed player.  Obviously, we don't
+	//  include the distance from the player to himself, if
+	//  the player is already part of this group.
+	//--------------------------------------------------------
+	
 	int distance = 0;	// return -1 if not eligible to enter group.
 	bool firstTest = true;
 	
@@ -165,6 +204,10 @@ hnGroup::DistanceFromGroup( hnPlayer * player )
 int
 hnGroup::DistanceFromGroup( const hnPoint & where )
 {
+	//--------------------------------------------------------
+	//  Find the minimum distance from any of the members of
+	//  this group to the passed point.
+	//--------------------------------------------------------
 	int distance = 0;	// return -1 if not eligible to enter group.
 	bool firstTest = true;
 	
@@ -188,6 +231,11 @@ hnGroup::DistanceFromGroup( const hnPoint & where )
 void
 hnGroup::AddPlayer( hnPlayer * player )
 {
+	//------------------------------------------------------
+	//  Add a player to our list of members.  Sanity check
+	//  first that the player isn't already one of our
+	//  members.
+	//------------------------------------------------------
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
 	{
 		if ( m_player[i] == player )
@@ -214,6 +262,9 @@ hnGroup::AddPlayer( hnPlayer * player )
 void
 hnGroup::RemovePlayer( hnPlayer * player )
 {
+	//------------------------------------------------------
+	//  Remove a player to our list of members.
+	//------------------------------------------------------
 	for ( int i = 0; i < m_maxPlayerCount; i++ )
 	{
 		if ( m_player[i] == player )

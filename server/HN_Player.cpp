@@ -19,7 +19,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_map = new (mapBase *)[m_mapCount];
 
 	m_entity = new entHuman( where, true );
-//	Ever want to play as a Grid Bug?  Comment the line above and 
+//	Ever want to play as a Grid Bug?  Comment out the line above and 
 //	uncomment the next line, and you will!  Yes, we already
 //	support non-human players!  Hooray!
 //	------------------------------------------------------------
@@ -59,8 +59,6 @@ hnPlayer::Move( hnDirection dir )
 		m_queuedTurn.type = queuedTurn::Move;
 		m_queuedTurn.move.direction = dir;
 	}
-	//m_entity->Move( dir );
-	// is there anything else we need to do here?  Probably..
 }
 
 const hnPoint &
@@ -75,6 +73,14 @@ hnPlayer::GetPosition()
 void
 hnPlayer::Listen( const hnPoint & position, char * message )
 {
+	//---------------------------------------------------------
+	//  We hear the sound if we're within MAX_TALK_DISTANCE of
+	//  it.
+	//
+	//  TODO:  We need a measure of 'loudness' which defines
+	//  how far away we can hear a sound from.  Get rid of
+	//  MAX_TALK_DISTANCE, sometime in the near future.
+	//---------------------------------------------------------
 	hnPoint offset = position - GetPosition();
 
 	if ( offset.z == 0 )
@@ -89,6 +95,9 @@ hnPlayer::Listen( const hnPoint & position, char * message )
 void
 hnPlayer::Listen( char * message )
 {
+	//---------------------------------------------------------
+	//  If there's no position for the sound, then we hear it
+	//---------------------------------------------------------
 	netServer::GetInstance()->StartMetaPacket(m_playerID);
 	netServer::GetInstance()->SendMessage( message );
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
@@ -164,6 +173,10 @@ hnPlayer::DoTurn()
 void
 hnPlayer::RecalculateVision()
 {
+	//---------------------------------------------------------------
+	//  Sanity checks, and be sure that our vision map has been
+	//  allocated.
+	//---------------------------------------------------------------
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
 	assert(realMap);
 
@@ -183,6 +196,10 @@ hnPlayer::RecalculateVision()
 void
 hnPlayer::UpdateVision()
 {
+	//---------------------------------------------------------------
+	//  Sanity checks, and be sure that our vision map has been
+	//  allocated.
+	//---------------------------------------------------------------
 	if ( GetPosition().z < 0 )
 		return;		// we've left the dungeon.  No need to do vision checks.
 	mapBase *realMap = hnDungeon::GetLevel( GetPosition().z );
@@ -204,7 +221,10 @@ hnPlayer::UpdateVision()
 void
 hnPlayer::SendUpdate()
 {
-	// Send an update packet to our player.
+	//---------------------------------------------------------------
+	//  Sanity checks, and be sure that our vision map has been
+	//  allocated.
+	//---------------------------------------------------------------
 	if ( GetPosition().z < 0 )
 		return;
 
@@ -218,14 +238,21 @@ hnPlayer::SendUpdate()
 	mapBase *map = m_map[ m_entity->GetPosition().z ];
 	assert( map );
 
+	// Send an update packet to our player.
 	netMapUpdateBBox update;
 	
 	hnPoint2D 	tlpos = map->GetTopLeftChanged();
 	hnPoint2D	brpos = map->GetBottomRightChanged();
 	
-	if ( tlpos.x <= brpos.x && tlpos.y <= brpos.y )	// if something changed...
+	//------------------------------------------------------------------------
+	// if something has changed in our vision since we sent our last
+	// update packet, tlpos and brpos will define the topleft and bottomright
+	// points of a rectangle.  If not, tlpos will be the bottom right corner
+	// of the map, and brpos will be the top left corner of the map.
+	//------------------------------------------------------------------------
+	if ( tlpos.x <= brpos.x && tlpos.y <= brpos.y )	
 	{
-		map->ResetChanged();
+		map->ResetChanged();		// reset our map's memory of what has changed, since we're updating the client.
 
 		netServer::GetInstance()->StartMetaPacket(m_playerID);
 		netServer::GetInstance()->SendClientLocation( GetPosition() );
@@ -258,10 +285,17 @@ hnPlayer::SendUpdate()
 
 		if ( m_group )
 		{
-			// now we need to send some group data..  (We should always be in a group, even if it's just us!)
+			//----------------------------------------------------------------------------------
+			//  Put some group update data into the same metapacket, just for convenience.
+			//  No point sending those nasty big TCP headers more often then necessary!
+			//  
+			//  Remember that we're always in a 'group', even if we're the only player in
+			//  it!  This tells the client how many members in the group, and how many of
+			//  those players have submitted turn data so far!
+			//----------------------------------------------------------------------------------
 			int groupMembers = m_group->GetPlayerCount();
 			int groupMembersWithTurns = m_group->QueuedTurnCount();
-		
+			
 			netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, HasQueuedTurn() );
 		}
 	
@@ -293,9 +327,13 @@ hnPlayer::RefreshMap( int level )
 	//--------------------------------------------------------
 	//  Instead of sending the whole level, send only the
 	//  bounding box around what the player has seen on the
-	//  level.  (And someday soon, we'll even only send THAT
-	//  if the client hasn't visited the level before during
-	//  this connect!)
+	//  level.   This function should be VERY rarely called!
+	//  (usually only immediately after resuming a saved
+	//  game.  Since we don't currently save games, this
+	//  function should be EXTREMELY rarely called!
+	//
+	//  ie:  NEVER!  :)
+	//
 	//--------------------------------------------------------
 	
 	hnPoint2D 	tlpos = map->GetTopLeftMaxChanged();

@@ -10,6 +10,30 @@
 #define min(x,y) ( (x>y)?y:x )
 #define max(x,y) ( (x<y)?y:x )
 
+//--------------------------------------------------------------------------
+//  Reimplementation of NetHack's standard maze levels.
+//
+//  NetHack uses a system of dividing up the level into sets of rectangles
+//  to determine which areas can be built in.  Here, I just randomly select
+//  rectangles until something fits into what has already been built.  The
+//  two systems are different, but should produce equivalent dungeons.
+//
+//  Corridor-drawing functions have been ripped off wholesale from NetHack.
+//  I don't think my mind is twisted enough to have invented that function
+//  by myself.
+//
+//  Overall room creation and linking strategy is ripped off wholesale
+//  from NetHack.
+//
+//  I've fixed what looks like an implementation bug in NetHack involving
+//  a global array 'smeq'.  I've also modified a bunch of corridor logic,
+//  since we were creating far more corridors than NetHack ever did.
+//  I think I must have missed something subtle in the corridor generation
+//  logic -- NetHack generates FAR fewer crossing corridors than we do.
+//  I'll have to re-examine this sometime soon.
+//
+//--------------------------------------------------------------------------
+
 mapHack::mapHack(uint8 width, uint8 height, uint8 depth):
 	mapBase(width,height,depth)
 {

@@ -15,7 +15,8 @@ enum hnDirection{
 	DIR_West = 6,
 	DIR_NorthWest = 7,
 	DIR_Up = 8,
-	DIR_Down = 9
+	DIR_Down = 9,
+	DIR_MAX
 };
 
 enum {

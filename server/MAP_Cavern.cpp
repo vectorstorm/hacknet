@@ -7,6 +7,17 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
+//-----------------------------------------------------------------------------
+//  Massive rip-off of some special level generation code in NetHack.
+//
+//  I've copied this code because I thought it was really cool.  It's
+//  effectively random noise into a buffer, followed by several low-pass
+//  filters, and produces very nice-looking natural cavern formations.
+//  In NetHack it's not restrained to creating rock/floor combinations
+//  as it is here, and I suspect it's used for swamps and other natural
+//  terrains....  but I'm not sure.  Anyone have any comments on this?
+//-----------------------------------------------------------------------------
+
 mapCavern::mapCavern(uint8 width, uint8 height, uint8 depth):
 	mapBase(width,height,depth)
 {

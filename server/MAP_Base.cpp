@@ -226,6 +226,15 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase * sourceMap )
 void
 mapBase::UpdateMap( mapBase * sourceMap )
 {
+	//-------------------------------------------------------------------
+	//  Function for vision maps.  Passing in the map to use as the
+	//  'source', for each tile in 'this' map which is set visible, it
+	//  copies the contents of the 'source' map tile, and sets the
+	//  'changed' flag on the tile, if that tile has changed.  This also
+	//  updates the bounding box of changed tiles, which is eventually
+	//  used to determine what data needs to be transmitted to the client
+	//  in the next update packet.
+	//-------------------------------------------------------------------
 	for ( uint8 y = 0; y < m_height; y++ )
 	{
 		for ( uint8 x = 0; x < m_width; x++ )

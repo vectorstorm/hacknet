@@ -44,12 +44,15 @@ hnDungeon::hnDungeon(int levelCount, int width, int height):
 	m_levelMap = new (mapBase *)[levelCount];
 	for ( int i = 0; i < levelCount; i++ )
 	{
+		// make Hack-style maps for now.
 		m_levelMap[i] = new mapHack(width, height, i);
 		m_levelMap[i]->Generate();
 
+		// every map except for the bottom one has stairs down.
 		if ( i < levelCount - 1 )
 			m_levelMap[i]->GenerateStairsDown();
-
+		
+		// every map has stairs up.
 		m_levelMap[i]->GenerateStairsUp();
 	}
 }

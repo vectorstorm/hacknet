@@ -1,21 +1,14 @@
 #ifndef __HN_GAME_H__
 #define __HN_GAME_H__
 
-// toplevel instance of a game.
-
 #include "HN_Config_Server.h"
 #include "HN_Enum.h"
 #include "HN_Point.h"
 
-//#define MAX_LEVELS	(50)
-//#define MAX_LEVELS (2)
-
-//class mapBase;
 class netServer;
 class hnPlayer;
 
 // hnGame is a singleton.
-
 class hnGame
 {
 	hnPlayer *		m_player[MAX_CLIENTS];
