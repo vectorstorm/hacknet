@@ -53,10 +53,13 @@ hnStatus::Initialise()
 	m_stunned = false;
 	m_hallucinating = false;
 	m_paralyzed = false;
+	m_undead = false;
 
 	m_changedStatistics = true;
 	m_changedHitPoints = true;
 	m_changedSpellPoints = true;
+	m_changedExperiencePoints = true; 
+
 }
 
 

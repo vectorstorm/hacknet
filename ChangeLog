@@ -6,6 +6,19 @@
 ---  most recent checkins at the bottom.
 ---
 
+November 9, 2002:
+  * General:  It's been a long time, but life has finally slowed down
+    again, and development has resumed!
+  * OBJ_Definition.cpp:  Updated to use the object list from
+    NetHack 3.4.0.  Several objects have been removed from the list
+    temporarily, as NH3.4.0 modified their object structure, and rather
+    than update ours, I've just removed the objects affected.  This will
+    be fixed up within the next few days, when I update our object
+    classes to include the new data in 3.4.0's objects.
+  * HN_Display.cpp:  Fixed a bizarre client-side bug which caused 
+    the client not to realise when it needed to attack instead of
+    move.  I can't imagine how this bug slipped in.
+  
 April 6, 2002:
   * HN_DisplayTTY.cpp:  Added mutex to protect 'Refresh()' function
     from being called by the TTY's network and io threads simultaneously.

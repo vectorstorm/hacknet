@@ -15,6 +15,7 @@ int		hnGroupManager::s_maxGroupDistanceSq = GROUP_DISTANCE_LEEWAY_SQ;
 
 hnGroup::hnGroup( int maxPlayers ):
 	m_player(NULL),
+	m_monsterCount(0),
 	m_playerCount(0),
 	m_maxPlayerCount(maxPlayers)
 {
@@ -258,6 +259,7 @@ hnGroup::AddPlayer( hnPlayer * player )
 void
 hnGroup::RemovePlayer( hnPlayer * player )
 {
+	assert(player);
 	//------------------------------------------------------
 	//  Remove a player to our list of members.
 	//------------------------------------------------------

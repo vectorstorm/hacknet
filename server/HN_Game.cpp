@@ -53,6 +53,9 @@ hnGame::hnGame()
 	printf("Generating maps...\n");
 	hnDungeon::Startup( MAX_LEVELS, LEVEL_WIDTH, LEVEL_HEIGHT );
 	hnGroupManager::Startup( MAX_CLIENTS );
+
+	for ( int i = 0; i < MAX_CLIENTS; i++ )
+		m_player[i] = NULL;
 	
 	printf("\n");
 }
@@ -377,6 +380,7 @@ hnGame::ClientAttack(int playerID, hnDirection dir)
 	//  as a result of this move, the distribution of players
 	//  within groups has changed.
 	// -------------------------------------------------------------
+	
 	hnPlayer *player = m_player[playerID];
 	if ( dir >= 0 && dir < DIR_Up )	// sanity check
 	{	

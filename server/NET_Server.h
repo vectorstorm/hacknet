@@ -34,9 +34,12 @@ struct clientData {
 	sint16		incomingPacketSizeSize;		// how many more bytes of packet data to read before we know how big our incoming packet will be.
 };
 
+class netSocketThread;
 
 class netServer
 {
+	friend class netSocketThread;
+	
 	hnGame *		m_game;
 	
 	int			m_socket;

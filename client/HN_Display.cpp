@@ -58,7 +58,7 @@ hnDisplay::SetObjectName(uint16 objectID, objType type, char *name)
 void
 hnDisplay::UpdateMapTile(const hnPoint &point, const mapClientTile &tile)
 {
-	if ( m_map[point.z] != NULL )
+	if ( m_map && m_map[point.z] != NULL )
 	{
 		mapClientTile *myTile = &m_map[point.z]->MapTile(point.x,point.y);
 		
@@ -88,7 +88,7 @@ hnDisplay::DungeonReset( sint8 levelCount )
 			delete m_map[i];
 		delete [] m_map;
 	}
-	
+
 	m_levelCount = levelCount;
 	m_map = new (mapClient *)[m_levelCount];
 	
@@ -99,9 +99,12 @@ hnDisplay::DungeonReset( sint8 levelCount )
 void
 hnDisplay::MapReset(sint8 width, sint8 height, sint8 depth)
 {
-	if ( m_map[depth] )
-		delete m_map[depth];
-	m_map[depth] = new mapClient( width, height );
+	if ( m_map )
+	{
+		if ( m_map[depth] )
+			delete m_map[depth];
+		m_map[depth] = new mapClient( width, height );
+	}
 }
 
 void
@@ -289,7 +292,15 @@ hnDisplay::MoveCommand( hnDirection dir )
 		hnPoint proposedSquare = m_position;
 		proposedSquare.Increment(dir);
 		
-		mapClient *map = m_map[proposedSquare.z];
+		mapClient *map = NULL;
+		
+		if ( m_map )
+			map = m_map[proposedSquare.z];
+		else
+			printf("Nomap!\n");
+
+		if ( map == NULL )
+			printf("AIEEE! %d\n",proposedSquare.z);
 		
 		if ( map && map->MapTile(proposedSquare.x,proposedSquare.y).entity != ENTITY_None )
 			attackInstead = true;
