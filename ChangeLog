@@ -1,3 +1,17 @@
+April 27, 2001:
+  Adjusted client argument parsing.  Client still defaults to 'localhost'
+  if no other host is provided.  Added player 'name' argument reading,
+  using identical '-u Name' syntax to that used by NetHack (so either
+  '-u Name' or '-uName' will work)..  if no name is specified on the
+  command line, then HackNet will fill in the name from the USER
+  environment variable.  If there's no USER environment variable, then
+  the LOGNAME variable is used.  If that doesn't exist either, then
+  the name 'Unknown' is used.  (NetHack asks explicitly for a name
+  in this case -- implementing that is a 'TODO' for HackNet).  The
+  name isn't yet transferred to the server, but expect to see that
+  tomorrow.
+
+---
 April 26, 2001:
   Adjusted client to use the (relatively) new netMetaPacket code that
   was originally written for the server.  Better code reusability, and
