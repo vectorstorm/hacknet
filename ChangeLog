@@ -6,6 +6,9 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 6, 2001:
+  * Finally added 'OBJ_Types.cpp' to CVS repository.  Oops!  :)
+
 July 2, 2001:
   * 'Pick up' code migrated from hnGame to hnPlayer and entBase, so
     that any entity can pick objects up, and players can queue up
