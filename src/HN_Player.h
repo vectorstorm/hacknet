@@ -8,6 +8,22 @@
 class mapBase;
 class entBase;
 
+struct queuedTurn
+{
+	enum turnType{
+		None,
+		Move,
+		Wait
+	};
+	int type;
+
+	union{
+		struct{
+			hnDirection direction;
+		} move;
+	};
+};
+
 class hnPlayer
 {
 	int		m_playerID;				// the ID the server assigns to us.  NOT TO BE SAVED.
@@ -32,13 +48,16 @@ class hnPlayer
 	
 	mapBase **	m_map;
 	int		m_mapCount;
+
+	queuedTurn	m_queuedTurn;
 	
 public:
 			hnPlayer( int playerID, const hnPoint & where );
 	virtual		~hnPlayer();
 	
+	bool		HasQueuedTurn();	// are we ready to process a turn?
 	virtual bool	IsValidMove( hnDirection dir );
-	virtual void	Move( hnDirection dir );
+
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
 	
@@ -49,9 +68,15 @@ public:
 	void		SetName( char * name );
 	char *		GetName();
 	
-	virtual void	PostTurn();
+	virtual void	DoTurn();	// run our turn now.
+	virtual void	PostTurn();	// send results of our turn now.
 
 	virtual void	RefreshMap( int level );
+
+	
+	//  Queued Actions Beneath This Point ------------------------------------------
+	virtual void	Move( hnDirection dir );
+	
 };
 
 #endif

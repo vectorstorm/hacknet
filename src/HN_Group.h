@@ -21,6 +21,8 @@ public:
 	void			RemovePlayer( hnPlayer * player );
 
 	int			GetPlayerCount() { return m_playerCount; }
+
+	void			ProcessTurn();
 };
 
 class hnGroupManager

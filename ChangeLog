@@ -14,6 +14,17 @@ May 3, 2001:
   moves between everyone in a single group, so nobody in a group moves
   until they all move.
 
+  Well, I did it.  Now nobody in a group moves until they've all
+  submitted a turn.  Currently there's no feedback to a client that
+  his move has been received..  if you enter two or more moves before
+  everyone else in your group submits a move, your later moves overwrite
+  your earlier ones (So at the point when the server decides that
+  everyone will now move, whatever your most recently submitted move
+  was is what you'll do).  Note that talking/shouting doesn't take
+  up turns, and so occurs instantly.  Making this change allowed a
+  bunch of code to be removed from ClientMove() in hnGame, which is
+  always a good thing!
+
 May 2, 2001:
   Changed netServer and netClient in response to feedback that MSG_*
   enumerations weren't compiling successfully under FreeBSD.  As I'd

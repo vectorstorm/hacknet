@@ -211,35 +211,12 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 	hnPlayer *player = m_player[playerID];
 	if ( dir >= 0 && dir < 10 )	// sanity check
 	{	
-		if ( player->IsValidMove(dir) )
-		{
-			hnPoint iniPos = player->GetPosition();
-			netMapUpdateBBox update;
-			
-			player->Move(dir);
-			player->PostTurn();
-			
-			//-------------------------------------------------------------------------
-			//  This next segment of code is temporary.  What it does is search for
-			//  client who are near to the player who just moved, and sends them
-			//  updated visibility information on that player, so that he moves
-			//  correctly.  To be more correct, we should be synchronizing nearby
-			//  players' turns, so that all their visibility information would have
-			//  already been updated in their 'postturn' function, which would have
-			//  been called above.  Until then, this is a HACK.   -- Trevor, 22/04/2001
-			//-------------------------------------------------------------------------
-			
-			hnPoint endPos = player->GetPosition();
-
-			for ( int i = 0; i < MAX_CLIENTS; i++ )
-				if ( i != playerID && m_player[i] != NULL )
-					if ( m_player[i]->CanSee(iniPos) || m_player[i]->CanSee(endPos) )
-						m_player[i]->PostTurn();
-
-			hnGroupManager::GetInstance()->UpdateGroups();
-		}
+		player->Move(dir);
+		hnGroupManager::GetInstance()->ProcessTurn();
+		hnGroupManager::GetInstance()->UpdateGroups();
 	}else{
 		printf("Tried to move in an illegal direction: %d.\n", dir);
+		netServer::GetInstance()->DisconnectClientID(playerID);
 	}
 
 }

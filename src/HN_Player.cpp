@@ -29,6 +29,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	for ( int i = 0; i < m_mapCount; i++ )
 		m_map[i] = NULL;
 	
+	m_queuedTurn.type = queuedTurn::None;
 }
 
 hnPlayer::~hnPlayer()
@@ -52,7 +53,12 @@ hnPlayer::IsValidMove( hnDirection dir )
 void
 hnPlayer::Move( hnDirection dir )
 {
-	m_entity->Move( dir );
+	if ( IsValidMove( dir ) )
+	{
+		m_queuedTurn.type = queuedTurn::Move;
+		m_queuedTurn.move.direction = dir;
+	}
+	//m_entity->Move( dir );
 	// is there anything else we need to do here?  Probably..
 }
 
@@ -62,7 +68,7 @@ hnPlayer::GetPosition()
 	return m_entity->GetPosition();
 }
 
-#define MAX_TALK_DISTANCE	(5)
+#define MAX_TALK_DISTANCE	(12)
 #define MAX_TALK_DISTANCE_SQ	(MAX_TALK_DISTANCE * MAX_TALK_DISTANCE)
 
 void
@@ -95,6 +101,12 @@ hnPlayer::CanSee( const hnPoint & where )
 	return map->MapTile(where.x, where.y).visible;
 }
 
+bool
+hnPlayer::HasQueuedTurn()
+{
+	return ( m_queuedTurn.type != queuedTurn::None );
+}
+
 void
 hnPlayer::SetName( char * name )
 {
@@ -118,6 +130,22 @@ hnPlayer::GetName()
 }
 
 
+void
+hnPlayer::DoTurn()
+{
+	switch ( m_queuedTurn.type )
+	{
+		case queuedTurn::Move:
+			if ( IsValidMove( m_queuedTurn.move.direction ) )
+				m_entity->Move( m_queuedTurn.move.direction );
+			break;
+		case queuedTurn::Wait:
+			// do nothing.
+			break;
+	}
+
+	m_queuedTurn.type = queuedTurn::None;
+}
 
 void
 hnPlayer::PostTurn()

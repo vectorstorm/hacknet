@@ -22,6 +22,31 @@ hnGroup::~hnGroup()
 	delete [] m_player;
 }
 
+void
+hnGroup::ProcessTurn()
+{
+	if ( m_playerCount > 0 )
+	{	
+		bool everyoneHasATurn = true;
+	
+		for ( int i = 0; i < m_maxPlayerCount; i++ )
+			if ( m_player[i] != NULL )
+				if ( !m_player[i]->HasQueuedTurn() )
+					everyoneHasATurn = false;
+		
+		if ( everyoneHasATurn )
+		{
+			for ( int i = 0; i < m_maxPlayerCount; i++ )
+				if ( m_player[i] )
+					m_player[i]->DoTurn();
+			
+			for ( int i = 0; i < m_maxPlayerCount; i++ )
+				if ( m_player[i] )
+					m_player[i]->PostTurn();
+		}
+	}
+}
+
 int
 hnGroup::DistanceFromGroup( hnPlayer * player )
 {
@@ -236,6 +261,11 @@ void
 hnGroupManager::ProcessTurn()
 {
 	// check each group to see if they're ready to run a turn, and do so if they are.
+
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		m_group[i]->ProcessTurn();
+	}
 }
 
 void
