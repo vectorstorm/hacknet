@@ -240,8 +240,9 @@ netClient::SendMove(hnDirection dir)
 void
 netClient::SendName(char * name)
 {
+	sint16 nameLength = strlen(name);
 	StartMetaPacket();
-	m_packet->ClientName(name, strlen(name));
+	m_packet->ClientName(name, nameLength);
 	TransmitMetaPacket();
 }
 

@@ -3,6 +3,24 @@ April 28, 2001:
   displays the name in its packet trace messages (in addition to the 
   client ID number, as before).
 
+  The netMetaPacket class hierarchy can now send 'String' types, in
+  addition to 'Char', 'Short', and 'Long's.  Note that Char/Short/Long
+  are explicitly coded to send 8, 16, and 32 bytes of data, respectively.
+  For convenience, 'String' takes a char buffer, rather than an array of
+  sint8s.  Also, String() takes a sint16 reference, stating the length
+  of the array (This should really be a uint16, now that I stop and
+  think about it), so that it doesn't read in/out too much data.
+
+  The client code has been modified to redraw the full screen every
+  frame (theoretically, curses should be taking care of not actually
+  redrawing parts that haven't changed..  if this isn't the case, I'll
+  need to make the code a little smarter).  This is to allow the printing
+  of prompts over the map.  And speaking of prompts over the map...
+
+  The client UI for talking has now been put into place.  Hit " to
+  begin to speak, and hit enter to finish speaking.  Ain't it great?
+  (Backspace isn't yet implemented, because I'm a lazy bastard).  :)
+
 ---
 April 27, 2001:
   Adjusted client argument parsing.  Client still defaults to 'localhost'

@@ -1,6 +1,7 @@
 #include <netinet/in.h>
-#include "NET_Packet.h"
 #include <stdio.h>
+#include <assert.h>
+#include "NET_Packet.h"
 
 netMetaPacket::netMetaPacket( char *packet, uint32 packetSize ):
 	m_bufferLength(packetSize),
@@ -180,14 +181,15 @@ netMetaPacket::ClientMove( sint8 & direction )
 }
 
 bool
-netMetaPacket::ClientName( char * namebuffer, int bufferlength )
+netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 {
 	bool success = true;
 	
 	sint8 type = CPT_Name;
 	sint16 length;
 	Char(type);
-	
+	String( namebuffer, bufferlength );
+#if 0	
 	if ( Output() ){
 		// creating the packet..
 		length = strlen(namebuffer);
@@ -211,7 +213,7 @@ netMetaPacket::ClientName( char * namebuffer, int bufferlength )
 		// if we're reading packet, be sure we stick a null on the end, for safety.
 		namebuffer[bufferlength-1] = '\0';
 	}
-	
+#endif	
 	return success;
 }
 
@@ -292,6 +294,40 @@ netMetaPacketInput::Long( sint32 & result )
 		m_bufferDistance += sizeof(sint32);
 		success = true;
 	}
+}
+
+bool
+netMetaPacketInput::String( char * string, sint16 & stringLength )
+{	
+	bool success = true;
+	
+	sint16 length;			// how much we're going to read
+	sint16 packetStringLength;	// how much is actually stored in the packet
+	
+	// reading packet..
+	Short(packetStringLength);
+	length = packetStringLength;
+
+	if ( length > stringLength )
+		length = stringLength;	// don't read more from the packet than we can actually read!
+	
+
+	for ( int i = 0; i < length; i++ )
+		Char((sint8)string[i]);
+	
+	// now, in case there's more data in the packet than we have space for,
+	// keep reading chars out of the packet until we reach the end of this
+	// string (otherwise parsing any other packets in this metapacket would
+	// fail!)
+	sint8 temp;
+	for ( int i = length; i < packetStringLength; i++ )
+		Char(temp);
+		
+	// if we're reading packet, be sure we stick a null on the end, for safety.
+	string[stringLength-1] = '\0';
+	
+	return success;
+
 }
 
 sint8
@@ -390,5 +426,25 @@ netMetaPacketOutput::Long( sint32 & result )
 		success = true;
 	}
 
+	return success;
+}
+
+bool
+netMetaPacketOutput::String( char * string, sint16 & stringLength )
+{
+	bool success = true;
+	sint16 length = strlen(string);
+	
+	if ( length > stringLength )	// this can never happen, right?  Unless the string isn't null terminated.
+	{
+		assert(0);
+		length = stringLength;
+	}
+	
+	Short(length);
+	
+	for ( int i = 0; i < length; i++ )
+		Char((sint8)string[i]);
+	
 	return success;
 }

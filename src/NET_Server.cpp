@@ -266,6 +266,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 
 #define MAX_NAME_BYTES (128)
 	char namebuffer[MAX_NAME_BYTES];
+	sint16 nameBufferSize = MAX_NAME_BYTES;
 	
 	assert(clientID >= 0 && clientID < MAX_CLIENTS);
 #if 0	
@@ -291,7 +292,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				okay = true;
 				break;
 			case CPT_Name:
-				packet->ClientName(namebuffer, MAX_NAME_BYTES);
+				packet->ClientName(namebuffer, nameBufferSize);
 				m_game->ClientName(clientID, namebuffer);
 				printf("Client %d calls himself %s\n", clientID, namebuffer);
 				okay = true;

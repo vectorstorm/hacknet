@@ -13,7 +13,10 @@
 
 hnDisplayTTY::hnDisplayTTY( char * name ):
 	hnDisplay(name),
-	m_needsRefresh(false)
+	m_mode(MODE_Normal),
+	m_talkLength(0),
+	m_needsRefresh(false),
+	m_done(false)
 {
 #ifndef __DEBUGGING_NETWORK__
 	initscr();
@@ -58,68 +61,118 @@ hnDisplayTTY::Go()
 	
 	// create a thread to run the event loop...
 	
-	pthread_create( &ioThread, NULL, EventLoop, (void *)m_client );
+	pthread_create( &ioThread, NULL, StartEventLoop, (void *)this );
 	
 	return 0;
 }
 
-void * EventLoop(void *arg)
+void * StartEventLoop(void *arg)
 {
-	netClient *client = (netClient *)arg;
+	hnDisplayTTY *display = (hnDisplayTTY *)arg;
+	
+	display->EventLoop();
+
+	return 0;
+}
+
+void
+hnDisplayTTY::EventLoop()
+{
 	
 #ifdef __DEBUGGING_NETWORK__
-	client->SendMove(DIR_West);
+	SendMove(DIR_West);
 #endif	
 
-	bool done = false;
-	while ( !done )
+	while ( !m_done )
 	{
 		int commandkey = getch();
-		if ( commandkey == 'q' ){
-			//printf("Got quit key.. trying to disconnect.\n");
-			client->SendQuit(false);
-			done = true;
-		}else{
-			switch( commandkey )
-			{
-				case 'h':
-					//printf("Got move west.\n");
-					client->SendMove(DIR_West);
-					break;
-				case 'j':
-					//printf("Got move south.\n");
-					client->SendMove(DIR_South);
-					break;
-				case 'k':
-					//printf("Got move north.\n");
-					client->SendMove(DIR_North);
-					break;
-				case 'l':
-					//printf("Got move east.\n");
-					client->SendMove(DIR_East);
-					break;
-				case 'u':
-					client->SendMove(DIR_NorthEast);
-					break;
-				case 'y':
-					client->SendMove(DIR_NorthWest);
-					break;
-				case 'n':
-					client->SendMove(DIR_SouthEast);
-					break;
-				case 'b':
-					client->SendMove(DIR_SouthWest);
-					break;
-				default:
-					//printf("Got unknown keypress.\n");
-					break;
-			}
+
+		switch( m_mode )
+		{
+			case MODE_Normal:
+				HandleKeypressNormal( commandkey );
+				break;
+			case MODE_Talking:
+				HandleKeypressTalking( commandkey );
+				break;
 		}
+		Refresh();
 	}
 
-	client->Disconnect();
+	m_client->Disconnect();
+}
 
-	return NULL;
+void
+hnDisplayTTY::HandleKeypressNormal(int commandkey)
+{
+	switch( commandkey )
+	{
+		case 'q':
+			m_client->SendQuit(false);
+			m_done = true;
+			break;
+		case '"':
+			m_mode = MODE_Talking;
+			m_needsRefresh = true;		// need to print prompt on screen
+			break;
+		case 'h':
+			//printf("Got move west.\n");
+			m_client->SendMove(DIR_West);
+			break;
+		case 'j':
+			//printf("Got move south.\n");
+			m_client->SendMove(DIR_South);
+			break;
+		case 'k':
+			//printf("Got move north.\n");
+			m_client->SendMove(DIR_North);
+			break;
+		case 'l':
+			//printf("Got move east.\n");
+			m_client->SendMove(DIR_East);
+			break;
+		case 'u':
+			m_client->SendMove(DIR_NorthEast);
+			break;
+		case 'y':
+			m_client->SendMove(DIR_NorthWest);
+			break;
+		case 'n':
+			m_client->SendMove(DIR_SouthEast);
+			break;
+		case 'b':
+			m_client->SendMove(DIR_SouthWest);
+			break;
+		default:
+			//printf("Got unknown keypress.\n");
+			break;
+	}
+}
+
+void
+hnDisplayTTY::HandleKeypressTalking( int commandKey )
+{
+	switch ( commandKey )
+	{
+		case '\r':				// other characters I should be checking for here?
+			m_mode = MODE_Normal;		// perhaps I should enable keypad and just look for KEY_ENTER?
+			m_talkLength = 0;
+			m_talkBuffer[0]='\0';
+			m_needsRefresh = true;		// get rid of prompts
+			// transmit the string now!
+			break;
+		default:
+			// TODO:  Check commandkey is a valid alphanumeric character!
+			
+			if ( m_talkLength < MAX_TALK_BYTES-1 )
+			{
+				m_talkBuffer[m_talkLength] = commandKey;
+				m_talkBuffer[m_talkLength+1] = '\0';
+				m_talkLength++;
+				m_needsRefresh = true;
+			}
+			break;
+	}
 }
 
 void
@@ -214,7 +267,8 @@ void
 hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const mapClientTile &tile)
 {
 	hnDisplay::UpdateMapTile(x,y,tile);
-	PlotSquare(x,y);
+	m_needsRefresh = true;
+	//PlotSquare(x,y);
 }
 
 
@@ -222,7 +276,8 @@ void
 hnDisplayTTY::UpdateMapCreature( sint8 x, sint8 y, entType type )
 {
 	hnDisplay::UpdateMapCreature(x,y,type);
-	PlotSquare(x,y);
+	m_needsRefresh = true;
+	//PlotSquare(x,y);
 }
 
 void
@@ -231,6 +286,23 @@ hnDisplayTTY::Refresh()
 	if ( m_needsRefresh )
 	{
 #ifndef __DEBUGGING_NETWORK__
+		// redraw screen -- this is hackish.. I ought to make a single function that does this,
+		// instead of repeatedly calling a single function for every point on the screen.
+		for ( int j = 0; j < m_map->GetHeight(); j++ )
+			for ( int i = 0; i < m_map->GetWidth(); i++ )
+			{
+				PlotSquare(i,j);
+			}
+		
+		// do prompts over the map, if required.
+		if ( m_mode == MODE_Talking )
+		{
+			// draw our string in the top few lines..
+			
+			move( 1, 1 );
+			printw("Say: %s", m_talkBuffer);
+		}
+	
 		refresh();
 #endif
 		m_needsRefresh = false;

@@ -5,12 +5,30 @@
 
 class hnDisplayTTY : public hnDisplay
 {
+	enum inputMode{
+		MODE_Normal,	// business as usual
+		MODE_Talking	// we're in the middle of trying to speak.
+	};
+
+	inputMode	m_mode;
+
+#define MAX_TALK_BYTES	(128)
+
+	char		m_talkBuffer[MAX_TALK_BYTES];
+	int		m_talkLength;
+	
 	bool		m_needsRefresh;
+	bool		m_done;
+	
 public:
 			hnDisplayTTY(char * name);
 	virtual		~hnDisplayTTY();
 	virtual bool	Go();
-
+	
+	void		EventLoop();
+	void		HandleKeypressNormal( int key );
+	void		HandleKeypressTalking( int key );
+	
 	virtual void	Refresh();
 	
 	virtual void	PlotSquare( sint8 x, sint8 y );
@@ -19,6 +37,6 @@ public:
 	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
 };
 
-void *	EventLoop(void *);	// for use by our thread to check for keypresses
+void *	StartEventLoop(void *);		// for use by our thread to check for keypresses
 
 #endif //__PH_TTYDISPLAY_H__

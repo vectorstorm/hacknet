@@ -13,7 +13,7 @@ enum{
 	SPT_MapUpdateBBox,
 	SPT_MapObjectList,
 	SPT_MapEntity,
-	SPT_Message,
+	SPT_Message,		// message from the server
 	SPT_QuitConfirm,	// yes, you're out of the game
 	SPT_SaveConfirm,	// yes, you've been saved and are out of the game
 	SPT_BadPacketNotice,	// you just sent me a bad packet, and are being disconnected.  Version mismatch?
@@ -63,12 +63,6 @@ struct netMapEntity
 	sint8 objectType;
 };
 
-struct netMessage
-{
-	sint8 messageType;
-	char buffer[128];
-};
-
 
 enum 
 {
@@ -111,7 +105,7 @@ public:
 	
 	/*****************   Client Packets  ******************/
 	bool			ClientMove( sint8 & direction );
-	bool			ClientName( char * namebuffer, int bufferLength );
+	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientSave();
 	bool			ClientQuit();
 
@@ -119,6 +113,7 @@ public:
 	virtual bool 		Char( sint8 & ) = 0;
 	virtual bool 		Short( sint16 & ) = 0;
 	virtual bool 		Long( sint32 & ) = 0;
+	virtual bool		String( char *, sint16 & ) = 0;
 
 	virtual	bool		Input() { return false; }
 	virtual bool		Output() { return false; }
@@ -133,6 +128,7 @@ public:
 	virtual bool 		Char( sint8 & );
 	virtual bool 		Short( sint16 & );
 	virtual bool 		Long( sint32 & );
+	virtual bool		String( char *, sint16 & );
 	
 	virtual sint8 		PeekChar();
 	virtual sint16 		PeekShort();
@@ -152,6 +148,7 @@ public:
 	virtual bool 		Char( sint8 & );
 	virtual bool 		Short( sint16 & );
 	virtual bool 		Long( sint32 & );
+	virtual bool		String( char *, sint16 & );
 	
 	virtual	bool		Output() { return true; }
 };
