@@ -1,4 +1,4 @@
-HackNet - version 0.0.2
+HackNet - version 0.0.5
 
 Trevor Powell:  whiterabbit@users.sourceforge.net
 -------
@@ -17,9 +17,11 @@ docs/instructions.txt for playing instructions.
 What's New?   (See ChangeLog for details)
 -------
 
-New since 0.0.1, communication between players, rudimentary line-of-sight
-(rogue-style), multiple dungeon levels, the ability to run the server and
-clients on different servers.
+New since 0.0.4:  Combat, Status, Object take/drop/wield, Inventory,
+  Defaults to no-groups (since that's my preferred mode), Player stats
+  now randomly generated, Status line, and of course, lots of
+  infrastructure changes, lots of code cleanups, and even a bug fix
+  or two.
 
 
 Platforms Supported
@@ -33,29 +35,23 @@ x86 	- Cygwin (under Windows)
 Alpha 	- RedHat Linux 7.0
 PPC 	- Debian GNU/Linux 2.2
 Sparc	- Debian GNU/Linux 2.2
-
-Known problems exist for the following platforms:
-Sun Solaris:  The current codebase will actually compile and link on the
-  Solaris machines in SourceForge's compile farm, but won't run.  I suspect
-  that this is due to a misconfigured dev environment on those machines,
-  but I won't move this platform to the 'success' category above until I
-  receive word from someone saying that they've had it compile and run
-  properly.  If you have access to a Solaris box, I'd be quite grateful if
-  you could test HackNet on it, and let me know the results!  (Note that
-  you may need to export an environment variable of CC=gcc in order to
-  make the configure script work properly)
-Compaq Tru64:  The Tru64 machine in SourceForge's compile farm has no C++
-  compiler installed on it.  Presumably, if you were to install the
-  GNU utilities onto it, Hacknet would compile and run.  As with
-  Solaris, I'd be glad to hear from anyone who's experimented with
-  getting HackNet to run on a Tru64 machine.
+Sparc   - Sun Solaris (8)
 
 ...and more, as they're reported to me!  If you get it to compile on something
 that isn't listed here, or get it compiling on one of the currently unworking
-platforms, or have a lead on how to get it working, please let me know!  
-Please submit any patches to me at: 
+platforms, or have a lead on how to get it working, please let me know!  More
+importantly, if it fails to compile for you on one of the systems mentioned
+above, please tell me immediately!
 
-whiterabbit@users.sourceforge.net
+I can be reached at:   whiterabbit@users.sourceforge.net
+
+Known problems exist for the following platforms:
+Sun Solaris:  You need to install the usual GNU utilities for a compile to
+  succeed.  In particular, you need GNU make (if you've named it something
+  other than just 'make', you need to export MAKE=makename), you need GNU
+  ar, and you probably need a number of other utilities.. and they all need
+  to be in your PATH.  Once this is done, the configure script should
+  autodetect everything else and let you make the sources.
 
 
 
@@ -105,6 +101,8 @@ name 'Foo', use the following command line:
 
 ./hacknet.tty -uFoo localhost
 
+If you don't specify a server address, it will default to localhost.
+If you don't specify a name, it will assume your login name.
 
 Caveats:
 --------
@@ -113,8 +111,3 @@ Note that currently the HackNet client is hard-wired to connect to a server
 running on port 9274, and the server is hard-wired to use that port.  Is
 there any demand to allow it to use an arbitrary port?  I should probably
 stop being lazy and make it possible.
-
-Note that currently quite a lot of data gets transferred to the client
-when changing levels -- ~7k, which can take some amount of time on modem
-connects.  Minimizing data that must be transferred is going to be a major 
-goal for the next version.

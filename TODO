@@ -7,7 +7,7 @@ indented items rely upon the completion of their parent item before they can
 be achieved!  (ie: we must have monsters before we can write monster AI)
 
  - UI work.  (Integrate existing NetHack client code to make our own clients?)
- - Character creation (name, class, alignment, stats, etc)
+ - Proper character creation (race, class, alignment, etc)
  - Objects
    - Populate initial maps with objects
  - Monsters

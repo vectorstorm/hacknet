@@ -244,9 +244,6 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 			{
 				// grab this object description
 				ObjDescription( packet.object[i][j] );
-				//Uint16( packet.object[i][j].type );
-				//Uint8( packet.object[i][j].blesscurse );
-				//Uint8( packet.object[i][j].count );
 			}
 		}
 	}
@@ -614,7 +611,9 @@ netMetaPacketInput::Sint16( sint16 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		result = ntohs(*((sint16 *)m_bufferPoint));
+		sint16 value;
+		memcpy( &value, m_bufferPoint, sizeof(sint16) );
+		result = ntohs(value);
 		m_bufferPoint += sizeof(sint16);
 		m_bufferDistance += sizeof(sint16);
 		success = true;
@@ -633,7 +632,9 @@ netMetaPacketInput::Uint16( uint16 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		result = ntohs(*((uint16 *)m_bufferPoint));
+		uint16 value;
+		memcpy(&value, m_bufferPoint, sizeof(uint16));
+		result = ntohs(value);
 		m_bufferPoint += sizeof(uint16);
 		m_bufferDistance += sizeof(uint16);
 		success = true;
@@ -652,7 +653,9 @@ netMetaPacketInput::Sint32( sint32 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		result = ntohl(*((sint32 *)m_bufferPoint));
+		sint32 value;
+		memcpy(&value, m_bufferPoint, sizeof(sint32));
+		result = ntohl(value);
 		m_bufferPoint += sizeof(sint32);
 		m_bufferDistance += sizeof(sint32);
 		success = true;
@@ -671,7 +674,9 @@ netMetaPacketInput::Uint32( uint32 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		result = ntohl(*((uint32 *)m_bufferPoint));
+		uint32 value;
+		memcpy(&value, m_bufferPoint, sizeof(uint32));
+		result = ntohl(value);
 		m_bufferPoint += sizeof(uint32);
 		m_bufferDistance += sizeof(uint32);
 		success = true;
@@ -829,7 +834,8 @@ netMetaPacketOutput::Sint16( sint16 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		*((sint16 *)m_bufferPoint) = htons(result);
+		sint16 value = htons(result);
+		memcpy(m_bufferPoint,&value,sizeof(sint16));
 		m_bufferPoint += sizeof(sint16);
 		m_bufferDistance += sizeof(sint16);
 		success = true;
@@ -848,7 +854,8 @@ netMetaPacketOutput::Uint16( uint16 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		*((uint16 *)m_bufferPoint) = htons(result);
+		uint16 value = htons(result);
+		memcpy( m_bufferPoint, &value, sizeof(uint16) );
 		m_bufferPoint += sizeof(uint16);
 		m_bufferDistance += sizeof(uint16);
 		success = true;
@@ -868,7 +875,8 @@ netMetaPacketOutput::Sint32( sint32 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		*((sint32 *)m_bufferPoint) = htonl(result);
+		sint32 value = htonl(result);
+		memcpy(m_bufferPoint,&value,sizeof(sint32));
 		m_bufferPoint += sizeof(sint32);
 		m_bufferDistance += sizeof(sint32);
 		success = true;
@@ -887,7 +895,8 @@ netMetaPacketOutput::Uint32( uint32 & result )
 	
 	if ( m_bufferDistance < m_bufferLength )
 	{
-		*((uint32 *)m_bufferPoint) = htonl(result);
+		uint32 value = htonl(result);
+		memcpy(m_bufferPoint, &value, sizeof(uint32));
 		m_bufferPoint += sizeof(uint32);
 		m_bufferDistance += sizeof(uint32);
 		success = true;

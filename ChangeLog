@@ -6,6 +6,11 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 15, 2001:
+  * Fixed alignment issues in netMetaPacket.  Thanks to dbg, ig2, and
+    LIM from #c++ on the OpenProjects irc network for helping me to
+    track down this problem!
+
 July 14, 2001:
   * Server-side initial implementation of 'wielding' objects.
   * Added 'wielding' objects to common networking libs.
