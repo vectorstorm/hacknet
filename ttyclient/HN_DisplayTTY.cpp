@@ -24,12 +24,15 @@
 	int color_set(short,void * ){}
 #endif
 
+#define COLOR_INVERSE 	(8)
+
 #define min(x,y) ((x<y)?x:y)
 
 
 hnDisplayTTY::hnDisplayTTY( char * name ):
 	hnDisplay(name),
 	m_mode(MODE_Normal),
+	m_inventoryMode(ISM_None),
 	m_talkLength(0),
 	m_messageLines(0),
 	m_messageDisplayLine(0),
@@ -60,6 +63,7 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 		init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
 		init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
 		init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+		init_pair(COLOR_INVERSE, COLOR_BLACK, COLOR_WHITE);
 	}
 	
 	refresh();	
@@ -205,6 +209,7 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			HandleDrop();
 			break;
 		case 'i':
+			PostTurnSubmit();
 			HandleInventory();
 			break;
 		case ',':
@@ -258,12 +263,40 @@ hnDisplayTTY::HandleKeypressInventoryDisplay( int commandKey )
 void
 hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 {
+	const char inventoryLetters[56] =
+	{
+		'a','b','c','d','e','f','g','h','i','j','k','l','m',
+		'n','o','p','q','r','s','t','u','v','w','x','y','z',
+		'A','B','C','D','E','F','G','H','I','J','K','L','M',
+		'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+	};
+	sint8 inventorySelected = -1;
+	
+	for ( int i = 0; i < 56; i++ )
+	{
+		if ( inventoryLetters[i] == commandKey )
+		{
+			inventorySelected = i;
+			break;
+		}
+	}
+
+	if ( inventorySelected != -1 )
+	{
+		m_mode = MODE_Normal;
+		m_needsRefresh = true;
+
+		DropCommand(inventorySelected);
+	}
+	
 	switch ( commandKey )
 	{
-		default:
-			// TODO:  Check commandkey is a valid alphanumeric character!
+		case ' ':
 			m_mode = MODE_Normal;
 			m_needsRefresh = true;
+			break;
+		default:
+			// do nothing
 			break;
 	}
 }
@@ -331,7 +364,10 @@ hnDisplayTTY::HandleDrop()
 
 	if ( m_inventoryCount > 0 )
 	{
-		DropCommand(0);
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Drop;
+
+		m_needsRefresh = true;
 	}
 }
 
@@ -644,11 +680,53 @@ hnDisplayTTY::DrawInventory()
 	int y = 0;
 	char buffer[256];
 
-	for ( int i = 0; i < min(56,m_inventoryCount); i++ )
+#define CATEGORY_COUNT (4)
+
+	const char * categoryName[CATEGORY_COUNT] =
 	{
-		move(y++,x);
-		GetObjectDescriptionText(m_inventory[i],buffer,256);
-		printw("%c - %s", inventoryLetters[i], buffer);
+		"Amulets",
+		"Weapons",
+		"Armour",
+		"Potions"
+	};
+
+	const int categoryStart[CATEGORY_COUNT] =
+	{
+		AMULET_MIN,
+		WEAPON_MIN,
+		ARMOUR_MIN,
+		POTION_MIN
+	};
+
+	const int categoryEnd[CATEGORY_COUNT] =
+	{
+		AMULET_MAX,
+		WEAPON_MAX,
+		ARMOUR_MAX,
+		POTION_MAX
+	};
+	
+	for ( int j = 0; j < CATEGORY_COUNT; j++ )
+	{
+		bool somethingInThisCategory = false;
+		
+		for ( int i = 0; i < min(56,m_inventoryCount); i++ )
+		{
+			if ( m_inventory[i].type > categoryStart[j] && m_inventory[i].type < categoryEnd[j] )
+			{
+				if ( !somethingInThisCategory )
+				{
+					move(y++,x);
+					color_set( COLOR_INVERSE, NULL );
+					printw("%s", categoryName[j]);
+					color_set( COLOR_WHITE, NULL );
+					somethingInThisCategory = true;
+				}
+				move(y++,x);
+				GetObjectDescriptionText(m_inventory[i],buffer,256);
+				printw("%c - %s", inventoryLetters[i], buffer);
+			}
+		}
 	}
 	move(y,x);
 	printw("(end)");

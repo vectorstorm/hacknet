@@ -8,19 +8,27 @@ enum
 	OBJECT_None,
 	
 	/*                POTIONS                  */
+	POTION_MIN,
 	POTION_Bubbly,		// there should be one of these for each item type.
-
+	POTION_MAX,
+	
 	/*                 ARMOURS                  */
+	ARMOUR_MIN,
 	ARMOUR_Leather,
-
+	ARMOUR_MAX,
+	
 	/*                 WEAPONS                 */
+	WEAPON_MIN,
 	WEAPON_Dagger,
 	WEAPON_LongSword,
-
+	WEAPON_MAX,
+	
 	/*                ARTIFACTS                */
+	AMULET_MIN,
 	AMULET_ImitationYendor,		// Accept no substitute!
 	AMULET_Yendor,			// the goal of the whole thing!
-
+	AMULET_MAX,
+	
 	OBJECT_MAX
 };
 typedef uint16 objType;

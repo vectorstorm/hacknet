@@ -5,15 +5,24 @@
 	static const char * g_objectName[OBJECT_MAX+1] = {
 		"No Object",
 		
+		"POTIONMIN",
 		"bubbly potion",
+		"POTIONMAX",
+		
+		"ARMOURMIN",
 		"leather armour",
-
+		"ARMOURMAX",
+		
+		"WEAPONMIN",
 		"dagger",
 		"long sword",
-
+		"WEAPONMAX",
+		
+		"AMULETMIN",
 		"cheap plastic imitation of the Amulet of Yendor",
 		"the Amulet of Yendor",
-
+		"AMULETMAX",
+		
 		"OBJECT TYPE ERROR"
 	};
 	

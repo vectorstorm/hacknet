@@ -11,8 +11,14 @@ class hnDisplayTTY : public hnDisplay
 		MODE_InventorySelect,	// selecting something from our inventory
 		MODE_Talking		// we're in the middle of trying to speak.
 	};
+	enum inventorySelectMode{
+		ISM_None,
+		ISM_Drop,
+		ISM_Wield
+	};
 
-	inputMode	m_mode;
+	inputMode		m_mode;
+	inventorySelectMode	m_inventoryMode;
 
 #define MAX_TALK_BYTES		(128)
 
