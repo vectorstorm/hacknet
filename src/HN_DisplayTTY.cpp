@@ -153,6 +153,12 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 		case 'b':
 			m_client->SendMove(DIR_SouthWest);
 			break;
+		case '>':
+			m_client->SendMove(DIR_Down);
+			break;
+		case '<':
+			m_client->SendMove(DIR_Up);
+			break;
 		default:
 			//printf("Got unknown keypress.\n");
 			break;
@@ -259,6 +265,12 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 		case WALL_Room:
 		case WALL_Doorway:
 			theChar = '.';
+			break;
+		case WALL_StairsUp:
+			theChar = '<';
+			break;
+		case WALL_StairsDown:
+			theChar = '>';
 			break;
 		default:
 			theChar = wallType;

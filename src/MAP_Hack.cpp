@@ -17,6 +17,44 @@ mapHack::~mapHack()
 }
 
 void
+mapHack::GenerateStairsUp()
+{
+	bool didit = false;
+
+	while ( !didit )
+	{
+		int x = rand() % GetWidth();
+		int y = rand() % GetHeight();
+
+		if ( WallAt(x,y) == WALL_Room )
+		{
+			WallAt(x,y) = WALL_StairsUp;
+			m_stairsUp.Set(x,y);
+			didit = true;
+		}
+	}
+}
+
+void
+mapHack::GenerateStairsDown()
+{
+	bool didit = false;
+
+	while ( !didit )
+	{
+		int x = rand() % GetWidth();
+		int y = rand() % GetHeight();
+
+		if ( WallAt(x,y) == WALL_Room )
+		{
+			WallAt(x,y) = WALL_StairsDown;
+			m_stairsDown.Set(x,y);
+			didit = true;
+		}
+	}
+}
+
+void
 mapHack::MakeRooms()
 {
 	bool done = false;

@@ -18,7 +18,7 @@ struct sockaddr_in;
 struct netClientPacket;
 
 
-#define MAX_META_PACKET_SIZE (512)
+#define MAX_META_PACKET_SIZE (65536)
 #define MAX_CLIENT_PACKET_SIZE (128)
 
 struct clientData {

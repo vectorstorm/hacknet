@@ -8,7 +8,7 @@
 #include "HN_Point.h"
 
 //#define MAX_LEVELS	(50)
-#define MAX_LEVELS (2)
+//#define MAX_LEVELS (2)
 
 //class mapBase;
 class netServer;

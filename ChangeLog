@@ -46,6 +46,28 @@ April 28, 2001:
   have to lower the number of messages displayed and otherwise adjust
   to UI to be able to fit statistics at the bottom of the screen.
 
+  I've been a busy little coder today, apparently!  Here's the next
+  set of prezzies for you..  First, stairs are now generated, and you
+  can now walk up and down them!  Second, the server now remembers
+  the client's visual map of each level, and uses that for the data
+  that's sent to each client (this means that we're much closer to
+  being able to save/restore a client's state).  Third, the server
+  now fully updates the client's vision every time they walk up or
+  down a dungeon level -- this is done because the client only stores
+  a single 'map' locally, and so when you go up or down a level, the
+  contents of the new level are sent from the server to overwrite
+  the old level..  the bad news is that on currently-sized levels,
+  that amounts to more than 7k of data!  This is a lot more than
+  I really want to be transferring for a single move, so I suspect I'll
+  need to rewrite this system to make the clients a bit smarter..
+  perhaps make the clients remember all maps they see within each
+  play session, and just have the server send all vision data to the
+  clients whenever resuming a saved play session.. that way, we
+  don't have to transfer 7k each time you change levels, just transfer
+  up to 50 dungeon levels times 7k each during the initial connection
+  process..  (But that's 350k, which can take a lot of time to
+  transfer on slow modem connections, even if it's only done once!)
+
 ---
 April 27, 2001:
   Adjusted client argument parsing.  Client still defaults to 'localhost'

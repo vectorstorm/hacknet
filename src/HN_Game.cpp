@@ -13,6 +13,7 @@ hnGame * hnGame::s_instance = NULL;
 
 #define LEVEL_WIDTH (78)
 #define LEVEL_HEIGHT (20)
+#define MAX_LEVELS (5)
 
 void
 hnGame::Startup()
@@ -117,40 +118,12 @@ hnGame::ClientJoined(int playerID)
 	netServer::GetInstance()->StartMetaPacket( playerID );
 	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
 	
-	hnPoint pos = m_player[playerID]->GetPosition();
-
 	mapBase *map = hnDungeon::GetLevel(z);
 	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight() );
-
-	pos += offsetVector[DIR_NorthWest];
-	netMapUpdateBBox update;
-	update.loc = pos;
-	update.width = 3;
-	update.height = 3;
-	update.material = new sint16[update.width * update.height];
-	update.wall = new sint16[update.width * update.height];
-	update.entityType = new sint8[update.width * update.height];
 	
-	for ( int j = 0; j < update.height; j++ )
-		for ( int i = 0; i < update.width; i++)
-		{
-			update.material[i+(j*update.width)] = hnDungeon::GetLevel(pos.z)->MaterialAt(pos.x+i,pos.y+j);
-			update.wall[i+(j*update.width)] = hnDungeon::GetLevel(pos.z)->WallAt(pos.x+i,pos.y+j);
-			entBase *entity = hnDungeon::GetLevel(pos.z)->MapTile(pos.x+i,pos.y+j).entity;
-
-			if ( entity )
-				update.entityType[i+(j*update.width)] = entity->GetType();
-			else
-				update.entityType[i+(j*update.width)] = ENTITY_None;
-		}
-	netServer::GetInstance()->SendMapUpdateBBox( update );
-
-	delete [] update.material;
-	delete [] update.wall;
-	delete [] update.entityType;		
-
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
-			
+	
+	m_player[playerID]->PostTurn();
 }
 
 void
@@ -217,6 +190,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 	if ( dir >= 0 && dir < 10 )	// final sanity check
 	{
 		bool legalMove = false;
+		bool blocked = false;
 		//bool legalMove = true;
 		
 		if ( dir >= 0 && dir < 8 )
@@ -226,14 +200,47 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			
 			if ( hnDungeon::GetLevel(potentialPos.z)->WallAt(potentialPos.x,potentialPos.y) & WALL_Passable )
 				if ( hnDungeon::GetLevel(potentialPos.z)->MapTile(potentialPos.x,potentialPos.y).entity == NULL )
+				{
 					legalMove = true;
+				}
+				else
+					blocked = true;
 		}
 		else
 		{
 			// up or down -- check for appropriate stairways here.
-			legalMove = false;
+			hnPoint currentPos = player->GetPosition();
+			if ( dir == DIR_Up )
+				if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsUp )
+				{
+					hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z-1)->GetDownStairs();
+					if ( hnDungeon::GetLevel(currentPos.z-1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
+					{
+						legalMove = true;	// nobody standing where we want to go.
+					}
+					else
+						blocked = true;
+				}
+			if ( dir == DIR_Down )
+				if ( hnDungeon::GetLevel(currentPos.z)->WallAt(currentPos.x,currentPos.y) & WALL_StairsDown )
+				{
+					hnPoint2D stairsPos = hnDungeon::GetLevel(currentPos.z+1)->GetUpStairs();
+					if ( hnDungeon::GetLevel(currentPos.z+1)->MapTile(stairsPos.x, stairsPos.y).entity == NULL )
+					{
+						legalMove = true;	// nobody standing where we want to go.
+					}
+					else
+						blocked = true;
+				}
 		}
-
+		
+		if ( blocked )
+		{
+			char *buffer = "Someone is blocking the way.";
+			netServer::GetInstance()->StartMetaPacket( playerID );
+			netServer::GetInstance()->SendMessage(buffer);
+			netServer::GetInstance()->TransmitMetaPacket();
+		}
 		if ( legalMove )
 		{
 			// TODO:

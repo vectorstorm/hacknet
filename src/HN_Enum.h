@@ -51,21 +51,24 @@ typedef sint16 hnMaterialType;
 
 enum {	// actually, 'vertical structure' type stuff goes here.
 	
-	WALL_Invalid 	= 	0,
-	WALL_Room 	= 	1,
-	WALL_Corridor 	= 	2,
-	WALL_Doorway 	= 	4,
-	WALL_OpenDoor 	= 	8,
-	WALL_ClosedDoor = 	16,
-	WALL_Solid 	=	32,
-	WALL_Horizontal = 	64,
-	WALL_Vertical 	= 	128
+	WALL_Invalid 	= 	0x000,
+	WALL_Room 	= 	0x001,
+	WALL_Corridor 	= 	0x002,
+	WALL_Doorway 	= 	0x004,
+	WALL_OpenDoor 	= 	0x008,
+	WALL_ClosedDoor = 	0x010,
+	WALL_Solid 	=	0x020,
+	WALL_Horizontal = 	0x040,
+	WALL_Vertical 	= 	0x080,
+	WALL_StairsUp	=	0x100,
+	WALL_StairsDown =	0x200
 };
 
 typedef sint16 hnWallType;
 
-#define WALL_Passable		(WALL_Room | WALL_Corridor | WALL_Doorway | WALL_OpenDoor)
-#define WALL_None		(WALL_Room | WALL_Corridor)
+#define WALL_Stairs		(WALL_StairsUp | WALL_StairsDown)
+#define WALL_Passable		(WALL_Room | WALL_Corridor | WALL_Doorway | WALL_OpenDoor | WALL_Stairs)
+#define WALL_None		(WALL_Room | WALL_Corridor | WALL_Stairs)
 #define WALL_Any		(WALL_Horizontal | WALL_Vertical | WALL_Solid)
 #define WALL_Door		(WALL_OpenDoor | WALL_ClosedDoor)
 #define WALL_RoomEntrance	(WALL_Doorway | WALL_Door)

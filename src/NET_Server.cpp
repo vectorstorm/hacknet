@@ -19,7 +19,8 @@
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
 
-//#define __DEBUG_NETWORKING__
+#define __DEBUG_NETWORKING__
+//#define __DISPLAY_PACKET_CONTENT__
 
 netServer * netServer::s_instance = NULL;
 
@@ -461,7 +462,7 @@ netServer::TransmitMetaPacket()
 		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), MSG_NOSIGNAL) == -1 )
 			perror("send");
 
-#ifdef __DEBUG_NETWORKING__
+#ifdef __DISPLAY_PACKET_CONTENT__
 		for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
 		{
 			printf("Value: %d\n", m_metaPacket->GetBuffer()[i]);

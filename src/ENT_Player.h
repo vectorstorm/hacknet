@@ -3,6 +3,8 @@
 
 #include "ENT_Base.h"
 
+class mapClient;
+
 class entPlayer : public entBase
 {
 	int		m_playerID;				// the ID the server assigns to us.  NOT TO BE SAVED.
@@ -24,6 +26,8 @@ class entPlayer : public entBase
 
 	int		m_experiencePoints;
 	
+	mapClient **	m_map;
+	int		m_mapCount;
 public:
 			entPlayer( int playerID, const hnPoint & where );
 			~entPlayer();

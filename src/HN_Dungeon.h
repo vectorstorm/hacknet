@@ -14,8 +14,11 @@ class hnDungeon
 public:
 	static void 		Startup( int depth, int width, int height );
 	static void 		Shutdown();
-
+	
+	static hnDungeon *	GetInstance();
 	static mapBase * 	GetLevel( int levelNumber );
+
+	int			GetLevelCount() { return m_levelCount; }
 };
 
 

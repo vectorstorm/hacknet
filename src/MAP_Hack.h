@@ -27,6 +27,8 @@ public:
 	virtual			~mapHack();
 
 	virtual void		Generate();
+	virtual void		GenerateStairsUp();
+	virtual void		GenerateStairsDown();
 };
 
 #endif // __HN_HACK_MAP_H__

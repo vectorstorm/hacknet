@@ -46,6 +46,12 @@ hnDungeon::hnDungeon(int levelCount, int width, int height):
 	{
 		m_levelMap[i] = new mapHack(width, height);
 		m_levelMap[i]->Generate();
+
+		if ( i < levelCount - 1 )
+			m_levelMap[i]->GenerateStairsDown();
+
+		if ( i > 0 )
+			m_levelMap[i]->GenerateStairsUp();
 	}
 }
 
@@ -56,4 +62,13 @@ hnDungeon::~hnDungeon()
 		delete m_levelMap[i];
 	}
 	delete [] m_levelMap;
+}
+
+
+hnDungeon *
+hnDungeon::GetInstance()
+{
+	assert( s_instance );
+
+	return s_instance;
 }

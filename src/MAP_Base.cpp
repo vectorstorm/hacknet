@@ -13,6 +13,9 @@
 mapBase::mapBase(sint8 width, sint8 height):
 	m_width(width), m_height(height), m_roomCount(0)
 {
+	m_stairsUp.Set(-1,-1);
+	m_stairsDown.Set(-1,-1);
+	
 	m_tile = new mapTile[width * height];
 	for ( int i = 0; i < width * height; i++ )
 	{
