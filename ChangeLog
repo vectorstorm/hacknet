@@ -1,3 +1,19 @@
+April 25, 2001:
+  How sad is this -- I even put in a change on ANZAC day.  I ought to get
+  my priorities straight!  ;)
+
+  I actually did a major restruturing of the code to properly generate
+  NetHack-style levels through identical code to that used in NetHack...
+  and then realised that the NetHack code is functionally equivalent to
+  what I already had (with one or two minor factors that I'd missed
+  before)..  the NetHack version of the code is more efficient in CPU
+  time and memory, but my version is more intuitive to the casual
+  examiner (or so I like to believe), so I threw out all those changes
+  and went back to the original code.  I've added in one or two factors
+  that I'd missed before, though, such as limits on the maximum area of
+  rooms.  (Currently hardcoded to 50 -- the same as in NetHack)
+
+---
 April 24, 2001:
   Long day at work -- not much time to work on HackNet.  Added ability
   for the client to connect to an internet server, and tested it on my

@@ -429,6 +429,11 @@ mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, ch
 		if ( yabs < 2 )
 			yabs = 2;
 		
+		if ( htmp * wtmp > 50 )
+		{
+			htmp = 50 / wtmp;	// if we're too big, make us smaller.
+		}
+		
 		result.top = yabs;
 		result.left = xabs;
 		result.bottom = yabs + htmp;
@@ -466,8 +471,8 @@ mapHack::CreateRoom(char x, char y, char w, char h, char xalign, char yalign, ch
 		
 		printf("Succeeded at generating room: %dx%d at %d,%d.\n", result.right - result.left,result.bottom-result.top, result.left, result.top);
 		
-		for ( int i = result.left-3; i <= result.right+3; i++ )
-			for ( int j = result.top-3; j <= result.bottom+3; j++ )
+		for ( int i = result.left-5; i <= result.right+5; i++ )
+			for ( int j = result.top-5; j <= result.bottom+5; j++ )
 			{
 				MapTile(i,j).border = true;
 			}
