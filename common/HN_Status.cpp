@@ -136,6 +136,18 @@ void
 hnStatus::TakeDamage( sint16 pointsDamage )
 {
 	m_hitPoints -= pointsDamage;
+	m_changedHitPoints = true;
+}
+
+void
+hnStatus::HealDamage( sint16 pointsDamage )
+{
+	m_hitPoints += pointsDamage;
+
+	if ( m_hitPoints > m_hitPointMax )
+		m_hitPoints = m_hitPointMax;
+	
+	m_changedHitPoints = true;
 }
 
 void

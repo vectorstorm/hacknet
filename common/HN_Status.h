@@ -72,6 +72,7 @@ public:
 	bool		Paralyzed() { return m_paralyzed; }
 
 	void		TakeDamage( sint16 points );
+	void		HealDamage( sint16 points );
 	void		TurnPassed();	// a turn has passed.  Do whatever needs to be done.
 	
 	void		SendChanges( netMetaPacketOutput *packet );

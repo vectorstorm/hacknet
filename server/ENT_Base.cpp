@@ -225,6 +225,7 @@ entBase::Attack( hnDirection dir )
 	if ( RollToHit(foe) )
 	{
 		// we hit!
+		foe->GetStatus()->TakeDamage(1);	// just do one hit point of damage for now.
 		return true;
 	}
 	else
