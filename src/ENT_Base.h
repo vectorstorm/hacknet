@@ -1,19 +1,9 @@
-#ifndef __HN_ENTITY_H__
-#define __HN_ENTITY_H__
+#ifndef __ENT_BASE_H__
+#define __ENT_BASE_H__
 
 #include "HN_Enum.h"
 #include "HN_Point.h"
-
-enum {
-        ENTITY_None,                    // a mapobjectupdate with this type means nothing's here any more.
-		        
-        ENTITY_Monster,      	        // there should be one of these for every type of monster
-        ENTITY_Player,
-
-        ENTITY_MAX
-};
-
-typedef uint8 entType;
+#include "ENT_Types.h"
 
 class entBase
 {
@@ -43,4 +33,4 @@ protected:
 	void			Unlink();
 };
 
-#endif
+#endif // __ENT_BASE_H__

@@ -13,7 +13,15 @@ April 22, 2001:
   code, because it'll no longer be required.  (The movement code still in
   hnGame is there to synchronise the movements of moving players with the
   vision of non-moving players, if that makes any sense).
-  
+
+  Moved enumerations from OBJ/ENT_Base.h into OBJ/ENT_Types.h  This is so
+  that the client code can get the types without including the object and
+  entity class declarations (which it doesn't need).
+
+  Fixed Makefile.am to remove some unneeded source files from the client.  My
+  mistake.  :)   (They'd just be removed in the linking process, but now
+  'make hacknet' doesn't have to compile quite so many source files)
+
 ---
 April 21, 2001:
   Lots of renamed files, to make a more consistant file naming scheme.  Objects now

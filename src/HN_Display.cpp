@@ -1,9 +1,8 @@
 #include <stdlib.h>
 #include "HN_Display.h"
 #include "HN_Consts.h"
-#include "MAP_Base.h"
-#include "OBJ_Base.h"
-#include "ENT_Base.h"
+#include "OBJ_Types.h"
+#include "ENT_Types.h"
 
 hnDisplay::hnDisplay()
 {

@@ -4,7 +4,7 @@
 #include "HN_Enum.h"
 #include "HN_Point.h"
 #include "MAP_Client.h"
-#include "ENT_Base.h"
+#include "ENT_Types.h"
 
 class netClient;
 

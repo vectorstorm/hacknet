@@ -1,20 +1,9 @@
-#ifndef __HN_OBJECT_H__
-#define __HN_OBJECT_H__
+#ifndef __OBJ_BASE_H__
+#define __OBJ_BASE_H__
 
 #include "HN_Types.h"
 #include "HN_Point.h"
-
-enum
-{
-	OBJECT_None,
-	
-	OBJECT_Potion,		// there should be one of these for each item type.
-	OBJECT_Armor,
-	OBJECT_Weapon,
-
-	OBJECT_MAX
-};
-typedef uint8 objType;
+#include "OBJ_Types.h"
 
 class objBase
 {
@@ -52,4 +41,4 @@ public:
 
 
 
-#endif //__HN_OBJECT_H__
+#endif //__OBJ_BASE_H__

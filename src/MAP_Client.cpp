@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "MAP_Client.h"
-//#include "HN_Object.h"
 #include "HN_Point.h"
 
 

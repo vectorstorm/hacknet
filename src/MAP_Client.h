@@ -4,8 +4,8 @@
 #include "HN_Enum.h"
 #include "HN_Types.h"
 #include "HN_Point.h"
-#include "ENT_Base.h"
-#include "OBJ_Base.h"
+#include "ENT_Types.h"
+#include "OBJ_Types.h"
 
 class mapClientTile
 {
