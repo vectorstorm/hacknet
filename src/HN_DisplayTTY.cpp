@@ -280,7 +280,7 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	{
 		mapClientTile & tile = m_map[m_position.z]->MapTile(x,y);
 		color_set( floorTileColor[floorType],NULL);
-
+		
 		if ( tile.entity == ENTITY_Human )	// if someone is standing here...
 		{
 			color_set( COLOR_WHITE, NULL );
@@ -291,14 +291,12 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 			color_set( COLOR_MAGENTA, NULL );
 			theChar = 'x';
 		}
-		//mvaddch(y,x,floorTileChar[floorType]);
 		mvaddch(y + MAX_MESSAGE_LINES+1,x,theChar);
 		move(m_position.y + MAX_MESSAGE_LINES+1,m_position.x);
 
 		m_needsRefresh = true;
 	}
 #endif
-//	refresh();
 }
 
 void

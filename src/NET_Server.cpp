@@ -3,6 +3,7 @@
 #include <stdlib.h> 
 #include <errno.h> 
 #include <assert.h>
+#include <signal.h>
 #include <string.h> 
 #include <unistd.h>
 #include <sys/time.h>
@@ -88,7 +89,7 @@ netServer::StartServer()
 	m_localAddress->sin_family = AF_INET;			// host byte order
 	m_localAddress->sin_port = htons(HACKNET_PORT);		// short, network byte order
 	m_localAddress->sin_addr.s_addr = INADDR_ANY;		// auto-fill with my IP
-	bzero(&(m_localAddress->sin_zero),8);			// zero out the rest of the struct
+	bzero((char *)&(m_localAddress->sin_zero),8);			// zero out the rest of the struct
 	
 	printf("Binding socket to port %d...\n", HACKNET_PORT);
 	if ( bind( m_socket, (sockaddr *)m_localAddress, sizeof(sockaddr)) < 0 )
@@ -152,7 +153,7 @@ netServer::Go()
 			}
 		}
 		
-		unsigned int sin_size = sizeof(sockaddr_in);
+		socklen_t sin_size = sizeof(sockaddr_in);
 		//printf("Got socket stuff... \n");
 		if ( FD_ISSET(m_socket, &open_sockets) )	// we have a new client
 		{

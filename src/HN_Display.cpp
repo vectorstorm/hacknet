@@ -35,12 +35,15 @@ hnDisplay::~hnDisplay()
 void
 hnDisplay::UpdateMapTile(const hnPoint &point, const mapClientTile &tile)
 {
-	if ( tile.material != MATERIAL_Unknown )
-		m_map[point.z]->MaterialAt(point.x,point.y) = tile.material;
-	if ( tile.wall != WALL_Unknown )
-		m_map[point.z]->WallAt(point.x,point.y) = tile.wall;
-	
-	m_map[point.z]->MapTile(point.x,point.y).entity = tile.entity;
+	if ( m_map[point.z] != NULL )
+	{
+		if ( tile.material != MATERIAL_Unknown )
+			m_map[point.z]->MaterialAt(point.x,point.y) = tile.material;
+		if ( tile.wall != WALL_Unknown )
+			m_map[point.z]->WallAt(point.x,point.y) = tile.wall;
+		
+		m_map[point.z]->MapTile(point.x,point.y).entity = tile.entity;
+	}
 }
 
 void

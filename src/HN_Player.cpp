@@ -176,8 +176,8 @@ hnPlayer::PostTurn()
 	
 	netMapUpdateBBox update;
 	
-	hnPoint2D 	tlpos = map->GetTopLeftVisibility();
-	hnPoint2D	brpos = map->GetBottomRightVisibility();
+	hnPoint2D 	tlpos = map->GetTopLeftChanged();
+	hnPoint2D	brpos = map->GetBottomRightChanged();
 		
 	update.loc.Set( tlpos.x, tlpos.y, m_entity->GetPosition().z );
 	update.width = (brpos.x - tlpos.x) + 1;
@@ -246,8 +246,8 @@ hnPlayer::RefreshMap( int level )
 	//  this connect!)
 	//--------------------------------------------------------
 	
-	hnPoint2D 	tlpos = map->GetTopLeftMaxVisibility();
-	hnPoint2D	brpos = map->GetBottomRightMaxVisibility();
+	hnPoint2D 	tlpos = map->GetTopLeftMaxChanged();
+	hnPoint2D	brpos = map->GetBottomRightMaxChanged();
 	
 	update.loc.Set( tlpos.x, tlpos.y, level );
 	update.width = ( brpos.x - tlpos.x ) + 1;

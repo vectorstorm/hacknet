@@ -47,6 +47,23 @@ AC_HEADER_STDC
 AC_CHECK_LIB(pthread, pthread_create,THREADLIB='-lpthread')
 AC_SUBST(THREADLIB)
 
+dnl AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h unistd.h netinet/in.h)
+
+# Bleah.  If we don't have a socklen_t, switch it to an int for the sake of
+# Cygwin, which seems to have decided that they might want to receive a
+# packet with a negative number of bytes in it.
+
+AC_MSG_CHECKING(whether 'socklen_t' is defined)
+AC_TRY_COMPILE(
+
+#include <netinet/in.h> 
+#include <sys/types.h>
+#include <sys/socket.h>
+,
+[
+socklen_t sin_size = sizeof(int);
+],AC_MSG_RESULT(yes), AC_MSG_RESULT(no) AC_DEFINE(socklen_t=int))
+
 # Finally create all the generated files
 # The configure script takes "file.in" and substitutes variables to produce
 # "file".  In this case we are just generating the Makefiles, but this could

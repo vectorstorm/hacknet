@@ -46,7 +46,7 @@ public:
 	bool			isVisited() { return m_visited; }
 	void			SetVisited(bool val) { m_visited = val; }
 	virtual void		Generate();
-	
+
 	void			RemoveObject( objType object );					// remove object from map
 	void			PutObjectAt( objType object, uint8 x, uint8 y );			// put object at given coords
 	void			MoveObjectTo( objType object, uint8 x, uint8 y );			// remove object from map, then put it at given coords

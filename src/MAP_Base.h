@@ -58,10 +58,12 @@ protected:
 	hnPoint2D		m_stairsUp;		// where our up stairs are located.
 	hnPoint2D		m_stairsDown;		// where our down stairs are located.
 
-	hnPoint2D		m_topLeftVisibility;
-	hnPoint2D		m_topLeftMaxVisibility;
-	hnPoint2D		m_bottomRightVisibility;
-	hnPoint2D		m_bottomRightMaxVisibility;
+	hnPoint2D		m_topLeftChanged;
+	hnPoint2D		m_topLeftMaxChanged;
+	hnPoint2D		m_bottomRightChanged;
+	hnPoint2D		m_bottomRightMaxChanged;
+	
+	void			MarkPointChanged( uint8 x, uint8 y );
 	
 public:
 				mapBase( uint8 width, uint8 height, uint8 depth );
@@ -73,10 +75,10 @@ public:
 	const hnPoint2D &	GetUpStairs() { return m_stairsUp; }
 	const hnPoint2D &	GetDownStairs() { return m_stairsDown; }
 	
-	const hnPoint2D &	GetTopLeftVisibility() { return m_topLeftVisibility; }
-	const hnPoint2D &	GetTopLeftMaxVisibility() { return m_topLeftMaxVisibility; }
-	const hnPoint2D &	GetBottomRightVisibility() { return m_bottomRightVisibility; }
-	const hnPoint2D &	GetBottomRightMaxVisibility() { return m_bottomRightMaxVisibility; }
+	const hnPoint2D &	GetTopLeftChanged() { return m_topLeftChanged; }
+	const hnPoint2D &	GetTopLeftMaxChanged() { return m_topLeftMaxChanged; }
+	const hnPoint2D &	GetBottomRightChanged() { return m_bottomRightChanged; }
+	const hnPoint2D &	GetBottomRightMaxChanged() { return m_bottomRightMaxChanged; }
 	
 	void			PrepareVisibility();
 	void			UpdateVisibility( const hnPoint & position, mapBase *originalMap );

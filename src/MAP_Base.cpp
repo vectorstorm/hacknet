@@ -20,8 +20,8 @@ mapBase::mapBase(uint8 width, uint8 height, uint8 depth):
 {
 	m_stairsUp.Set(-1,-1);
 	m_stairsDown.Set(-1,-1);
-	m_bottomRightMaxVisibility.Set(0,0);
-	m_topLeftMaxVisibility.Set(m_width,m_height);
+	m_bottomRightMaxChanged.Set(0,0);
+	m_topLeftMaxChanged.Set(m_width,m_height);
 	
 	m_tile = new mapTile[width * height];
 	for ( int i = 0; i < width * height; i++ )
@@ -144,8 +144,8 @@ void
 mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 {
 	// Reset our visibility bounding box
-	m_bottomRightVisibility.Set(position.x,position.y);
-	m_topLeftVisibility.Set(position.x,position.y);
+	m_bottomRightChanged.Set(position.x,position.y);
+	m_topLeftChanged.Set(position.x,position.y);
 	
 	
 	for ( int i = 0; i < m_width; i++ )
@@ -220,17 +220,7 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 					}
 					
 					if ( changed )
-					{
-						m_topLeftVisibility.x = min( m_topLeftVisibility.x, x );
-						m_topLeftMaxVisibility.x = min( m_topLeftMaxVisibility.x, x );
-						m_topLeftVisibility.y = min( m_topLeftVisibility.y, y );
-						m_topLeftMaxVisibility.y = min( m_topLeftMaxVisibility.y, y );
-						
-						m_bottomRightVisibility.x = max( m_bottomRightVisibility.x, x );
-						m_bottomRightMaxVisibility.x = max( m_bottomRightMaxVisibility.x, x );
-						m_bottomRightVisibility.y = max( m_bottomRightVisibility.y, y );
-						m_bottomRightMaxVisibility.y = max( m_bottomRightMaxVisibility.y, y );
-					}
+						MarkPointChanged( x, y );
 				}
 		
 		}
@@ -264,20 +254,43 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 					MapTile( x, y ).entityType = ENTITY_None;
 				else
 					MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
-
-				m_topLeftVisibility.x = min( m_topLeftVisibility.x, x );
-				m_topLeftMaxVisibility.x = min( m_topLeftMaxVisibility.x, x );
-				m_topLeftVisibility.y = min( m_topLeftVisibility.y, y );
-				m_topLeftMaxVisibility.y = min( m_topLeftMaxVisibility.y, y );
-						
-				m_bottomRightVisibility.x = max( m_bottomRightVisibility.x, x );
-				m_bottomRightMaxVisibility.x = max( m_bottomRightMaxVisibility.x, x );
-				m_bottomRightVisibility.y = max( m_bottomRightVisibility.y, y );
-				m_bottomRightMaxVisibility.y = max( m_bottomRightMaxVisibility.y, y );
+				MarkPointChanged( x, y );
 			}
+	}
+
+	// now, do a last minute pass to remove things as required.
+
+	for ( uint8 y = 0; y < m_height; y++ )
+	{
+		for ( uint8 x = 0; x < m_width; x++ )
+		{
+			mapTile *tile = &MapTile(x,y);
+			
+			if ( tile->entityType != ENTITY_None )
+			{
+				if ( !tile->visible )
+				{
+					tile->entityType = ENTITY_None;
+					MarkPointChanged( x, y );
+				}
+			}
+		}
 	}
 }
 
+void
+mapBase::MarkPointChanged( uint8 x, uint8 y )
+{
+	m_topLeftChanged.x = min( m_topLeftChanged.x, x );
+	m_topLeftMaxChanged.x = min( m_topLeftMaxChanged.x, x );
+	m_topLeftChanged.y = min( m_topLeftChanged.y, y );
+	m_topLeftMaxChanged.y = min( m_topLeftMaxChanged.y, y );
+						
+	m_bottomRightChanged.x = max( m_bottomRightChanged.x, x );
+	m_bottomRightMaxChanged.x = max( m_bottomRightMaxChanged.x, x );
+	m_bottomRightChanged.y = max( m_bottomRightChanged.y, y );
+	m_bottomRightMaxChanged.y = max( m_bottomRightMaxChanged.y, y );
+}
 
 //---------------------------------
 

@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <string.h> 
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h> 
 #include <netinet/in.h> 
 #include <sys/socket.h> 
@@ -62,7 +63,7 @@ netClient::StartClient( char * serverAddress )
 	m_serverAddress->sin_family = AF_INET;				// host byte order
 	m_serverAddress->sin_port = htons(HACKNET_PORT);		// short, network byte order
 	m_serverAddress->sin_addr = *((in_addr *)he->h_addr);
-	bzero(&(m_serverAddress->sin_zero),8);				// zero out the rest of the struct
+	bzero((char *)&(m_serverAddress->sin_zero),8);				// zero out the rest of the struct
 
 	// okay, we're all ready to go now!  (But we haven't yet connected)
 
@@ -224,7 +225,6 @@ netClient::Go()
 						SendRefreshRequest( bbox.loc.z );
 						break;
 					}
-					
 					
 					for ( int i = 0; i < bbox.width; i++ )
 						for ( int j = 0; j < bbox.height; j++ )

@@ -6,6 +6,30 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 4, 2001:
+  Late update today.. that's because I've had to implement today's new
+  feature twice.  I wanted to make creatures vanish from the map
+  display when they go out of view, like in NetHack.  At first I did
+  it on the client's side, but eventually worked out that the client
+  has no good way of figuring out what's visible and what's not
+  visible at the moment, so I re-implemented it on the server side.
+  This means that update packets are a little larger, but it also
+  keeps the server authoritative, so it's not necessarily a bad thing.
+  Also, added some #includes to make parts of the codebase compile
+  cleanly under Cygwin on Windows platforms.  I've also modified
+  configure.in in the hopes of detecting whether or not socklen_t
+  is available (it's not available under Cygwin.  Things which
+  traditionally take socklen_t (which is generally typedef-ed
+  into an unsigned 32 bit int) instead use a SIGNED int under
+  Cygwin..  I can't imagine how Cygwin has made their networking
+  utilities compile cleanly....   Anyhow, I THINK the changes I made
+  to configure.in should detect this situation, and will properly
+  #define socklen_t into 'int' in that case (if such a thing can be
+  in any way considered 'proper').  If this causes anyone trouble,
+  please, please let me know!  In particular, if you can modify the
+  configure.in script to make it work on your system, I'll add
+  your changes to the official distribution!
+
 May 3, 2001:
   Added initial revision of sorting players into groups.  Groups
   only exist on a single level.. anyone within 10 squares of another
