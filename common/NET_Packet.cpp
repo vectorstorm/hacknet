@@ -261,6 +261,17 @@ netMetaPacket::ClientMove( sint8 & direction )
 }
 
 bool
+netMetaPacket::ClientAttack( sint8 & direction )
+{
+	bool success = true;
+	
+	sint8 type = CPT_Attack;
+	Char( type );
+	Char( direction );
+	
+	return success;
+}
+bool
 netMetaPacket::ClientName( char * namebuffer, sint16 & bufferlength )
 {
 	bool success = true;

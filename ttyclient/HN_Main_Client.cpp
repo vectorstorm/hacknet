@@ -10,10 +10,11 @@ int main( int argc, char *argv[] )
 
 	// parse arguments..
 #define MAX_ARG_SIZE (256)
-	char host[MAX_ARG_SIZE];
+	char host[MAX_ARG_SIZE] = "localhost";
 	char name[MAX_ARG_SIZE] = "Unknown";
 	char * username = getenv("USER");
-	bool legalArgs = false;
+	bool showVersionOnly = false;
+	//bool legalArgs = false;
 	
 	if ( !username )
 		username = getenv("LOGNAME");
@@ -37,16 +38,23 @@ int main( int argc, char *argv[] )
 					strncpy(name,argv[++i], MAX_ARG_SIZE);
 				name[MAX_ARG_SIZE-1] = '\0';
 			}
+			else if ( strncmp( argv[i], "-v", 2 ) == 0 ||
+				strncmp( argv[i], "--version", 9 ) == 0 ||
+				strncmp( argv[i], "-h", 2 ) == 0 ||
+				strncmp( argv[i], "--help", 6 ) == 0 )
+			{
+				showVersionOnly = true;
+			}
 			else if ( i == argc-1 )
 			{
 				strncpy(host,argv[i],MAX_ARG_SIZE);
 				host[MAX_ARG_SIZE-1] = '\0';
-				legalArgs = true;
+	//			legalArgs = true;
 			}
 		}
 	}
 	
-	if ( !legalArgs )
+	if ( showVersionOnly )
 	{
 		printf("HackNet client version %s\n", VERSION);
 		printf("Usage: hacknet [-u Name] host\n");

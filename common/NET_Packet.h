@@ -8,6 +8,7 @@
 
 enum{
 	SPT_ClientLocation,
+	SPT_ClientStatus,	// send client details about himself.  (Stats, etc)
 	SPT_MapTile,
 	SPT_DungeonReset,
 	SPT_MapReset,
@@ -26,6 +27,32 @@ enum{
 struct netClientLocation
 {
 	hnPoint loc;
+};
+
+// ---------------------------------------------------
+//   Gads.  Look at this struct.  We're never going to
+//   actually change this much stuff all at once.
+//   I should split this up into bunches of separate
+//   packets....
+// ---------------------------------------------------
+struct netClientStatus
+{
+	uint8 strength;
+	uint8 dexterity;
+	uint8 constitution;
+	uint8 intelligence;
+	uint8 wisdom;
+	uint8 charisma;
+	
+	uint16 maxHitPoints;
+	uint16 hitPoints;
+
+	uint16 maxSpellPoints;
+	uint16 spellPoints;
+
+	uint8 level;
+
+	uint16 experiencePoints;
 };
 
 struct netMapTile
@@ -77,6 +104,7 @@ struct netMapEntity
 enum 
 {
 	CPT_Move,
+	CPT_Attack,	// an attack is actually different from a move, so we don't attack people by accident.
 	CPT_Name,
 	CPT_Talk,
 	CPT_RequestRefresh,	// request refreshed information on this level
@@ -120,6 +148,7 @@ public:
 	
 	/*****************   Client Packets  ******************/
 	bool			ClientMove( sint8 & direction );
+	bool			ClientAttack( sint8 & direction );
 	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientTalk( char * talkbuffer, sint16 & bufferLength );
 	bool			ClientRequestRefresh( sint8 & level );

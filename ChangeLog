@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 12, 2001:
+  * Coding on a new computer now.  Back to work!
+  * NET_Packet.h/.cpp:  Added a few new packet types for upcoming combat.
+  * HN_Main_Client.cpp:  By request, made the client default to connect to
+    localhost if you don't tell it otherwise.
+
 May 8, 2001:
   * HN_Group.cpp: Fixed bug so monsters get assigned to groups correctly.
   * ENT_Base.cpp: Fixed bug, allowing travel in northwest direction again.
