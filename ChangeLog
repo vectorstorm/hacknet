@@ -27,6 +27,8 @@ May 6, 2001:
   client/ directory (plus whatever libs are required from the
   common/ directory)
 
+  NET_Server.cpp: Commented out DEBUG_NETWORKING #define.
+
 May 5, 2001:
   Spent the morning working at compiling hacknet on the various
   machines in the SourceForge compile farm.  I think I've worked
