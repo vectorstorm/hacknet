@@ -59,8 +59,6 @@ netServer::netServer():
 	m_localAddress = new sockaddr_in;
 	
 	StartServer();
-	
-	m_game->SetServer(this);
 }
 
 netServer::~netServer()

@@ -25,7 +25,6 @@ struct playerData
 
 class hnGame
 {
-	netServer 		*m_server;
 	playerData		m_player[MAX_CLIENTS];
 	mapBase			*m_levelMap[MAX_LEVELS];
 
@@ -40,8 +39,6 @@ public:
 	static hnGame *		GetInstance();
 	
 
-	
-	void			SetServer(netServer *server) { m_server = server; }
 	
 	void			ClientJoined(int clientID);
 	void			ClientQuit(int clientID);

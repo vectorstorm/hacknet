@@ -1,3 +1,16 @@
+April 21, 2001:
+  Lots of renamed files, to make a more consistant file naming scheme.  Objects now
+  have an OBJ prefix, Entities (players, monsters, etc) now have an ENT prefix, and
+  Maps now have a MAP prefix.  Core classes still use HN, and network classes still
+  use NET.
+
+  Adjusted the hnGame and netServer classes.  The netServer has a pointer to the
+  hnGame, which has a pointer to the lower-level guts of the simulation.  Both
+  the netServer and the hnGame are singletons (possibly the hnGame shouldn't be
+  a singleton -- to be considered for future updates).  This is in preparation
+  for migrating the player update logic from the hnGame object into the entPlayer
+  object.
+---
 April 1, 2001:
   Continued discussions about timing issues.
   Adjusted object class hierarchy -- 'hnEntity' is now at the top of the hierarchy,

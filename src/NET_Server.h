@@ -29,9 +29,10 @@ struct clientData {
 
 class netServer
 {
+	hnGame *		m_game;
+	
 	int			m_socket;
 	sockaddr_in *		m_localAddress;
-	hnGame *		m_game;					// the game we're serving
 	
 	clientData		m_client[MAX_CLIENTS];				// socket fds for all our clients
 	int			m_clientCount;					// how many clients have we got?

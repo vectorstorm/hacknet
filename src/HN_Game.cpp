@@ -94,8 +94,8 @@ hnGame::ClientJoined(int playerID)
 	m_player[playerID].entity = new entPlayer(hnPoint(x,y,z));
 	m_levelMap[z]->PutEntityAt( m_player[playerID].entity, x, y );
 	
-	m_server->StartMetaPacket( playerID );
-	m_server->SendClientLocation( &m_player[playerID].pos );
+	netServer::GetInstance()->StartMetaPacket( playerID );
+	netServer::GetInstance()->SendClientLocation( &m_player[playerID].pos );
 	
 	hnPoint pos = m_player[playerID].pos;
 	
@@ -115,13 +115,13 @@ hnGame::ClientJoined(int playerID)
 			update.wall[i+(j*update.width)] = m_levelMap[pos.z]->WallAt(pos.x+i,pos.y+j);
 			update.entityType[i+(j*update.width)] = (m_levelMap[pos.z]->MapTile(pos.x+i,pos.y+j).entity) ? ENTITY_Player : ENTITY_None;
 		}
-	m_server->SendMapUpdateBBox( &update );
+	netServer::GetInstance()->SendMapUpdateBBox( &update );
 
 	delete [] update.material;
 	delete [] update.wall;
 	delete [] update.entityType;		
 
-	m_server->TransmitMetaPacket();	// all done!  Send it!
+	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 			
 }
 
@@ -147,7 +147,6 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 		if ( dir >= 0 && dir < 8 )
 		{
 			// north->northwest
-
 			hnPoint potentialPos = m_player[playerID].pos + offsetVector[dir];
 			
 			if ( m_levelMap[potentialPos.z]->WallAt(potentialPos.x,potentialPos.y) & WALL_Passable )
@@ -157,7 +156,6 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 		else
 		{
 			// up or down -- check for appropriate stairways here.
-
 			legalMove = false;
 		}
 
@@ -166,7 +164,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			// TODO:
 			// I'd really like to move most (all?) of this code into hnPlayer::Move() and/or MoveTo().
 			
-			m_server->StartMetaPacket(playerID);
+			netServer::GetInstance()->StartMetaPacket(playerID);
 			
 			// first, player moves out of his current square.
 			m_levelMap[m_player[playerID].pos.z]->RemoveEntity(m_player[playerID].entity);
@@ -178,7 +176,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 			// and put the player object into his new position on the map
 			m_player[playerID].entity->SetPosition(pos);
 			m_levelMap[pos.z]->PutEntityAt(m_player[playerID].entity, pos.x, pos.y);
-			m_server->SendClientLocation( &m_player[playerID].pos );
+			netServer::GetInstance()->SendClientLocation( &m_player[playerID].pos );
 			
 			// now tell the player about what they can see from this new location.
 			// just show him all the ground around himself, at present.
@@ -200,13 +198,13 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 					//if ( update.entityType[i+(j*update.width)] == ENTITY_Player )
 					//	printf("Sending player location.\n");
 				}
-			m_server->SendMapUpdateBBox( &update );
+			netServer::GetInstance()->SendMapUpdateBBox( &update );
 		
 			delete [] update.material;
 			delete [] update.wall;
 			delete [] update.entityType;			
 
-			m_server->TransmitMetaPacket();	// all done!  Send it!
+			netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 			
 			
 			for ( int i = 0; i < MAX_CLIENTS; i++ )
@@ -218,7 +216,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						m_player[i].pos.z == iniPos.z )
 					{
 						// if we have a connected nearby player who isn't the one we've just sent an update to...
-						m_server->StartMetaPacket(i);
+						netServer::GetInstance()->StartMetaPacket(i);
 						update.loc = iniPos;
 						update.width = 1;
 						update.height = 1;
@@ -229,8 +227,8 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.wall[0] = m_levelMap[iniPos.z]->WallAt(iniPos.x,iniPos.y);
 						update.entityType[0] = (m_levelMap[iniPos.z]->MapTile(iniPos.x,iniPos.y).entity) ? ENTITY_Player : ENTITY_None;
 						
-						m_server->SendMapUpdateBBox( &update );
-						m_server->TransmitMetaPacket();
+						netServer::GetInstance()->SendMapUpdateBBox( &update );
+						netServer::GetInstance()->TransmitMetaPacket();
 
 						delete update.material;
 						delete update.wall;
@@ -242,7 +240,7 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						m_player[i].pos.z == endPos.z )
 					{
 						// if we have a connected nearby player who isn't the one we've just sent an update to...
-						m_server->StartMetaPacket(i);
+						netServer::GetInstance()->StartMetaPacket(i);
 						update.loc = endPos;
 						update.width = 1;
 						update.height = 1;
@@ -253,8 +251,8 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.wall[0] = m_levelMap[endPos.z]->WallAt(endPos.x,endPos.y);
 						update.entityType[0] = (m_levelMap[endPos.z]->MapTile(endPos.x,endPos.y).entity) ? ENTITY_Player : ENTITY_None;
 						
-						m_server->SendMapUpdateBBox( &update );
-						m_server->TransmitMetaPacket();
+						netServer::GetInstance()->SendMapUpdateBBox( &update );
+						netServer::GetInstance()->TransmitMetaPacket();
 						
 						delete update.material;
 						delete update.wall;
