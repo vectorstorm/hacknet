@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 #include "HN_Game.h"
 #include "MAP_Hack.h"
 #include "NET_Server.h"
