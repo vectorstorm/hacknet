@@ -254,6 +254,37 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 }
 
 void
+hnGame::ClientAttack(int playerID, hnDirection dir)
+{
+	// -------------------------------------------------------------
+	//  The player has submitted an 'attack' command.  Do some basic
+	//  error checking to be sure the direction passed in is legal,
+	//  and then pass it on to the player object.
+	// 
+	//  THE PLAYER WILL NOT ACTUALLY ATTACK.  The player will queue
+	//  the attack command, and will eventually perform the queued
+	//  function when his group finally gets to process a turn.
+	//
+	//  For this reason, after we send the command to the player
+	//  object, we tell the GroupManager to check whether any
+	//  groups can process a turn, and then to check to see whether
+	//  as a result of this move, the distribution of players
+	//  within groups has changed.
+	// -------------------------------------------------------------
+	hnPlayer *player = m_player[playerID];
+	if ( dir >= 0 && dir < DIR_Up )	// sanity check
+	{	
+		player->Attack(dir);
+		hnGroupManager::GetInstance()->ProcessTurn();
+		hnGroupManager::GetInstance()->UpdateGroups();
+	}else{
+		printf("Tried to attack in an illegal direction: %d.\n", dir);
+		netServer::GetInstance()->SendQuitConfirm(playerID);
+		netServer::GetInstance()->DisconnectClientID(playerID);
+	}
+}
+
+void
 hnGame::ClientWait( int playerID )
 {
 	hnPlayer *player = m_player[playerID];

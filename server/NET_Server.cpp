@@ -21,7 +21,7 @@
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
 
-//#define __DEBUG_NETWORKING__
+#define __DEBUG_NETWORKING__
 //#define __DETAIL_DEBUG_NETWORKING__
 //#define __DISPLAY_PACKET_CONTENT__
 
@@ -272,7 +272,9 @@ netServer::Go()
 							assert(m_client[i].incomingPacketSize == 0);
 							m_client[i].incomingPacketSize = 0;
 							m_client[i].packetRecv = m_client[i].packet;
-					//		printf("  Processing packet.\n");
+#ifdef __DEBUG_NETWORKING__
+							printf("  Received %d byte packet from %s (client id %d).\n", m_client[i].packetFullSize, m_game->GetPlayerName(i), i);
+#endif
 							if ( !ProcessClientPacket(i, m_client[i].packet, m_client[i].packetFullSize) )
 							{
 								// aiee!  Illegal packet!  Kill the client!
@@ -319,6 +321,10 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 			case CPT_Move:
 				okay = packet->ClientMove(direction);
 				m_game->ClientMove(clientID, (hnDirection)direction);
+				break;
+			case CPT_Attack:
+				okay = packet->ClientAttack(direction);
+				m_game->ClientAttack(clientID, (hnDirection)direction);
 				break;
 			case CPT_Wait:
 				okay = packet->ClientWait();

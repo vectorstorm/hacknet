@@ -91,5 +91,21 @@ hnDisplay::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool
 void
 hnDisplay::MoveCommand( hnDirection dir )
 {
-	m_client->SendMove(dir);	
+	bool attackInstead = false;
+	
+	if ( dir != DIR_Up && dir != DIR_Down )
+	{
+		// check the square we're going to move into...
+		hnPoint proposedSquare = m_position;
+		proposedSquare.Increment(dir);
+		
+		mapClient *map = m_map[proposedSquare.z];
+		
+		if ( map && map->MapTile(proposedSquare.x,proposedSquare.y).entity != ENTITY_None )
+			attackInstead = true;
+	}
+	if ( attackInstead )
+		m_client->SendAttack(dir);
+	else
+		m_client->SendMove(dir);	
 }

@@ -13,6 +13,9 @@ May 18, 2001:
   * Removed nasty global offsetVector array and rolled that functionality
     into the hnPoint class.  More minor modifications in preparation for
     the upcoming combat system.
+  * Client now transmits 'attack' command.  Server does basic 'to hit' check
+    and sends back a 'hit' or 'missed' message to the client.  No damage
+    dealt yet.
 
 May 17, 2001:
   * Bug #424181:  Missing #include in HN_Game.cpp

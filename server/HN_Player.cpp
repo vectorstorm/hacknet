@@ -56,6 +56,12 @@ hnPlayer::IsValidMove( hnDirection dir )
 	return m_entity->IsValidMove( dir );
 }
 
+bool
+hnPlayer::IsValidAttack( hnDirection dir )
+{
+	return m_entity->IsValidAttack( dir );
+}
+
 void
 hnPlayer::Move( hnDirection dir )
 {
@@ -63,6 +69,16 @@ hnPlayer::Move( hnDirection dir )
 	{
 		m_queuedTurn.type = queuedTurn::Move;
 		m_queuedTurn.move.direction = dir;
+	}
+}
+
+void
+hnPlayer::Attack( hnDirection dir )
+{
+	if ( IsValidAttack( dir ) )
+	{
+		m_queuedTurn.type = queuedTurn::Attack;
+		m_queuedTurn.attack.direction = dir;
 	}
 }
 
@@ -161,6 +177,20 @@ hnPlayer::DoAction()
 			// whether the move is valid before executing it.  However, by explicitly
 			// checking here, we can avoid recalculating our visible set of tiles.
 			m_movePending = m_entity->FindMoveDestination( m_moveDestination, m_queuedTurn.move.direction );
+			break;
+		case queuedTurn::Attack:
+			if ( m_entity->Attack( m_queuedTurn.attack.direction ) )
+			{
+				netServer::GetInstance()->StartMetaPacket(m_playerID);
+				netServer::GetInstance()->SendMessage("You hit!");
+				netServer::GetInstance()->TransmitMetaPacket();
+			}
+			else
+			{
+				netServer::GetInstance()->StartMetaPacket(m_playerID);
+				netServer::GetInstance()->SendMessage("You missed!");
+				netServer::GetInstance()->TransmitMetaPacket();
+			}
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

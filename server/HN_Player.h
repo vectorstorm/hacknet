@@ -14,7 +14,8 @@ struct queuedTurn
 	enum turnType{
 		None,
 		Move,
-		Wait
+		Wait,
+		Attack
 	};
 	int type;
 
@@ -22,6 +23,9 @@ struct queuedTurn
 		struct{
 			hnDirection direction;
 		} move;
+		struct{
+			hnDirection direction;
+		} attack;
 	};
 };
 
@@ -61,6 +65,7 @@ public:
 	
 	bool		HasQueuedTurn();	// are we ready to process a turn?
 	virtual bool	IsValidMove( hnDirection dir );
+	virtual bool	IsValidAttack( hnDirection dir );
 
 	virtual void	Listen( const hnPoint & position, char * message );
 	virtual void	Listen( char * message );
@@ -78,6 +83,7 @@ public:
 	
 	//  Queued Actions Beneath This Point ------------------------------------------
 	virtual void	Move( hnDirection dir );
+	virtual void	Attack( hnDirection dir );
 	virtual void	Wait( );
 	
 };

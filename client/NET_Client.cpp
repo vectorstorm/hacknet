@@ -306,6 +306,15 @@ netClient::SendMove(hnDirection dir)
 }
 
 void
+netClient::SendAttack(hnDirection dir)
+{
+	sint8 direction = dir;
+	StartMetaPacket();
+	m_packet->ClientAttack(direction);
+	TransmitMetaPacket();
+}
+
+void
 netClient::SendWait()
 {
 	StartMetaPacket();

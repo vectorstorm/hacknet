@@ -123,7 +123,7 @@ entBase::FindMoveDestination( hnPoint &destination, hnDirection dir )
 bool
 entBase::RollToHit( entBase *target)
 {
-	int hitChance = 1 + m_status->Level();
+	int hitChance = 1 + m_status->Level() + 10;
 	
 	if ( target->GetStatus()->Paralyzed() )
 		hitChance += 2;
@@ -188,4 +188,49 @@ entBase::MoveTo( const hnPoint & pos )
 		map->PutEntityAt(this, pos.x, pos.y);
 	
 	m_position = pos;
+}
+
+bool
+entBase::IsValidAttack( hnDirection dir )
+{
+	bool valid = false;
+	
+	if ( dir >= 0 && dir < DIR_Up )
+	{
+		hnPoint target = GetPosition();
+		target.Increment(dir);
+
+		mapBase *map = hnDungeon::GetLevel( target.z );
+
+		if ( map && map->MapTile(target.x, target.y).entity != NULL )
+			valid = true;
+	}
+	
+	return valid;
+}
+
+bool
+entBase::Attack( hnDirection dir )
+{
+	if ( !IsValidAttack(dir) )	// perhaps our target has already died?
+		return false;
+	
+	hnPoint target = GetPosition();
+	target.Increment(dir);
+
+	mapBase *map = hnDungeon::GetLevel( target.z );
+
+	entBase *foe = map->MapTile(target.x, target.y).entity;
+
+	if ( RollToHit(foe) )
+	{
+		// we hit!
+		return true;
+	}
+	else
+	{
+		// we missed!
+	}
+
+	return false;
 }

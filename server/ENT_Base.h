@@ -48,6 +48,9 @@ public:
 	virtual void		Move( hnDirection direction );
 	virtual void		MoveTo( const hnPoint & position );
 	
+	virtual bool		IsValidAttack( hnDirection direction );	// Called to check to see if a move is legal.
+	virtual bool		Attack( hnDirection direction );
+	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn
 	
