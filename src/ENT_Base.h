@@ -17,6 +17,7 @@ class entBase
 protected:	
 	char 			m_name[MAX_NAME_BYTES];
 	int			m_hitPoints;
+	int			m_maxHitPoints;
 	bool			m_changedLevel;	// needs to refresh all our vision
 	
 public:

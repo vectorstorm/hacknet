@@ -35,11 +35,11 @@ esac
 
 dnl Checks for curses headers and functions.  (Does generic 'curses' ever have a color_set function?)
 AC_CHECK_LIB(ncurses, initscr, 
-             [ AC_DEFINE(HAS_NCURSES) 
+             [ AC_DEFINE(HAVE_LIBNCURSES) 
 	     AC_CHECK_LIB( ncurses, color_set, AC_DEFINE(HAS_COLOR_SET) )
 	     CURSESLIB='-lncurses'; ], [ 
         AC_CHECK_LIB(curses, initscr, 
-                     [ AC_DEFINE(HAS_CURSES) 
+                     [ AC_DEFINE(HAVE_LIBCURSES) 
 		     AC_CHECK_LIB( curses, color_set, AC_DEFINE(HAS_COLOR_SET) )
 		     CURSESLIB='-lcurses'; ])
 ])
@@ -58,18 +58,13 @@ AC_SUBST(THREADLIB)
 
 dnl Solaris (and others?) put socket code into libsocket instead of in
 dnl libc.  So if it's not in libc, check libsocket.
-AC_CHECK_LIB(c, socket,, [
-	AC_CHECK_LIB(socket,socket,SOCKETLIB='-lsocket')
-	])
- AC_SUBST(SOCKETLIB)
+AC_CHECK_LIB(socket,socket)
 
 dnl Solaris (and others?) put hostname lookup into libnsl instead of
 dnl libc.  So if it's not in libc, check nsl.
-AC_CHECK_LIB(c, gethostbyname,
-	AC_CHECK_LIB(c,herror,AC_DEFINE(HAS_HERROR)), [
-	AC_CHECK_LIB(nsl,gethostbyname,NSLLIB='-lnsl')
-	])
- AC_SUBST(NSLLIB)
+AC_CHECK_LIB(nsl,gethostbyname)
+
+AC_CHECK_FUNCS(herror)
 
 
 AC_HEADER_STDC

@@ -13,6 +13,9 @@ May 6, 2001:
   Should now support curses-based systems.  (Rather than ncurses).
   Closer to Solaris support..
 
+  More configure script adjustments.  Removed HN_Version.cpp/.h,
+  since it wasn't being used and was redundant anyway.
+
 May 5, 2001:
   Spent the morning working at compiling hacknet on the various
   machines in the SourceForge compile farm.  I think I've worked

@@ -1,8 +1,8 @@
-#if HAS_CURSES
-  #include <curses.h>
+#if HAVE_LIBNCURSES
+  #include <ncurses.h>
 #else
-  #if HAS_NCURSES
-    #include <ncurses.h>
+  #if HAVE_LIBCURSES
+    #include <curses.h>
   #else
     #error "No curses library found!"
   #endif

@@ -59,6 +59,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
+CURSESLIB = @CURSESLIB@
 CXX = @CXX@
 MAKEINFO = @MAKEINFO@
 PACKAGE = @PACKAGE@

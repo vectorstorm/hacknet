@@ -62,20 +62,18 @@ host_triplet = @host@
 CURSESLIB = @CURSESLIB@
 CXX = @CXX@
 MAKEINFO = @MAKEINFO@
-NSLLIB = @NSLLIB@
 PACKAGE = @PACKAGE@
-SOCKETLIB = @SOCKETLIB@
 THREADLIB = @THREADLIB@
 VERSION = @VERSION@
 
-hacknet_LDADD = $(CURSESLIB) $(THREADLIB) $(SOCKETLIB) $(NSLLIB)
-hacknetd_LDADD = $(SOCKETLIB) $(NSLLIB)
+hacknet_LDADD = $(CURSESLIB) $(THREADLIB)
+hacknetd_LDADD = 
 
 bin_PROGRAMS = hacknet hacknetd
-hacknet_SOURCES = HN_Display.cpp HN_DisplayTTY.cpp MAP_Client.cpp HN_Point.cpp 		HN_Version.cpp HN_Main_Client.cpp NET_Client.cpp NET_Packet.cpp
+hacknet_SOURCES = HN_Display.cpp HN_DisplayTTY.cpp MAP_Client.cpp HN_Point.cpp 		HN_Main_Client.cpp NET_Client.cpp NET_Packet.cpp
 
 
-hacknetd_SOURCES = HN_Main_Server.cpp ENT_Base.cpp ENT_GridBug.cpp ENT_Human.cpp 		OBJ_Base.cpp HN_Group.cpp HN_Game.cpp HN_Player.cpp HN_Dungeon.cpp MAP_Base.cpp 		MAP_Client.cpp MAP_Hack.cpp MAP_Cavern.cpp HN_Version.cpp NET_Server.cpp 		HN_Point.cpp NET_Packet.cpp
+hacknetd_SOURCES = HN_Main_Server.cpp ENT_Base.cpp ENT_GridBug.cpp ENT_Human.cpp 		OBJ_Base.cpp HN_Group.cpp HN_Game.cpp HN_Player.cpp HN_Dungeon.cpp MAP_Base.cpp 		MAP_Client.cpp MAP_Hack.cpp MAP_Cavern.cpp NET_Server.cpp 		HN_Point.cpp NET_Packet.cpp
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -87,13 +85,13 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 hacknet_OBJECTS =  HN_Display.o HN_DisplayTTY.o MAP_Client.o HN_Point.o \
-HN_Version.o HN_Main_Client.o NET_Client.o NET_Packet.o
+HN_Main_Client.o NET_Client.o NET_Packet.o
 hacknet_DEPENDENCIES = 
 hacknet_LDFLAGS = 
 hacknetd_OBJECTS =  HN_Main_Server.o ENT_Base.o ENT_GridBug.o \
 ENT_Human.o OBJ_Base.o HN_Group.o HN_Game.o HN_Player.o HN_Dungeon.o \
-MAP_Base.o MAP_Client.o MAP_Hack.o MAP_Cavern.o HN_Version.o \
-NET_Server.o HN_Point.o NET_Packet.o
+MAP_Base.o MAP_Client.o MAP_Hack.o MAP_Cavern.o NET_Server.o HN_Point.o \
+NET_Packet.o
 hacknetd_DEPENDENCIES = 
 hacknetd_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
@@ -111,9 +109,9 @@ DEP_FILES =  .deps/ENT_Base.P .deps/ENT_GridBug.P .deps/ENT_Human.P \
 .deps/HN_Display.P .deps/HN_DisplayTTY.P .deps/HN_Dungeon.P \
 .deps/HN_Game.P .deps/HN_Group.P .deps/HN_Main_Client.P \
 .deps/HN_Main_Server.P .deps/HN_Player.P .deps/HN_Point.P \
-.deps/HN_Version.P .deps/MAP_Base.P .deps/MAP_Cavern.P \
-.deps/MAP_Client.P .deps/MAP_Hack.P .deps/NET_Client.P \
-.deps/NET_Packet.P .deps/NET_Server.P .deps/OBJ_Base.P
+.deps/MAP_Base.P .deps/MAP_Cavern.P .deps/MAP_Client.P .deps/MAP_Hack.P \
+.deps/NET_Client.P .deps/NET_Packet.P .deps/NET_Server.P \
+.deps/OBJ_Base.P
 SOURCES = $(hacknet_SOURCES) $(hacknetd_SOURCES)
 OBJECTS = $(hacknet_OBJECTS) $(hacknetd_OBJECTS)
 

@@ -13,7 +13,7 @@ hnPoint offsetVector[10];
 hnGame * hnGame::s_instance = NULL;
 
 #define LEVEL_WIDTH (78)
-#define LEVEL_HEIGHT (20)
+#define LEVEL_HEIGHT (19)
 #define MAX_LEVELS (5)
 
 void
