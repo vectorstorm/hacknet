@@ -4,7 +4,7 @@
 enum {
         ENTITY_None,                    // a mapobjectupdate with this type means nothing's here any more.
 		        
-        ENTITY_Monster,      	        // there should be one of these for every type of monster
+	ENTITY_Ant,				// types of creatures.
 	ENTITY_GridBug,
 	ENTITY_Human,
 

@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 29, 2001:
+  * Added first pass at NetHack-style entity definitions.  I'm still
+    not certain that this is how I actually want to do this, but it's
+    better than the previous method.. even if it's now ripped almost
+    verbatim from the NetHack codebase!
+  
 July 23, 2001:
   * Removed debug output accidentally left in HN_Game.cpp
 

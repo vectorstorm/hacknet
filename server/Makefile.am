@@ -8,6 +8,6 @@ hacknetd_SOURCES = HN_Main_Server.cpp ENT_Base.cpp ENT_Base.h ENT_GridBug.cpp EN
 		MAP_Base.cpp MAP_Base.h MAP_Hack.cpp MAP_Hack.h MAP_Cavern.cpp MAP_Cavern.h \
 		NET_Server.cpp NET_Server.h HN_Config_Server.h \
 		OBJ_Manager.cpp OBJ_Manager.h OBJ_Weapon.cpp OBJ_Weapon.h\
-		OBJ_Definition.cpp OBJ_Definition.h
+		ENT_Definition.cpp ENT_Definition.h OBJ_Definition.cpp OBJ_Definition.h
 
 INCLUDES = -I../common/

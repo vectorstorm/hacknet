@@ -30,6 +30,7 @@ Platforms Supported
 HackNet has been successfully compiled on:
 
 x86 	- Debian GNU/Linux 2.1, 2.2, & current 'unstable'.
+x86	- Redhat 7.1 and Mandrake 8.0
 x86 	- FreeBSD 4.2-stable
 x86 	- Cygwin (under Windows)
 Alpha 	- RedHat Linux 7.0
