@@ -17,6 +17,8 @@ May 19, 2001:
     disconnects them.  Monsters still can't die.
   * ENT_*.cpp/.h:  Entities now store a pointer to a hnPlayer, if they
     are being controlled by a player.
+  * Modification to how names are stored.  Modification to attack messages.
+    Monsters can now die.  Player deaths implemented differently.
 
 May 18, 2001:
   * Turns split into two phases:  First actions, then movements.  This means

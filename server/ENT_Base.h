@@ -25,13 +25,23 @@ protected:
 	bool			m_changedLevel;	// needs to refresh all our vision
 	
 public:
+	
+	enum{
+		AT_Miss,
+		AT_Hit,
+		AT_Kill
+	};	// result of attack
+	
 				entBase( entType type, const hnPoint &, hnPlayer * player = NULL );
 	virtual			~entBase();
 	
 	void			SetName( char * name );
 	char *			GetName();
 
+	void			GetFullName( char * buffer, int bufferSize );
+	
 	bool			IsAPlayer() { return (m_player != NULL); }
+	hnPlayer *		GetPlayer() { return m_player; }
 	bool			IsAlive() { return m_status->Alive(); }
 	
 	const hnPoint &		GetPosition();
@@ -51,7 +61,8 @@ public:
 	virtual void		MoveTo( const hnPoint & position );
 	
 	virtual bool		IsValidAttack( hnDirection direction );	// Called to check to see if a move is legal.
-	virtual bool		Attack( hnDirection direction );
+	virtual entBase *	GetAttackTarget( hnDirection direction );
+	virtual int		Attack( hnDirection direction );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

@@ -28,6 +28,7 @@ public:
 	
 	void			AddPlayer( hnPlayer * player );
 	void			RemovePlayer( hnPlayer * player );
+	void			RemoveEntity( entBase * entity );
 
 	void			ScanForMonsters();			// search the map for nearby monsters to join us.
 	
@@ -67,6 +68,7 @@ public:
 
 	void			AddPlayer( hnPlayer * player );
 	void			RemovePlayer( hnPlayer * player );
+	void			RemoveEntity( entBase * entity );
 };
 
 #endif // __HN_GROUP__

@@ -29,8 +29,12 @@ struct queuedTurn
 	};
 };
 
+#define MAX_PLAYER_NAME_BYTES	(80)
+
 class hnPlayer
 {
+	char		m_name[MAX_PLAYER_NAME_BYTES];
+	
 	int		m_playerID;				// the ID the server assigns to us.  NOT TO BE SAVED.
 	entBase *	m_entity;
 	
@@ -56,6 +60,7 @@ public:
 	virtual		~hnPlayer();
 	
 	void		SetName( char * name );
+	void		SetEntity( entBase *entity );
 	void		SetGroup( hnGroup * group ) { m_group = group; }
 	
 	const hnPoint &	GetPosition();

@@ -73,7 +73,8 @@ hnGroup::ProcessTurn()
 					
 			// now our monsters get to move.
 			for ( int i = 0; i < m_monsterCount; i++ )
-				m_monster[i]->Think();
+				if ( m_monster[i] )
+					m_monster[i]->Think();
 			
 			// now rebuild our monster list.
 			ScanForMonsters();
@@ -271,6 +272,17 @@ hnGroup::RemovePlayer( hnPlayer * player )
 	}
 }
 
+void
+hnGroup::RemoveEntity( entBase * entity )
+{
+	//------------------------------------------------------
+	//  Remove a monster from our list of monsters.
+	//------------------------------------------------------
+	for ( int i = 0; i < m_monsterCount; i++ )
+		if ( m_monster[i] == entity )
+			m_monster[i] = NULL;
+}
+
 //---------------------------------------------------------
 
 void
@@ -403,6 +415,15 @@ hnGroupManager::RemovePlayer( hnPlayer *player )
 	{
 		if ( m_player[i] == player )
 			m_player[i] = NULL;
+	}
+}
+
+void
+hnGroupManager::RemoveEntity( entBase *entity )
+{
+	for ( int i = 0; i < m_maxGroupCount; i++ )
+	{
+		m_group[i]->RemoveEntity(entity);
 	}
 }
 

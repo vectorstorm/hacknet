@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <strings.h>
 #include "HN_Player.h"
 #include "NET_Server.h"
 #include "HN_Dungeon.h"
@@ -35,6 +37,9 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 		m_map[i] = NULL;
 	
 	m_queuedTurn.type = queuedTurn::None;
+
+	if ( m_entity == NULL )
+		printf("Unable to allocate entity!\n");
 }
 
 hnPlayer::~hnPlayer()
@@ -48,6 +53,16 @@ hnPlayer::~hnPlayer()
 		delete m_map[i];
 	
 	delete [] m_map;
+}
+
+void
+hnPlayer::SetEntity( entBase * entity )
+{
+	printf("Setting entity...\n");
+	if ( m_entity )
+		delete m_entity;
+	
+	m_entity = entity;
 }
 
 bool
@@ -64,6 +79,8 @@ hnPlayer::IsAlive()
 bool
 hnPlayer::IsValidMove( hnDirection dir )
 {
+	if ( !m_entity )
+		printf("ERROR!  No entity!\n");
 	return m_entity->IsValidMove( dir );
 }
 
@@ -158,29 +175,24 @@ hnPlayer::HasQueuedTurn()
 void
 hnPlayer::SetName( char * name )
 {
-	if ( m_entity )
-	{
-		m_entity->SetName(name);
-	}
+	snprintf( m_name, MAX_PLAYER_NAME_BYTES, "%s", name );
 }
 
 char *
 hnPlayer::GetName()
 {
-	char * result = NULL;
-	
-	if ( m_entity )
-	{
-		result = m_entity->GetName();
-	}
-
-	return result;
+	return m_name;
 }
 
 
 void
 hnPlayer::DoAction()
 {
+	entBase *entity;
+	int result;
+	char name[128];
+	char buffer[128];
+	
 	switch ( m_queuedTurn.type )
 	{
 		case queuedTurn::Move:
@@ -190,18 +202,25 @@ hnPlayer::DoAction()
 			m_movePending = m_entity->FindMoveDestination( m_moveDestination, m_queuedTurn.move.direction );
 			break;
 		case queuedTurn::Attack:
-			if ( m_entity->Attack( m_queuedTurn.attack.direction ) )
+			
+			entity = m_entity->GetAttackTarget( m_queuedTurn.attack.direction );
+			
+			if (entity)
 			{
-				netServer::GetInstance()->StartMetaPacket(m_playerID);
-				netServer::GetInstance()->SendMessage("You hit!");
-				netServer::GetInstance()->TransmitMetaPacket();
+				entity->GetFullName(name,128);
 			}
+			result = m_entity->Attack( m_queuedTurn.attack.direction );
+			
+			if ( result == entBase::AT_Hit )
+				sprintf(buffer,"You hit %s!", name);
+			else if ( result == entBase::AT_Kill )
+				sprintf(buffer,"You destroyed %s!", name);
 			else
-			{
-				netServer::GetInstance()->StartMetaPacket(m_playerID);
-				netServer::GetInstance()->SendMessage("You missed!");
-				netServer::GetInstance()->TransmitMetaPacket();
-			}
+				sprintf(buffer,"You missed %s!", name);
+
+			netServer::GetInstance()->StartMetaPacket(m_playerID);
+			netServer::GetInstance()->SendMessage(buffer);
+			netServer::GetInstance()->TransmitMetaPacket();
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

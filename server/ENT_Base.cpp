@@ -1,8 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "ENT_Base.h"
 #include "MAP_Base.h"
 #include "HN_Dungeon.h"
+#include "HN_Player.h"
+#include "HN_Group.h"
 
 #include "assert.h"
 
@@ -33,6 +36,15 @@ char *
 entBase::GetName()
 {
 	return m_name;
+}
+
+void
+entBase::GetFullName( char * buffer, int bufferSize )
+{
+	if ( m_player )
+		snprintf(buffer, bufferSize, "%s the %s", m_player->GetName(), m_name );
+	else
+		snprintf(buffer, bufferSize, "the %s", m_name);
 }
 
 const hnPoint &
@@ -209,7 +221,23 @@ entBase::IsValidAttack( hnDirection dir )
 	return valid;
 }
 
-bool
+entBase *
+entBase::GetAttackTarget( hnDirection dir )
+{
+	if ( !IsValidAttack(dir) )	// perhaps our target has already died?
+		return NULL;
+	
+	hnPoint target = GetPosition();
+	target.Increment(dir);
+
+	mapBase *map = hnDungeon::GetLevel( target.z );
+
+	entBase *foe = map->MapTile(target.x, target.y).entity;
+	
+	return foe;
+}
+
+int
 entBase::Attack( hnDirection dir )
 {
 	if ( !IsValidAttack(dir) )	// perhaps our target has already died?
@@ -226,12 +254,28 @@ entBase::Attack( hnDirection dir )
 	{
 		// we hit!
 		foe->GetStatus()->TakeDamage(1);	// just do one hit point of damage for now.
-		return true;
+
+		if ( foe->GetStatus()->Destroyed() )
+		{
+			// we killed it!
+			map->RemoveEntity( foe );
+
+			if ( foe->IsAPlayer() )
+				foe->GetPlayer()->SetEntity(NULL);
+			
+			hnGroupManager::GetInstance()->RemoveEntity(foe);
+			
+			delete foe;
+			
+			return AT_Kill;
+		}
+		
+		return AT_Hit;
 	}
 	else
 	{
 		// we missed!
 	}
 
-	return false;
+	return AT_Miss;
 }
