@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "MAP_Client.h"
 #include "HN_Point.h"
-#include "ENT_Base.h"
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )

@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "HN_Config_Client.h"
 #include "HN_Display.h"
 #include "NET_Client.h"
-
-#ifdef TTY_DISPLAY
 #include "HN_DisplayTTY.h"
-#endif
 
 int main( int argc, char *argv[] )
 {
@@ -62,9 +58,7 @@ int main( int argc, char *argv[] )
 		printf("Contacting %s...\n", host);
 		hnDisplay *display = NULL;
 	
-#ifdef TTY_DISPLAY
 		display = new hnDisplayTTY(name);
-#endif
 
 		if ( display )
 		{

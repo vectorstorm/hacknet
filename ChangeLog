@@ -19,6 +19,14 @@ May 6, 2001:
   Removed #include "ENT_Base.h" from NET_Client.cpp.  Not sure why
   it was there in the first place.
 
+  Massive source reorganisation.  Instead of one src directory,
+  we now have split our source code into common/ server/ client/
+  and ttyclient/ directories.  To add new clients, just add
+  them to the root directory, provide a  'Main' similar to that
+  in the ttyclient, and link in the libclient.a from the
+  client/ directory (plus whatever libs are required from the
+  common/ directory)
+
 May 5, 2001:
   Spent the morning working at compiling hacknet on the various
   machines in the SourceForge compile farm.  I think I've worked

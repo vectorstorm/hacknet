@@ -20,6 +20,7 @@ AM_INIT_AUTOMAKE(hacknet, 0.0.4)
 AC_PROG_MAKE_SET
 AC_PROG_CXX
 AC_PROG_INSTALL
+AC_PROG_RANLIB
 
 # This is a trick I learned at Loki - the current compiler for the alpha
 # architecture doesn't produce code that works on all versions of the
@@ -102,5 +103,8 @@ u_int8_t size = sizeof(int);
 # be used to generate any number of automatically generated files.
 AC_OUTPUT([
 Makefile
-src/Makefile
+server/Makefile
+client/Makefile
+ttyclient/Makefile
+common/Makefile
 ])

@@ -459,13 +459,13 @@ mapHack::CreateRoom(sint8 x, sint8 y, sint8 w, sint8 h, sint8 xalign, sint8 yali
 	lit = true;	// always fully lit, for now.
 	
 	do{
-		char xtmp = x;
-		char ytmp = y;
-		char wtmp = w;
-		char htmp = h;
-		char xaltmp = xalign;
-		char yaltmp = yalign;
-		char xabs, yabs;
+		sint8 xtmp = x;
+		sint8 ytmp = y;
+		sint8 wtmp = w;
+		sint8 htmp = h;
+		sint8 xaltmp = xalign;
+		sint8 yaltmp = yalign;
+		sint8 xabs, yabs;
 		
 		if ( xtmp < 0 || ytmp < 0 )
 		{

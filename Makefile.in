@@ -63,10 +63,11 @@ CURSESLIB = @CURSESLIB@
 CXX = @CXX@
 MAKEINFO = @MAKEINFO@
 PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
 THREADLIB = @THREADLIB@
 VERSION = @VERSION@
 
-SUBDIRS = src
+SUBDIRS = common server client ttyclient 
 EXTRA_DIST = NOTES autogen.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
