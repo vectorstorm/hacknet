@@ -1,3 +1,10 @@
+# This whole script was taken and modified from a sample available on
+# one of the libsdl web pages..  I'd give more definite credit, except
+# that I've lost the links..  if someone knows where this all came from,
+# please alert me at whiterabbit@users.sourceforge.net, and I'll provide
+# proper attribution and a link.  I'm heavily indebted to this sample
+# script for helping me begin to get autoconf working!
+
 # This first line initializes autoconf and gives it a file that it can
 # look for to make sure the source distribution is complete.
 AC_INIT(README)
