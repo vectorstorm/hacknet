@@ -400,6 +400,14 @@ netServer::SendMapTile( const hnPoint & loc, const mapTile & tile )
 }
 
 void
+netServer::SendInventory( netInventory &inven )
+{
+	assert( m_metaPacket );
+
+	m_metaPacket->Inventory(inven);
+}
+
+void
 netServer::SendGroupData( int groupMemberCount, int groupMemberTurns, bool clientSubmitted )
 {
 	netGroupData packet;

@@ -8,7 +8,7 @@
 #include "MAP_Base.h"
 #include "MAP_Client.h"
 #include "HN_Game.h"
-
+#include "OBJ_Base.h"
 #include "ENT_Human.h"
 #include "ENT_GridBug.h"
 
@@ -16,6 +16,8 @@
 
 hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_playerID(playerID),
+	m_clientInventory(NULL),
+	m_clientInventoryCount(0),
 	m_lastSentGroupPlayerCount(0),
 	m_lastSentGroupPlayerQueuedTurns(0),
 	m_movePending(false),
@@ -440,9 +442,61 @@ hnPlayer::SendUpdate()
 	{
 		//----------------------------------------------------------
 		//  Send data on any updates to our health, stats, etc.
+		//   the status system itself can tell when it needs to
+		//   send updates, so we don't need to worry about putting
+		//   that logic in here.
 		//----------------------------------------------------------
 
 		netServer::GetInstance()->SendStatus( m_entity->GetStatus() );
+	}
+
+	objBase *inventory = m_entity->GetInventory();
+
+	if ( inventory )
+	{
+		//----------------------------------------------------------
+		//  'inventory' is our real inventory.  m_clientInventory
+		//  is the most recent inventory we've sent to our client.
+		//  If m_clientInventory doesn't match 'inventory', then
+		//  build a new m_clientInventory array and send it to
+		//  our client.
+		//----------------------------------------------------------
+		
+		bool needsRebuilding = false;
+		
+		if ( inventory->ObjectCount() != m_clientInventoryCount )
+			needsRebuilding = true;
+		else
+		{
+			for ( int i = 0; i < m_clientInventoryCount; i++ )
+			{
+				objBase *object = inventory->GetObject(i);
+				if ( object )
+				{
+					if ( !object->ExactMatch(m_clientInventory[i]) )
+						needsRebuilding = true;
+				}
+			}
+		}
+
+		if ( needsRebuilding )
+		{
+			delete [] m_clientInventory;
+			m_clientInventoryCount = inventory->ObjectCount();
+			m_clientInventory = new objDescription[m_clientInventoryCount];
+
+			for ( int i = 0; i < m_clientInventoryCount; i++ )
+				inventory->GetDescription( m_clientInventory[i], i );
+
+			// Now send the newly rebuilt inventory to our player.
+
+			netInventory inven(m_clientInventoryCount);
+
+			for ( int i = 0; i < m_clientInventoryCount; i++ )
+				inven.SetObject(i, m_clientInventory[i]);
+
+			netServer::GetInstance()->SendInventory(inven);
+		}
 	}
 
        //----------------------------------------------------------------

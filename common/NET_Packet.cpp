@@ -249,6 +249,33 @@ netMetaPacket::MapUpdateBBox( netMapUpdateBBox &packet )
 }
 
 bool
+netMetaPacket::Inventory( netInventory &packet )
+{
+	m_error = false;
+	
+	sint8 type = SPT_Inventory;
+	Sint8(type);
+	
+	uint16 count;
+	
+	if ( Input() )
+	{
+		Uint16(count);
+		packet.SetObjectCount(count);
+	}
+	else
+	{
+		count = packet.GetObjectCount();
+		Uint16(count);
+	}
+	
+	for ( uint16 i = 0; i < count; i++ )
+		ObjDescription( packet.GetObject(i) );
+	
+	return (!m_error);
+}
+
+bool
 netMetaPacket::MapEntity( netMapEntity &packet )
 {
 	m_error = false;
@@ -850,4 +877,48 @@ netMapUpdateBBox::~netMapUpdateBBox()
 	delete [] object;
 	delete [] objectCount;
 }
-	
+
+netInventory::netInventory():
+	m_objectCount(0),
+	m_object(NULL)
+{
+}
+
+netInventory::netInventory( int objectCount ):
+	m_objectCount(objectCount)
+{
+	m_object = new objDescription[m_objectCount];
+}
+
+netInventory::~netInventory()
+{
+	delete [] m_object;
+}
+
+void
+netInventory::SetObjectCount(uint16 count)
+{
+	m_objectCount = count;
+	delete [] m_object;
+	m_object = new objDescription[count];
+}
+
+void
+netInventory::SetObject(uint16 id, const objDescription &object)
+{
+	if ( id < m_objectCount )
+	{
+		m_object[id] = object;
+	}
+}
+
+objDescription &
+netInventory::GetObject(uint16 id)
+{
+	if ( id < m_objectCount )
+	{
+		return m_object[id];
+	}
+
+	return m_object[0];
+}

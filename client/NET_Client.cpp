@@ -88,6 +88,8 @@ netClient::Go()
 	netClientLocation clientLoc;
 	hnPoint	point;
 	sint8	levelCount;
+	netInventory inven;
+	objDescription *objList;
 	
 	m_display->TextMessage("Trying to connect to server...\n");
 	if ( connect( m_socket, (sockaddr *)m_serverAddress, sizeof(sockaddr) ) == -1 )
@@ -244,6 +246,14 @@ netClient::Go()
 							delete [] tile.object;
 						}
 
+					break;
+				case SPT_Inventory:
+					packet->Inventory(inven);
+					objList = new objDescription[inven.GetObjectCount()];
+					for ( int i = 0; i < inven.GetObjectCount(); i++ )
+						objList[i] = inven.GetObject(i);
+					m_display->UpdateInventory(inven.GetObjectCount(), objList);
+					delete [] objList;
 					break;
 				case SPT_BadPacketNotice:
 					packet->BadPacketNotice();

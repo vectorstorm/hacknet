@@ -23,6 +23,7 @@ enum{
 	SPT_MapObjectList,
 	SPT_MapEntity,
 	SPT_GroupData,		// sending information on the player's group.
+	SPT_Inventory,
 	SPT_QuitConfirm,	// yes, you're out of the game
 	SPT_SaveConfirm,	// yes, you've been saved and are out of the game
 	SPT_Refresh,		// we just finished sending a set of events.  Go ahead and refresh the screen now.
@@ -121,6 +122,21 @@ struct netMapEntity
 	sint8 objectType;
 };
 
+class netInventory
+{
+	uint16		m_objectCount;	// number of objects in each square
+	objDescription *m_object;	// arrays of objects in each square
+
+public:
+	netInventory();
+	netInventory( int objectCount );
+	~netInventory();
+	
+	void			SetObjectCount(uint16 count);
+	uint16			GetObjectCount() { return m_objectCount; }
+	void 			SetObject(uint16 id, const objDescription &object);
+	objDescription & 	GetObject(uint16 id);
+};
 
 enum 
 {
@@ -171,6 +187,7 @@ public:
 	bool			MapUpdateBBox( netMapUpdateBBox &packet );
 	bool			MapEntity( netMapEntity &packet );
 	bool			MapObjectList( netMapObjectList &packet );
+	bool			Inventory( netInventory &packet );
 	bool			JoinOK();
 	bool			QuitConfirm();
 	bool			SaveConfirm();

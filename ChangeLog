@@ -12,6 +12,9 @@ July 7, 2001:
   * Fixed minor memory leak when deleting entities.
   * Oops.  Added OBJ_Dagger.cpp/.h to CVS.  Looks like nobody but me
     is tracking CVS development.  :)
+  * Inventory is now transmitted to client.  (Client's "inventory"
+    command only lists the topmost object in the client's inventory,
+    though.. just because I'm being a slack little coder tonight)
     
 July 6, 2001:
   * Finally added 'OBJ_Types.cpp' to CVS repository.  Oops!  :)

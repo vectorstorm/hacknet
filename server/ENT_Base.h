@@ -48,6 +48,7 @@ public:
 	const hnPoint &		GetPosition();
 	entType			GetType() { return m_type; }
 	hnStatus *		GetStatus() { return m_status; }
+	objBase *		GetInventory() { return m_inventory; }
 
 	virtual bool		RollToHit( entBase *target );
 	

@@ -191,7 +191,10 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 		case ' ':
 			WaitCommand();
 			break;
-
+		
+		case 'i':
+			HandleInventory();
+			break;
 		case ',':
 			HandleTake();
 			break;
@@ -277,6 +280,22 @@ hnDisplayTTY::HandleTake()
 
 		if ( myTile.objectCount > 0 )
 			TakeCommand( myTile.object, 0 );
+	}
+}
+
+void
+hnDisplayTTY::HandleInventory()
+{
+	// for now, just show the topmost item in our inventory, just to
+	// prove that the data is actually being sent.
+
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		char buffer[256];
+		snprintf(buffer,256,"You are carrying a %s.", GetObjectName( m_inventory[0].type ) );
+		TextMessage(buffer);
 	}
 }
 

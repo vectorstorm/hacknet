@@ -43,6 +43,7 @@ public:
 	void		HandleKeypressTalking( int key );
 
 	void		HandleTake();
+	void		HandleInventory();
 	
 	virtual void	PostTurnSubmit();
 	

@@ -20,6 +20,9 @@ protected:
 	mapClient **	m_map;	// this is our map of all the levels...
 	int		m_levelCount;
 
+	objDescription *m_inventory;
+	int		m_inventoryCount;
+
 	hnStatus *	m_status;	// status of our player.
 
 	int		m_groupMemberCount;		// how many members in my group.
@@ -51,6 +54,7 @@ public:
 	virtual void	UpdateMapTile( const hnPoint &point, const mapClientTile & tile );
 	virtual void	UpdateMapCreature( const hnPoint &point, entType type );
 	virtual void	UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool submittedTurn );
+	virtual void	UpdateInventory( int objectCount, objDescription *objectArray );
 	virtual void	TextMessage( char * message ) {}
 
 	char *		GetName() { return m_name; }

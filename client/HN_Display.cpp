@@ -8,6 +8,8 @@
 
 hnDisplay::hnDisplay(char * name):
 	m_map(NULL),
+	m_inventory(NULL),
+	m_inventoryCount(0),
 	m_groupMemberCount(1),
 	m_groupMemberTurnCount(0),
 	m_submittedTurn(false),
@@ -141,6 +143,18 @@ hnDisplay::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool
 	m_groupMemberCount = groupMemberCount;
 	m_groupMemberTurnCount = groupMemberTurnCount;
 	m_submittedTurn = submittedTurn;
+}
+
+void
+hnDisplay::UpdateInventory( int objectCount, objDescription *objectArray )
+{
+	delete [] m_inventory;
+
+	m_inventoryCount = objectCount;
+	m_inventory = new objDescription[ objectCount ];
+
+	for ( int i = 0; i < m_inventoryCount; i++ )
+		m_inventory[i] = objectArray[i];
 }
 
 void

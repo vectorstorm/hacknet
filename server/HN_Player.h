@@ -48,6 +48,9 @@ class hnPlayer
 	mapClient **	m_map;
 	int		m_mapCount;
 	
+	objDescription *m_clientInventory;
+	int		m_clientInventoryCount;
+	
 	hnGroup *	m_group;				// pointer to the group we're a part of.
 	
 	queuedTurn	m_queuedTurn;
