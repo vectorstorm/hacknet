@@ -439,12 +439,14 @@ entBase::Attack( hnDirection dir )
 	
 	if ( RollToHit(foe) )
 	{
+		result = AT_Hit;
 		// we hit!
 		foe->GetStatus()->TakeDamage( RollDamage(foe) );	// just do one hit point of damage for now.
 
 		if ( foe->GetStatus()->Destroyed() )
 		{
 			// we killed it!
+			result = AT_Kill;
 			map->RemoveEntity( foe );
 
 			if ( foe->IsAPlayer() )
@@ -457,11 +459,7 @@ entBase::Attack( hnDirection dir )
 				hnGroupManager::GetInstance()->RemoveEntity(foe);
 				delete foe;
 			}
-			
-			result = AT_Kill;
 		}
-		
-		result = AT_Hit;
 	}
 	else
 	{

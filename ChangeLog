@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 20, 2002:
+  * HN_DisplayTTY.cpp:  Fixed to use default background colour instead
+    of forcing black.
+  * ENT_Base.cpp:  Now properly sends 'destroyed' text messages instead
+    of 'hit' text messages when a player or monster is killed.
+
 February 14, 2002:
   * Added hnRandom to common directory, to abstract out random number
     generation.

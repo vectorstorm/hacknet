@@ -406,7 +406,7 @@ hnPlayer::DoAction()
 {
 	entBase *entity;
 	int result;
-	char name[128];
+	//char name[128];
 	char buffer[128];
 	bool success = false;
 
@@ -420,10 +420,10 @@ hnPlayer::DoAction()
 			
 			entity = m_entity->GetAttackTarget( m_queuedTurn.attack.direction );
 			
-			if (entity)
-			{
-				entity->GetFullName(name,128);
-			}
+		//	if (entity)
+		//	{
+		//		entity->GetFullName(name,128);
+		//	}
 			result = m_entity->Attack( m_queuedTurn.attack.direction );
 			
 			success = true;
