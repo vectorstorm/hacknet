@@ -1,0 +1,101 @@
+Object Documentation
+--------------------
+
+This document is intended to evolve as HackNet's object system evolves.
+Since the system doesn't yet exist in any meaningful capacity, this document
+currently exists to devise the method by which objects will be implemented
+within the framework of HackNet.
+
+1.  Goals
+
+The goals of our object system are threefold.  First, we want our object
+system to be (groan) object-oriented.  Each object in the world should be
+an instantiation of a class, with the operations which can be performed
+on the object being represented by methods -- preferably virtual methods
+which can be overridden by derived classes (ie: a hnObject class might
+have an hnPotion child, which would have a hnHealingPotion child).
+
+Second, our objects must behave fundamentally like those in NetHack.  That
+is, many objects begin unidentified, and their purposes must be worked out
+by the player through experimentation or through other methods.  Once
+discovered, the objects should then be referred to by their proper (or
+given) names.
+
+Third, we want our object system to be low bandwidth -- we don't want to
+have to transmit a lot of data to our clients after each move, to keep
+them abreast of the movements of hundreds of objects.
+
+Finally, we want to keep the strain on the server as light as possible.
+We don't want the server to have to remember what every player has #named
+every object in the database, nor do we want to have to remember which
+potions everyone has identified, or which objects they know are blessed,
+cursed, or uncursed.
+
+2.  Implementation
+
+This bit is a bit of a black box to me.  I'm not sure exactly how to go
+about fulfilling our goals, but it seems to me that there are a few
+potential strategies, which I will outline here:
+
+ - Unique Object ID Numbers
+
+ In this scheme, a central "Object Database" would be given the job of
+assigning a unique object ID number to every object in the game, and
+recycling ID numbers from old, destroyed objects.  Under this scheme,
+the server can refer to objects by number when communicating with clients,
+without repeating information to clients about items they already have
+information about.  In other words, the server would say to the client,
+"Item number 31232 has just moved from square x to square y".
+Clients would know what item #31232 was if they'd examined it before,
+or they could query the server for obvious information on the object --
+object type, the quantity, etc, but no 'identification' data -- the client
+would be expected to remember that information locally when it earned
+it.  (ie: the client would remember if it discovered that a swirly potion 
+was healing, or that object #142 was a +7 long sword named Excalibur, 
+and would display those objects that way, even though the server wouldn't 
+store whether or not the client was aware of the identities of those two 
+objects, and would continue to describe those objects to the client as 
+'swirly potion' and 'long sword'.)
+
+ Advantages:  Low bandwidth, particularly for moving object around level.  
+ Low storage required on server.
+
+ Disadvantages:  Complicates client.  Client must 'save games' when
+ quitting and later rejoining a server, or it will forget the identities 
+ of all objects.  Similar problem if player plays one session on one
+ client, and then plays a second session on a client from a different
+ computer.  Unless they've taken the save data with them, the second
+ client won't know about the discoveries made with the first client.
+ Makes objects 'unique', so that if I see a sword on the west side of
+ the level, and wander around for a while and then see it on the east
+ side of the level, I instantly know that it's the same sword I saw on
+ the west side of the level.  This is different from the classic NetHack
+ behaviour of objects being indistinguishable
+ Makes objects 'unique', so that if I see a sword on the west side of
+ the level, and wander around for a while and then see it on the east
+ side of the level, I instantly know that it's the same sword I saw on
+ the west side of the level.  This is different from the classic NetHack
+ behaviour of objects being indistinguishable.
+
+ - Full Object Descriptions
+
+ Here, the server sends the client full object information each time
+that object's position or state is updated.  (Effectively, it tells
+the client "That sword you saw in square 'x' is no longer there, and
+A new sword with these attributes has appeared in square 'y').
+This requires the server to remember what information each client has 
+received about every object in the game, so that the proper information 
+is sent to the client each time an object is updated.
+
+ Advantages: Proper 'NetHack'-style behaviour when seeing a single
+ item in various different parts of a level.  Client is simple,
+ and shows exactly what the server tells it to show.
+
+ Disadvantages:  Server must remember all information it has given
+ to every client.  Bandwidth is higher, since all information 
+ (blessed/cursed, enchantment, name, etc) must be sent to the client
+ each time the object is seen in a new position.
+
+Are there other options?  Neither of these two sound ideal to me,
+but I'm currently leaning towards the second, if only because it's
+nearer the proper NetHack behaviour.
