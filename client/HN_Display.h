@@ -8,6 +8,7 @@
 #include "HN_Status.h"
 
 #define MAX_NAME_BYTES (128)
+#define INVENTORY_MAX (56)
 
 class netClient;
 
@@ -20,8 +21,8 @@ protected:
 	mapClient **	m_map;	// this is our map of all the levels...
 	int		m_levelCount;
 
-	objDescription *m_inventory;
-	int		m_inventoryCount;
+	objDescription 	m_inventory[INVENTORY_MAX];
+	uint8		m_inventoryCount;
 
 	hnStatus *	m_status;	// status of our player.
 

@@ -283,10 +283,13 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 
 	if ( inventorySelected != -1 )
 	{
-		m_mode = MODE_Normal;
-		m_needsRefresh = true;
+		if ( m_inventory[inventorySelected].count > 0 )
+		{
+			m_mode = MODE_Normal;
+			m_needsRefresh = true;
 
-		DropCommand(inventorySelected);
+			DropCommand(inventorySelected);
+		}
 	}
 	
 	switch ( commandKey )
@@ -360,15 +363,12 @@ hnDisplayTTY::HandleDrop()
 {
 	// we've requested to drop something.  If we have an
 	// inventory, drop the topmost item in it.
-	// TODO: Implement 'drop' properly!
+	// TODO: Check to see if there's at least one item in the inventory!
 
-	if ( m_inventoryCount > 0 )
-	{
-		m_mode = MODE_InventorySelect;
-		m_inventoryMode = ISM_Drop;
+	m_mode = MODE_InventorySelect;
+	m_inventoryMode = ISM_Drop;
 
-		m_needsRefresh = true;
-	}
+	m_needsRefresh = true;
 }
 
 void
@@ -712,7 +712,7 @@ hnDisplayTTY::DrawInventory()
 		
 		for ( int i = 0; i < min(56,m_inventoryCount); i++ )
 		{
-			if ( m_inventory[i].type > categoryStart[j] && m_inventory[i].type < categoryEnd[j] )
+			if ( m_inventory[i].count > 0 && m_inventory[i].type > categoryStart[j] && m_inventory[i].type < categoryEnd[j] )
 			{
 				if ( !somethingInThisCategory )
 				{

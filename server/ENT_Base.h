@@ -10,6 +10,8 @@
 class hnPlayer;
 class objBase;
 
+#define INVENTORY_MAX  (52)
+
 class entBase
 {
 	entType			m_type;
@@ -70,9 +72,9 @@ public:
 	virtual objBase *	GetTakeTarget( const objDescription &object, uint8 stackID );
 	virtual void		Take( const objDescription &object, uint8 stackID );
 
-	virtual bool		IsValidInventoryItem( const objDescription &object, uint8 inventorySlot );
+	virtual bool		IsValidInventoryItem( objBase *object );
 
-	virtual void		Drop( const objDescription &object, uint8 inventorySlot );
+	virtual void		Drop( objBase *object, uint8 count );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

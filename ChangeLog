@@ -6,6 +6,12 @@
 ---  most recent checkins at the bottom.
 ---
 
+July 12, 2001:
+  * Finally fixed inventory slot non-sorting issues.  TODO: Convert
+    other object-manipulation commands (Take) to the newly modified
+    system.  (This should only take a modification to the hnPlayer
+    queued command struct and to the 'Take' command on the entBase)
+
 July 8, 2001:
   * Added basic inventory UI to TTY client.
   * Added GetObjectDescriptionText to OBJ_Types.

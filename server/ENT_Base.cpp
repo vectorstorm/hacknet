@@ -112,35 +112,37 @@ entBase::Take( const objDescription &desc, uint8 stackID )
 }
 
 bool
-entBase::IsValidInventoryItem( const objDescription &desc, uint8 inventorySlot )
+entBase::IsValidInventoryItem( objBase *object )
 {
 	bool result = false;
-	if ( inventorySlot < m_inventory->ObjectCount() )
+	
+	for ( int i = 0; i < m_inventory->ObjectCount(); i++ )
 	{
-		objBase *object = m_inventory->GetObject(inventorySlot);
-
-		if ( object->PartialMatch(desc) )
+		objBase *shuttle = m_inventory->GetObject(i);
+		if ( shuttle == object )
+		{
 			result = true;
+			break;
+		}
 	}
 
 	return result;
 }
 
 void
-entBase::Drop(const objDescription &desc, uint8 inventorySlot)
+entBase::Drop( objBase *object, uint8 count )
 {
-	if ( IsValidInventoryItem(desc,inventorySlot) )
+	if ( IsValidInventoryItem(object) )
 	{
 		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
 		
 		if ( map )	// this should never fail.
 		{
-			objBase *object = m_inventory->RemoveObjectDescription(desc,inventorySlot);
-	
+			objBase *dropped = m_inventory->RemoveObjectQuantity(object,count);
+			
 			hnPoint pos = GetPosition();
-			map->MapTile(pos.x,pos.y).object->AddObject(object);
+			map->MapTile(pos.x,pos.y).object->AddObject(dropped);
 		}
-
 	}
 }
 

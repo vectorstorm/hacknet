@@ -16,8 +16,6 @@
 
 hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	m_playerID(playerID),
-	m_clientInventory(NULL),
-	m_clientInventoryCount(0),
 	m_lastSentGroupPlayerCount(0),
 	m_lastSentGroupPlayerQueuedTurns(0),
 	m_movePending(false),
@@ -39,6 +37,13 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	
 	for ( int i = 0; i < m_mapCount; i++ )
 		m_map[i] = NULL;
+	
+	for ( int i = 0; i < INVENTORY_MAX; i++ )
+	{
+		m_clientInventory[i].type = OBJECT_None;
+		m_clientInventory[i].count = 0;
+		m_clientInventoryMapping[i] = NULL;
+	}
 	
 	m_queuedTurn.type = queuedTurn::None;
 
@@ -97,7 +102,15 @@ hnPlayer::IsValidAttack( hnDirection dir )
 bool
 hnPlayer::IsValidInventoryItem( const objDescription &desc, uint8 inventorySlot )
 {
-	return m_entity->IsValidInventoryItem(desc,inventorySlot);
+	bool result = false;
+	objBase *object = m_clientInventoryMapping[inventorySlot];
+	
+	if (  m_entity->IsValidInventoryItem( object ) )
+	{
+		result = object->PartialMatch(desc);
+	}
+	
+	return result;
 }
 
 bool
@@ -149,8 +162,12 @@ hnPlayer::Drop( const objDescription &object, uint8 inventorySlot )
 	if ( IsValidInventoryItem( object, inventorySlot ) )
 	{
 		m_queuedTurn.type = queuedTurn::Drop;
-		m_queuedTurn.drop.object = object;
-		m_queuedTurn.drop.inventorySlot = inventorySlot;
+		m_queuedTurn.drop.object = m_clientInventoryMapping[inventorySlot];
+		m_queuedTurn.drop.dropCount = object.count;
+	}
+	else
+	{
+		printf("Player requested illegal drop.\n");
 	}
 }
 
@@ -311,7 +328,7 @@ hnPlayer::DoAction()
 			m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.stackID );
 			break;
 		case queuedTurn::Drop:
-			m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.inventorySlot );
+			m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.dropCount );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
@@ -477,42 +494,98 @@ hnPlayer::SendUpdate()
 		//----------------------------------------------------------
 		//  'inventory' is our real inventory.  m_clientInventory
 		//  is the most recent inventory we've sent to our client.
-		//  If m_clientInventory doesn't match 'inventory', then
-		//  build a new m_clientInventory array and send it to
-		//  our client.
+		//  'm_clientInventoryMapping' is a conversion from our
+		//  inventory slots to the objBase pointers they're
+		//  mirroring.  Update our inventory slots based upon the
+		//  current objBase pointers, and set the flag if anything
+		//  has changed.
 		//----------------------------------------------------------
 		
-		bool needsRebuilding = false;
+		bool inventoryUpdated = false;
+		bool slotUsed[INVENTORY_MAX];
+
+		for ( int i = 0; i < INVENTORY_MAX; i++ )
+			slotUsed[i] = false;
 		
-		if ( inventory->ObjectCount() != m_clientInventoryCount )
-			needsRebuilding = true;
-		else
+		for ( int i = 0; i < inventory->ObjectCount(); i++ )
 		{
-			for ( int i = 0; i < m_clientInventoryCount; i++ )
+			objBase *object = inventory->GetObject(i);
+			if ( object )
 			{
-				objBase *object = inventory->GetObject(i);
-				if ( object )
+				bool foundMatch = false;
+				
+				for ( int j = 0; j < INVENTORY_MAX; j++ )
 				{
-					if ( !object->ExactMatch(m_clientInventory[i]) )
-						needsRebuilding = true;
+					if ( m_clientInventoryMapping[j] == object )
+					{
+						foundMatch = true;
+						slotUsed[j] = true;
+						if ( !object->ExactMatch(m_clientInventory[j]) )
+						{
+							object->FillDescription( m_clientInventory[j] );
+							inventoryUpdated = true;
+						}
+						break;
+					}
+				}
+
+				if ( !foundMatch )
+				{
+					bool finished = false;
+					objDescription result;
+					object->FillDescription(result);
+					// first look for a slot that was previously
+					// used for this type of object...
+
+					for ( int j = 0; j < INVENTORY_MAX; j++ )
+					{
+						if ( m_clientInventoryMapping[j] == NULL && m_clientInventory[j].type == result.type )
+						{
+							finished = true;
+							inventoryUpdated = true;
+							m_clientInventory[j] = result;
+							m_clientInventoryMapping[j] = object;
+							slotUsed[j] = true;
+							break;
+						}
+					}
+
+					if ( !finished )
+					{
+						for ( int j = 0; j < INVENTORY_MAX; j++ )
+						{
+							if ( m_clientInventoryMapping[j] == NULL )
+							{
+								m_clientInventoryMapping[j] = object;
+								m_clientInventory[j] = result;
+								finished = true;
+								inventoryUpdated = true;
+								slotUsed[j] = true;
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
 
-		if ( needsRebuilding )
+		// now go through our inventory and turn off all slots
+		// which are marked as unused.
+
+		for ( int i = 0; i < INVENTORY_MAX; i++ )
 		{
-			delete [] m_clientInventory;
-			m_clientInventoryCount = inventory->ObjectCount();
-			m_clientInventory = new objDescription[m_clientInventoryCount];
+			if ( slotUsed[i] == false )
+			{
+				m_clientInventory[i].count = 0;
+				inventoryUpdated = true;
+			}
+		}
+		
+		if ( inventoryUpdated )
+		{
+			netInventory inven(INVENTORY_MAX);
 
-			for ( int i = 0; i < m_clientInventoryCount; i++ )
-				inventory->GetDescription( m_clientInventory[i], i );
-
-			// Now send the newly rebuilt inventory to our player.
-
-			netInventory inven(m_clientInventoryCount);
-
-			for ( int i = 0; i < m_clientInventoryCount; i++ )
+			for ( int i = 0; i < INVENTORY_MAX; i++ )
 				inven.SetObject(i, m_clientInventory[i]);
 
 			netServer::GetInstance()->SendInventory(inven);

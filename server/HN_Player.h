@@ -5,6 +5,7 @@
 #include "HN_Enum.h"
 #include "HN_Point.h"
 #include "OBJ_Types.h"
+#include "ENT_Base.h"
 
 //class mapBase;
 class mapClient;
@@ -35,8 +36,8 @@ struct queuedTurn
 			uint8 stackID;
 		} take;
 		struct{
-			objDescription object;
-			uint8 inventorySlot;
+			objBase * object;
+			uint8 dropCount;
 		} drop;
 	};
 };
@@ -53,8 +54,8 @@ class hnPlayer
 	mapClient **	m_map;
 	int		m_mapCount;
 	
-	objDescription *m_clientInventory;
-	int		m_clientInventoryCount;
+	objDescription 	m_clientInventory[INVENTORY_MAX];
+	objBase *	m_clientInventoryMapping[INVENTORY_MAX];
 	
 	hnGroup *	m_group;				// pointer to the group we're a part of.
 	

@@ -32,10 +32,12 @@ public:
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it
-	objBase *		RemoveObjectDescription( const objDescription &objectDescription, uint8 inventorySlot );	// match the description against one or more objects in our list and remove them, returning the removed object(s).
+	//objBase *		RemoveObjectDescription( const objDescription &objectDescription, uint8 inventorySlot );	// match the description against one or more objects in our list and remove them, returning the removed object(s).
+	objBase *		RemoveObjectQuantity( objBase *object, uint8 count );	// match the description against one or more objects in our list and remove them, returning the removed object(s).
 
 	int			ObjectCount();
 	objBase *		GetObject(int id);
+	int			GetObjectID(objBase *object);
 	void			GetDescription(objDescription &result, int id);
 
 	void			FillDescription( objDescription & );		// set the passed description to exactly match this object.

@@ -91,6 +91,42 @@ objBase::RemoveObject( objBase * object )
 }
 
 objBase *
+objBase::RemoveObjectQuantity( objBase *object, uint8 count )
+{
+	//---------------------------------------------------------
+	//  Check the list.  If we find this object in our list,
+	//  then remove the quantity specified as 'count'.
+	//---------------------------------------------------------
+
+	objBase *result = NULL;
+	objBase *shuttle = m_next;
+
+	while ( shuttle != this )
+	{
+		if ( shuttle == object )
+		{
+			if ( object->m_count >= count )
+			{
+				RemoveObject(object);
+				result = object;
+			}
+			else if ( object->m_count < count )
+			{
+				object->m_count -= count;
+				result = new objBase(object->m_type, hnPoint(0,0,0));
+				result->m_count = count;
+			}
+			
+			break;
+		}
+		shuttle = shuttle->m_next;
+	}
+
+	return result;
+}
+
+/*
+objBase *
 objBase::RemoveObjectDescription( const objDescription &desc, uint8 id )
 {
 	objBase *object = GetObject(id);
@@ -115,6 +151,7 @@ objBase::RemoveObjectDescription( const objDescription &desc, uint8 id )
 	
 	return result;
 }
+*/
 
 void
 objBase::Unlink()
@@ -195,6 +232,25 @@ objBase::GetObject(int id)
 			result = result->m_next;
 	}
 	
+	return result;
+}
+
+int
+objBase::GetObjectID(objBase * object)
+{
+	int result = -1;
+	int searchID = 0;
+	objBase *search = m_next;
+	
+	while ( search != this && search != object)
+	{
+		searchID++;
+		search = search->m_next;
+	}
+	
+	if ( search == object )
+		result = searchID;
+		
 	return result;
 }
 

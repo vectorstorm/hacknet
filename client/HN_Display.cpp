@@ -8,7 +8,6 @@
 
 hnDisplay::hnDisplay(char * name):
 	m_map(NULL),
-	m_inventory(NULL),
 	m_inventoryCount(0),
 	m_groupMemberCount(1),
 	m_groupMemberTurnCount(0),
@@ -25,7 +24,10 @@ hnDisplay::hnDisplay(char * name):
 		strncpy( m_name, "Unknown", MAX_NAME_BYTES );
 		m_name[MAX_NAME_BYTES-1] = '\0';
 	}
-
+	
+	for ( int i = 0; i < INVENTORY_MAX; i++ )
+		m_inventory[i].count = 0;
+	
 	m_status = new hnStatus;
 }
 
@@ -151,13 +153,15 @@ hnDisplay::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool
 void
 hnDisplay::UpdateInventory( int objectCount, objDescription *objectArray )
 {
-	delete [] m_inventory;
-
 	m_inventoryCount = objectCount;
-	m_inventory = new objDescription[ objectCount ];
 
-	for ( int i = 0; i < m_inventoryCount; i++ )
-		m_inventory[i] = objectArray[i];
+	for ( int i = 0; i < INVENTORY_MAX; i++ )
+	{
+		if ( i < objectCount )
+			m_inventory[i] = objectArray[i];
+		else
+			m_inventory[i].count = 0;
+	}
 }
 
 void
