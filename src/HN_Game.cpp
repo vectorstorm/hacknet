@@ -208,7 +208,13 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.entityType = new sint8;
 						update.material[0] = hnDungeon::GetLevel(iniPos.z)->MaterialAt(iniPos.x,iniPos.y);
 						update.wall[0] = hnDungeon::GetLevel(iniPos.z)->WallAt(iniPos.x,iniPos.y);
-						update.entityType[0] = (hnDungeon::GetLevel(iniPos.z)->MapTile(iniPos.x,iniPos.y).entity) ? ENTITY_Player : ENTITY_None;
+
+						entBase *entity = hnDungeon::GetLevel(iniPos.z)->MapTile(iniPos.x,iniPos.y).entity;
+						
+						if ( entity )
+							update.entityType[0] = entity->GetType();
+						else
+							update.entityType[0] = ENTITY_None;
 						
 						netServer::GetInstance()->SendMapUpdateBBox( update );
 						netServer::GetInstance()->TransmitMetaPacket();
@@ -232,7 +238,13 @@ hnGame::ClientMove(int playerID, hnDirection dir)
 						update.entityType = new sint8;
 						update.material[0] = hnDungeon::GetLevel(endPos.z)->MaterialAt(endPos.x,endPos.y);
 						update.wall[0] = hnDungeon::GetLevel(endPos.z)->WallAt(endPos.x,endPos.y);
-						update.entityType[0] = (hnDungeon::GetLevel(endPos.z)->MapTile(endPos.x,endPos.y).entity) ? ENTITY_Player : ENTITY_None;
+	
+						entBase *entity = hnDungeon::GetLevel(endPos.z)->MapTile(endPos.x,endPos.y).entity;
+						
+						if ( entity )
+							update.entityType[0] = entity->GetType();
+						else
+							update.entityType[0] = ENTITY_None;
 						
 						netServer::GetInstance()->SendMapUpdateBBox( update );
 						netServer::GetInstance()->TransmitMetaPacket();

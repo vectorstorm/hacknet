@@ -1,3 +1,12 @@
+April 23, 2001:
+  Minor adjustment to temporary movement code still in HN_Game.cpp to fix
+  a potential bug.  Before, if a non-moving player saw a monster move 
+  (currently unimplemented -- hence, potential bug), that monster would
+  have shown up as a human player.  Fixed now.  Not that anybody will
+  notice the change until monster movement is added.  And that won't
+  happen until monsters are added.  So much to do!
+
+---
 April 22, 2001:
   Big changes today.  Here's the scoop:
   
