@@ -11,8 +11,11 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-mapBase::mapBase(uint8 width, uint8 height):
-	m_width(width), m_height(height), m_roomCount(0)
+mapBase::mapBase(uint8 width, uint8 height, uint8 depth):
+	m_width(width), 
+	m_height(height),
+	m_depth(depth),
+	m_roomCount(0)
 {
 	m_stairsUp.Set(-1,-1);
 	m_stairsDown.Set(-1,-1);

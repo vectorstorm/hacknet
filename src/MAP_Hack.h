@@ -21,9 +21,11 @@ class mapHack : public mapBase
 	bool			NearDoor(uint8 x, uint8 y);
 	
 	void			Wallify();
+
+	void			MakeMonsters();
 	
 public:
-				mapHack( uint8 width, uint8 height );
+				mapHack( uint8 width, uint8 height, uint8 depth );
 	virtual			~mapHack();
 
 	virtual void		Generate();

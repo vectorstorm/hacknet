@@ -13,6 +13,11 @@ April 30, 2001:
   Adjusted client to put text lines at topmost free line of buffer, instead
   of always writing to the bottom line and scrolling upwards.
 
+  Added ENT_GridBug.cpp/.h class, to start implementing monsters and
+  monster behaviour with.  (Well honestly, what else did you EXPECT to be 
+  the first monster implemented?)  :)  TODO:  Implement a factory method
+  to create monsters without the map having to create them explicitly.
+
 April 29, 2001:
   Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
   a bug in the NetHack level generation code, involving the creation of

@@ -7,8 +7,8 @@
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 
-mapCavern::mapCavern(unsigned int width, unsigned int height):
-	mapBase(width,height)
+mapCavern::mapCavern(uint8 width, uint8 height, uint8 depth):
+	mapBase(width,height,depth)
 {
 }
 

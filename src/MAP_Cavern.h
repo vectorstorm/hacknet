@@ -15,7 +15,7 @@ class mapCavern : public mapBase
 	void			Wallify();
 	
 public:
-				mapCavern( unsigned int width, unsigned int height );
+				mapCavern( uint8 width, uint8 height, uint8 depth );
 	virtual			~mapCavern();
 
 	virtual void		Generate();

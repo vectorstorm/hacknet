@@ -51,6 +51,7 @@ protected:
 	mapTile			m_backgroundType;	// if we ask for something outside the map, what type do we call it?
 	uint8			m_width;
 	uint8			m_height;
+	uint8			m_depth;		// what level are we in the dungeon?
 	mapRoom *		m_room[MAX_ROOMS];	// pointers to our rooms.  Yay!
 	uint8			m_roomCount;		// how many rooms in this map?
 
@@ -61,7 +62,7 @@ protected:
 	hnPoint2D		m_bottomRightVisibility;
 	
 public:
-				mapBase( uint8 width, uint8 height );
+				mapBase( uint8 width, uint8 height, uint8 depth );
 	virtual			~mapBase();
 
 	uint8			GetWidth() { return m_width; }

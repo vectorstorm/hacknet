@@ -44,7 +44,7 @@ hnDungeon::hnDungeon(int levelCount, int width, int height):
 	m_levelMap = new (mapBase *)[levelCount];
 	for ( int i = 0; i < levelCount; i++ )
 	{
-		m_levelMap[i] = new mapHack(width, height);
+		m_levelMap[i] = new mapHack(width, height, i);
 		m_levelMap[i]->Generate();
 
 		if ( i < levelCount - 1 )

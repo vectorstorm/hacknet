@@ -278,11 +278,18 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 	if ( x >= 0 && x < m_map->GetWidth() && y >= 0 && y < m_map->GetHeight() )
 	{
 		mapClientTile & tile = m_map->MapTile(x,y);
+		color_set( floorTileColor[floorType],NULL);
 
 		if ( tile.entity == ENTITY_Player )	// if someone is standing here...
+		{
+			color_set( COLOR_WHITE, NULL );
 			theChar = '@';			// draw '@' instead of ground.  This is a HACK!
-		
-		color_set( floorTileColor[floorType],NULL);
+		}
+		if ( tile.entity == ENTITY_GridBug )
+		{
+			color_set( COLOR_MAGENTA, NULL );
+			theChar = 'x';
+		}
 		//mvaddch(y,x,floorTileChar[floorType]);
 		mvaddch(y + MAX_MESSAGE_LINES+1,x,theChar);
 		move(m_position.y + MAX_MESSAGE_LINES+1,m_position.x);

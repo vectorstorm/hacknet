@@ -2,14 +2,16 @@
 #include "MAP_Hack.h"
 #include "HN_Point.h"
 
+#include "ENT_GridBug.h"
+
 #include <stdio.h>
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
 #define max(x,y) ( (x<y)?y:x )
 
-mapHack::mapHack(uint8 width, uint8 height):
-	mapBase(width,height)
+mapHack::mapHack(uint8 width, uint8 height, uint8 depth):
+	mapBase(width,height,depth)
 {
 }
 
@@ -51,6 +53,27 @@ mapHack::GenerateStairsDown()
 			WallAt(x,y) = WALL_StairsDown;
 			m_stairsDown.Set(x,y);
 			didit = true;
+		}
+	}
+}
+
+void
+mapHack::MakeMonsters()
+{
+	for ( int i = 0; i < 10; i++ )
+	{
+		bool didit = false;
+
+		while ( !didit )
+		{
+			int x = rand() % GetWidth();
+			int y = rand() % GetHeight();
+
+			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
+			{
+				MapTile(x,y).entity = new entGridBug( hnPoint(x, y, 0) );
+				didit = true;
+			}
 		}
 	}
 }
@@ -642,6 +665,7 @@ mapHack::Generate()
 	SortRooms();
 	MakeCorridors();
 	Wallify();
+	MakeMonsters();
 
 	PrepareVisibility();
 }

@@ -79,7 +79,7 @@ entPlayer::PostTurn()
 
 	//  Allocate map storage if we haven't been here before.
 	if ( m_map[ GetPosition().z ] == NULL )
-		m_map[ GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight() );
+		m_map[ GetPosition().z ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), GetPosition().z );
 
 	mapBase *map = m_map[ GetPosition().z ];
 	assert( map );
