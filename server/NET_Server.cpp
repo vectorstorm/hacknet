@@ -500,41 +500,43 @@ netServer::TransmitMetaPacket()
 
 	if ( m_metaPacket )
 	{
-		// here we go -- send our netMetaPacket to the given client!
-		short metapacketdatalength = htons(m_metaPacket->GetBufferLength());	
+		if ( m_metaPacket->GetBufferLength() > 0 )
+		{
+			// here we go -- send our netMetaPacket to the given client!
+			short metapacketdatalength = htons(m_metaPacket->GetBufferLength());	
 
 #ifdef __DEBUG_NETWORKING__
-		printf("Sending %ld byte metapacket to %s (id %d)...\n", m_metaPacket->GetBufferLength(), 
+			printf("Sending %ld byte metapacket to %s (id %d)...\n", m_metaPacket->GetBufferLength(), 
 									m_game->GetPlayerName(m_packetClientID), m_packetClientID);
 #endif
 		
-		if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), 0 ) == -1 )
-		{
+			if ( send(m_client[m_packetClientID].socket, &metapacketdatalength, sizeof(sint16), 0 ) == -1 )
+			{
 			// something's gone wrong here -- presumably the client has disconnected from us
 			// without warning, so first be sure our socket is closed, then disconnect.
-			close( m_client[m_packetClientID].socket );
-			DisconnectClientID(m_packetClientID);
-		}
+				close( m_client[m_packetClientID].socket );
+				DisconnectClientID(m_packetClientID);
+			}
 
 #ifdef __DISPLAY_PACKET_CONTENT__
-		for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
-		{
-			printf("Value: %d\n", m_metaPacket->GetBuffer()[i]);
-		}
+			for ( int i = 0; i < m_metaPacket->GetBufferLength(); i++ )
+			{
+				printf("Value: %d\n", m_metaPacket->GetBuffer()[i]);
+			}
 #endif
 		
-		if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), 0 ) == -1 )
-		{
-			// something's gone wrong here -- presumably the client has disconnected from us
-			// without warning, so first be sure our socket is closed, then disconnect.
-			close( m_client[m_packetClientID].socket );
-			DisconnectClientID(m_packetClientID);
+			if ( send(m_client[m_packetClientID].socket, m_metaPacket->GetBuffer(), m_metaPacket->GetBufferLength(), 0 ) == -1 )
+			{
+				// something's gone wrong here -- presumably the client has disconnected from us
+				// without warning, so first be sure our socket is closed, then disconnect.
+				close( m_client[m_packetClientID].socket );
+				DisconnectClientID(m_packetClientID);
+			}
+			success = true;
 		}
 		
 		delete m_metaPacket;
 		m_metaPacket = NULL;
-
-		success = true;
 	}
 	
 	return success;

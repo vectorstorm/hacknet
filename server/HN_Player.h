@@ -43,6 +43,7 @@ class hnPlayer
 	int		m_spellPointMax;
 	int		m_spellPoints;
 
+	
 	int		m_level;
 
 	int		m_experiencePoints;
@@ -53,6 +54,12 @@ class hnPlayer
 	hnGroup *	m_group;				// pointer to the group we're a part of.
 	
 	queuedTurn	m_queuedTurn;
+	
+	int		m_lastSentGroupPlayerCount;
+	int		m_lastSentGroupPlayerQueuedTurns;
+	bool		m_statsChanged;
+	bool		m_hitPointsChanged;
+	bool		m_spellPointsChanged;
 	
 public:
 			hnPlayer( int playerID, const hnPoint & where );

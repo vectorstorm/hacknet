@@ -13,13 +13,18 @@
 extern hnPoint offsetVector[10];
 
 hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
-	m_playerID(playerID)
+	m_playerID(playerID),
+	m_lastSentGroupPlayerCount(0),
+	m_lastSentGroupPlayerQueuedTurns(0),
+	m_statsChanged(true),
+	m_hitPointsChanged(true),
+	m_spellPointsChanged(true)
 {
 	m_mapCount = hnDungeon::GetInstance()->GetLevelCount();
 	m_map = new (mapBase *)[m_mapCount];
 
 	m_entity = new entHuman( where, true );
-//	Ever want to play as a Grid Bug?  Comment out the line above and 
+//	Ever wanted to play as a Grid Bug?  Comment out the line above and 
 //	uncomment the next line, and you will!  Yes, we already
 //	support non-human players!  Hooray!
 //	------------------------------------------------------------
@@ -35,6 +40,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 
 hnPlayer::~hnPlayer()
 {
+	//  Since we're being deleted, remove us from the level.
 	hnDungeon::GetInstance()->GetLevel(GetPosition().z)->RemoveEntity( m_entity );
 
 	delete m_entity;
@@ -228,6 +234,14 @@ void
 hnPlayer::SendUpdate()
 {
 	//---------------------------------------------------------------
+	// in case we need to send a packet, tell the server to
+	// start building one.  We'll tell it to transmit it at the
+	// end of this function.  If no data is actually put into the
+	// packet, then the server won't actually send anything.
+	//---------------------------------------------------------------
+	netServer::GetInstance()->StartMetaPacket(m_playerID);
+	
+	//---------------------------------------------------------------
 	//  Sanity checks, and be sure that our vision map has been
 	//  allocated.
 	//---------------------------------------------------------------
@@ -260,7 +274,6 @@ hnPlayer::SendUpdate()
 	{
 		map->ResetChanged();		// reset our map's memory of what has changed, since we're updating the client.
 
-		netServer::GetInstance()->StartMetaPacket(m_playerID);
 		netServer::GetInstance()->SendClientLocation( GetPosition() );
 	
 		update.loc.Set( tlpos.x, tlpos.y, m_entity->GetPosition().z );
@@ -288,25 +301,37 @@ hnPlayer::SendUpdate()
 		delete [] update.wall;
 		delete [] update.entityType;
 	
-
-		if ( m_group )
-		{
-			//----------------------------------------------------------------------------------
-			//  Put some group update data into the same metapacket, just for convenience.
-			//  No point sending those nasty big TCP headers more often then necessary!
-			//  
-			//  Remember that we're always in a 'group', even if we're the only player in
-			//  it!  This tells the client how many members in the group, and how many of
-			//  those players have submitted turn data so far!
-			//----------------------------------------------------------------------------------
-			int groupMembers = m_group->GetPlayerCount();
-			int groupMembersWithTurns = m_group->QueuedTurnCount();
-			
-			netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, HasQueuedTurn() );
-		}
-	
-		netServer::GetInstance()->TransmitMetaPacket();	// all done!
 	}
+	
+	if ( m_group )
+	{
+		//----------------------------------------------------------------------------------
+		//  Put some group update data into the same metapacket, just for convenience.
+		//  No point sending those nasty big TCP headers more often then necessary!
+		//  
+		//  Remember that we're always in a 'group', even if we're the only player in
+		//  it!  This tells the client how many members in the group, and how many of
+		//  those players have submitted turn data so far!
+		//----------------------------------------------------------------------------------
+		int groupMembers = m_group->GetPlayerCount();
+		int groupMembersWithTurns = m_group->QueuedTurnCount();
+		
+		if ( groupMembers != m_lastSentGroupPlayerCount ||
+			groupMembersWithTurns != m_lastSentGroupPlayerQueuedTurns )
+		{
+			netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, HasQueuedTurn() );
+
+			m_lastSentGroupPlayerCount = groupMembers;
+			m_lastSentGroupPlayerQueuedTurns = groupMembersWithTurns;
+		}
+	}
+	
+	//----------------------------------------------------------------
+	// Send the metapacket now.  The server will recognize if there's
+	// no data in the packet, and will abort the send (returning
+	// false, although we don't really care about that).
+	//----------------------------------------------------------------
+	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }
 
 void

@@ -85,12 +85,13 @@ hnGroup::ProcessTurn()
 			for ( int i = 0; i < m_maxPlayerCount; i++ )
 				if ( m_player[i] )
 				{
-					int groupMembers = GetPlayerCount();
-					int groupMembersWithTurns = QueuedTurnCount();
+					m_player[i]->SendUpdate();
+					//int groupMembers = GetPlayerCount();
+					//int groupMembersWithTurns = QueuedTurnCount();
 					
-					netServer::GetInstance()->StartMetaPacket( m_player[i]->GetID() );
-					netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, m_player[i]->HasQueuedTurn() );
-					netServer::GetInstance()->TransmitMetaPacket();
+					//netServer::GetInstance()->StartMetaPacket( m_player[i]->GetID() );
+					//netServer::GetInstance()->SendGroupData( groupMembers, groupMembersWithTurns, m_player[i]->HasQueuedTurn() );
+					//netServer::GetInstance()->TransmitMetaPacket();
 				}
 		}
 	}

@@ -8,6 +8,9 @@
 
 May 16, 2001:
   * HN_Main_Server.cpp:  Server now accepts --nogroups as well as --no-groups.
+  * HN_Server.cpp, HN_Player.cpp, HN_Group.cpp:  Optimised network packets
+    again so group data is only sent when it actually changes.  Server now
+    aborts sending empty packets, instead of actually sending them.
 
 May 13, 2001:
   * NET_Packet.h/.cpp: More new packet types and rearrangements of old ones.
