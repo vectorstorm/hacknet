@@ -16,13 +16,15 @@ class objBase
 	uint8		m_blesscurse;
 	uint8		m_count;	// how many of us are there?
 
-	uint16		m_flags;
 
 	objBase *	m_next;
 	objBase *	m_prev;
 	
 protected:
+	uint16		m_flags;
+
 	void		Unlink();	
+	
 public:
 				objBase( uint32 type );
 	virtual 		~objBase();
@@ -36,10 +38,10 @@ public:
 
 	const char *		GetName();
 
-	void			SetWieldedPrimary(bool);
-	void			SetWieldedSecondary(bool);
+	virtual bool		SetWieldedPrimary(bool);	// returns success
+	virtual bool		SetWieldedSecondary(bool);	// returns success
 
-	void			SetWorn(bool);
+	virtual bool		SetWorn(bool);			// returns success
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it

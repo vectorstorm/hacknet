@@ -6,6 +6,11 @@
 ---  most recent checkins at the bottom.
 ---
 
+February 10, 2002:
+  * OBJ_Armour.cpp/.h: Added to CVS.  Implemented SetWorn()
+  * OBJ_Manager.cpp: Create correct class based upon object type.
+  * OBJ_Base.cpp: No longer allow non-armour to be worn.
+
 February 9, 2002:
   * HN_Player.cpp: Switched to delta-based inventory updates.
   * NET_Server.cpp: Added missing 'break' statement to delta-based

@@ -8,9 +8,9 @@ objBase::objBase( uint32 itemID ):
 	m_itemID(itemID),
 	m_blesscurse(BC_Uncursed),
 	m_count(1),
-	m_flags(0),
 	m_next(this),
-	m_prev(this)
+	m_prev(this),
+	m_flags(0)
 {
         const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
 	m_type = proto.type;
@@ -63,31 +63,32 @@ objBase::SetPosition( const hnPoint & pos )
         m_position = pos;
 }
 
-void
+bool
 objBase::SetWieldedPrimary( bool wielded )
 {
 	if ( wielded )
 		m_flags |= FLAG_WieldedPrimary;
 	else
 		m_flags &= ~FLAG_WieldedPrimary;
+
+	return true;	// TODO:  Return success/fail based upon whether stuff changed.
 }
 
-void
+bool
 objBase::SetWieldedSecondary( bool wielded )
 {
 	if ( wielded )
 		m_flags |= FLAG_WieldedSecondary;
 	else
 		m_flags &= ~FLAG_WieldedSecondary;
+
+	return true;	// TODO:  Return success/fail based upon whether stuff changed.
 }
 
-void
+bool
 objBase::SetWorn( bool worn )
 {
-	if ( worn )
-		m_flags |= FLAG_Worn_Suit;
-	else
-		m_flags &= ~FLAG_Worn_Suit;
+	return false;	// you can't wear anything but armour, rings, and some tools.
 }
 
 void

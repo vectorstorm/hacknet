@@ -34,12 +34,14 @@ enum {
 	FLAG_Worn_Shield 	= 0x0004,
 	FLAG_Worn_Boots 	= 0x0008,
 	FLAG_Worn_Gloves 	= 0x0010,
-	FLAG_Worn_Amulet 	= 0x0020,
-	FLAG_Worn_LeftRing 	= 0x0040,
-	FLAG_Worn_RightRing 	= 0x0080,
+	FLAG_Worn_Cloak		= 0x0020,
+	FLAG_Worn_Shirt		= 0x0040,
+	FLAG_Worn_Amulet 	= 0x0080,
+	FLAG_Worn_LeftRing 	= 0x0100,
+	FLAG_Worn_RightRing 	= 0x0200,
 	
-	FLAG_WieldedPrimary 	= 0x0100,
-	FLAG_WieldedSecondary 	= 0x0200,
+	FLAG_WieldedPrimary 	= 0x0400,
+	FLAG_WieldedSecondary 	= 0x0800
 };
 #define FLAG_Worn		(FLAG_Worn_Suit|FLAG_Worn_Helm|FLAG_Worn_Shield \
 				|FLAG_Worn_Boots|FLAG_Worn_Gloves \

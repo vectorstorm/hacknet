@@ -826,6 +826,6 @@ hnPlayer::SendMapData( const hnPoint2D &tlpos, const hnPoint2D &brpos, int level
 	}
 	else
 	{
-		printf( "No visual change.\n" );
+		//printf( "No visual change.\n" );
 	}
 }

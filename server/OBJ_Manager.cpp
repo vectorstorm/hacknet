@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "OBJ_Weapon.h"
+#include "OBJ_Armour.h"
 
 //---------  Temporary #includes while setting up new object system
 //#include "OBJ_LongSword.h"
@@ -136,7 +137,18 @@ objManager::RandomItem(uint8 level, objType type)
 			if ( value < m_objectDef[i].probability )
 			{
 				// create this object
-				result = new objWeapon(i);
+				switch ( m_objectDef[i].type )
+				{
+					case OBJ_TYPE_Weapon:
+						result = new objWeapon(i);
+						break;
+					case OBJ_TYPE_Armour:
+						result = new objArmour(i);
+						break;
+					default:
+						result = new objBase(i);
+						break;
+				}
 				break;
 			}
 			value -= m_objectDef[i].probability;

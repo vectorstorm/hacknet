@@ -9,6 +9,7 @@ hacknetd_SOURCES = HN_Main_Server.cpp ENT_Base.cpp ENT_Base.h ENT_GridBug.cpp EN
 		NET_Server.cpp NET_Server.h HN_Config_Server.h \
 		OBJ_Manager.cpp OBJ_Manager.h OBJ_Weapon.cpp OBJ_Weapon.h\
 		ENT_Definition.cpp ENT_Definition.h HN_Properties.h\
-		OBJ_Convert.h OBJ_Definition.cpp OBJ_Definition.h
+		OBJ_Convert.h OBJ_Definition.cpp OBJ_Definition.h\
+		OBJ_Armour.cpp OBJ_Armour.h
 
 INCLUDES = -I../common/
