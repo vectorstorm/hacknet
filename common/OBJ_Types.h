@@ -1,20 +1,30 @@
 #ifndef __OBJ_TYPES_H__
 #define __OBJ_TYPES_H__
 
+#include "HN_Types.h"
+
 enum
 {
 	OBJECT_None,
 	
-	OBJECT_Potion,		// there should be one of these for each item type.
-	OBJECT_Armor,
-	OBJECT_LongSword,
+	/*                POTIONS                  */
+	POTION_Bubbly,		// there should be one of these for each item type.
 
+	/*                 ARMOURS                  */
+	ARMOUR_Leather,
 
-	OBJECT_AmuletOfYendor,	// the goal of the whole thing!
+	/*                 WEAPONS                 */
+	WEAPON_LongSword,
+
+	/*                ARTIFACTS                */
+	AMULET_ImitationYendor,		// Accept no substitute!
+	AMULET_Yendor,			// the goal of the whole thing!
 
 	OBJECT_MAX
 };
 typedef uint16 objType;
+
+const char * GetObjectName(objType objectID);
 
 enum {
 	BC_Unknown,

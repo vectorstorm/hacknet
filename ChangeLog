@@ -10,6 +10,11 @@ July 2, 2001:
   * 'Pick up' code migrated from hnGame to hnPlayer and entBase, so
     that any entity can pick objects up, and players can queue up
     object pickup commands, the same as movement commands.
+  * Implemented method of grabbing an object's "name" from its
+    enumerated constant, without including the whole object
+    class hierarchy in the client.  It's not clean and elegant,
+    but it works.  TODO:  Rethink this setup, see if there's a
+    nicer way to achieve this.
 
 July 1, 2001:
   * Client can now 'pick up' objects with ',' -- no inventory yet,

@@ -108,15 +108,18 @@ hnDisplay::Refresh()
 		if ( m_map[m_position.z] )
 		{
 			int objCount = m_map[m_position.z]->MapTile(m_position.x, m_position.y).objectCount;
+			
 			if ( objCount > 0 )
 			{
 				// hardcode to long sword, since that's all we have right now.
 				char buffer[256];
+			
+				objDescription topObject = m_map[m_position.z]->MapTile(m_position.x, m_position.y).object[0];
 
 				if ( objCount > 1 )
 					snprintf(buffer, 256, "There are several objects here.");
 				else
-					snprintf(buffer, 256, "You see here a %s.", "long sword");
+					snprintf(buffer, 256, "You see here a %s.", GetObjectName(topObject.type) );
 
 				TextMessage(buffer);
 
