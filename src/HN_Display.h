@@ -16,7 +16,7 @@ protected:
 	char		m_name[MAX_NAME_BYTES];
 	netClient 	*m_client;
 	hnPoint		m_position;
-	mapClient	*m_map;		// this is our map of the current level...
+	mapClient	*m_map;	// this is our map of all the levels...
 public:
 			hnDisplay( char * name );
 	virtual		~hnDisplay();

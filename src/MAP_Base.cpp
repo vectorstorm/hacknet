@@ -10,6 +10,7 @@
 
 #define RND(x)  (int)(rand() % (long)(x))
 #define min(x,y) ( (x>y)?y:x )
+#define max(x,y) ( (x<y)?y:x )
 
 mapBase::mapBase(uint8 width, uint8 height, uint8 depth):
 	m_width(width), 
@@ -19,6 +20,8 @@ mapBase::mapBase(uint8 width, uint8 height, uint8 depth):
 {
 	m_stairsUp.Set(-1,-1);
 	m_stairsDown.Set(-1,-1);
+	m_bottomRightMaxVisibility.Set(0,0);
+	m_topLeftMaxVisibility.Set(m_width,m_height);
 	
 	m_tile = new mapTile[width * height];
 	for ( int i = 0; i < width * height; i++ )
@@ -144,6 +147,7 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 	m_bottomRightVisibility.Set(0,0);
 	m_topLeftVisibility.Set(m_width,m_height);
 	
+	
 	for ( int i = 0; i < m_width; i++ )
 		for ( int j = 0; j < m_height; j++ )
 		{
@@ -217,14 +221,15 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 					
 					if ( changed )
 					{
-						if ( x < m_topLeftVisibility.x )
-							m_topLeftVisibility.x = x;
-						if ( x > m_bottomRightVisibility.x )
-							m_bottomRightVisibility.x = x;
-						if ( y < m_topLeftVisibility.y )
-							m_topLeftVisibility.y = y;
-						if ( y > m_bottomRightVisibility.y )
-							m_bottomRightVisibility.y = y;
+						m_topLeftVisibility.x = min( m_topLeftVisibility.x, x );
+						m_topLeftMaxVisibility.x = min( m_topLeftMaxVisibility.x, x );
+						m_topLeftVisibility.y = min( m_topLeftVisibility.y, y );
+						m_topLeftMaxVisibility.y = min( m_topLeftMaxVisibility.y, y );
+						
+						m_bottomRightVisibility.x = max( m_bottomRightVisibility.x, x );
+						m_bottomRightMaxVisibility.x = max( m_bottomRightMaxVisibility.x, x );
+						m_bottomRightVisibility.y = max( m_bottomRightVisibility.y, y );
+						m_bottomRightMaxVisibility.y = max( m_bottomRightMaxVisibility.y, y );
 					}
 				}
 		
@@ -260,14 +265,15 @@ mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 				else
 					MapTile( x, y ).entityType = sourceMap->MapTile( x, y ).entity->GetType();
 
-				if ( x < m_topLeftVisibility.x )
-					m_topLeftVisibility.x = x;
-				if ( x > m_bottomRightVisibility.x )
-					m_bottomRightVisibility.x = x;
-				if ( y < m_topLeftVisibility.y )
-					m_topLeftVisibility.y = y;
-				if ( y > m_bottomRightVisibility.y )
-					m_bottomRightVisibility.y = y;
+				m_topLeftVisibility.x = min( m_topLeftVisibility.x, x );
+				m_topLeftMaxVisibility.x = min( m_topLeftMaxVisibility.x, x );
+				m_topLeftVisibility.y = min( m_topLeftVisibility.y, y );
+				m_topLeftMaxVisibility.y = min( m_topLeftMaxVisibility.y, y );
+						
+				m_bottomRightVisibility.x = max( m_bottomRightVisibility.x, x );
+				m_bottomRightMaxVisibility.x = max( m_bottomRightMaxVisibility.x, x );
+				m_bottomRightVisibility.y = max( m_bottomRightVisibility.y, y );
+				m_bottomRightMaxVisibility.y = max( m_bottomRightMaxVisibility.y, y );
 			}
 	}
 }

@@ -90,23 +90,26 @@ entPlayer::PostTurn()
 
 	map->UpdateVisibility( GetPosition(), realMap );
 	
-	//---------------------------------------------------------------
-	//  For now, we're just going to send the 3x3 box around the
-	//  player.  Once true visibility is being cast, we'll send
-	//  the the full bounding box around the visible area, with
-	//  'unknown' data for the unseen squares within the visibile
-	//  alrea's bounding box.
-	//---------------------------------------------------------------
-
-
 	netMapUpdateBBox update;
 	
 	if ( m_changedLevel )
 	{
-		printf("Just changed levels.\n");
-		update.loc.Set(0,0,0);
-		update.width = map->GetWidth();
-		update.height = map->GetHeight();
+		//--------------------------------------------------------
+		//  Instead of sending the whole level, send only the
+		//  bounding box around what the player has seen on the
+		//  level.  (And someday soon, we'll even only send THAT
+		//  if the client hasn't visited the level before during
+		//  this connect!)
+		//--------------------------------------------------------
+		
+		hnPoint2D 	tlpos = map->GetTopLeftMaxVisibility();
+		hnPoint2D	brpos = map->GetBottomRightMaxVisibility();
+		
+		netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight() );
+		
+		update.loc.Set( tlpos.x, tlpos.y, 0 );
+		update.width = ( brpos.x - tlpos.x ) + 1;
+		update.height = ( brpos.y - tlpos.y ) + 1;
 		m_changedLevel = false;
 	}
 	else

@@ -26,6 +26,9 @@ April 30, 2001:
   the player as near the up-stairs as possible, but since there's currently
   no up-stairs on the top level, this isn't done yet.
 
+  Network optimisations, so only previously visible part of the level is
+  transmitted when you change levels, instead of sending the WHOLE level.
+
 April 29, 2001:
   Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
   a bug in the NetHack level generation code, involving the creation of

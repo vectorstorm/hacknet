@@ -59,7 +59,9 @@ protected:
 	hnPoint2D		m_stairsDown;		// where our down stairs are located.
 
 	hnPoint2D		m_topLeftVisibility;
+	hnPoint2D		m_topLeftMaxVisibility;
 	hnPoint2D		m_bottomRightVisibility;
+	hnPoint2D		m_bottomRightMaxVisibility;
 	
 public:
 				mapBase( uint8 width, uint8 height, uint8 depth );
@@ -72,7 +74,9 @@ public:
 	const hnPoint2D &	GetDownStairs() { return m_stairsDown; }
 	
 	const hnPoint2D &	GetTopLeftVisibility() { return m_topLeftVisibility; }
+	const hnPoint2D &	GetTopLeftMaxVisibility() { return m_topLeftMaxVisibility; }
 	const hnPoint2D &	GetBottomRightVisibility() { return m_bottomRightVisibility; }
+	const hnPoint2D &	GetBottomRightMaxVisibility() { return m_bottomRightMaxVisibility; }
 	
 	void			PrepareVisibility();
 	void			UpdateVisibility( const hnPoint & position, mapBase *originalMap );

@@ -71,7 +71,7 @@ mapHack::MakeMonsters()
 
 			if ( WallAt(x,y) == WALL_Room && MapTile(x,y).entity == NULL )
 			{
-				MapTile(x,y).entity = new entGridBug( hnPoint(x, y, 0) );
+				MapTile(x,y).entity = new entGridBug( hnPoint(x, y, m_depth) );
 				didit = true;
 			}
 		}
