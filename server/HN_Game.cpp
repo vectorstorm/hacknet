@@ -277,6 +277,13 @@ hnGame::ClientRemove(int playerID, objDescription &desc, uint8 inventorySlot)
 }
 
 void
+hnGame::ClientQuaff(int playerID, objDescription &desc, uint8 inventorySlot)
+{
+	m_player[playerID]->Quaff( desc, inventorySlot );
+	ClientTurn();
+}
+
+void
 hnGame::ClientQuit(int playerID)
 {
 	// --------------------------------------------------------------

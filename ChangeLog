@@ -10,6 +10,8 @@ February 12, 2002:
   * Added objRing and objAmulet classes.
   * Makefile.am: Reorganized for easy maintenance.
   * objRing and objAmulets can now be put on/removed.
+  * Added objPotion.
+  * Added initial quaff support.
 
 February 10, 2002:
   * OBJ_Armour.cpp/.h: Added to CVS.  Implemented SetWorn()

@@ -79,6 +79,7 @@ public:
 	virtual bool		Wield( objBase *object );
 	virtual bool		Wear( objBase *object );
 	virtual bool		Remove( objBase *object );
+	virtual bool		Quaff( objBase *object );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

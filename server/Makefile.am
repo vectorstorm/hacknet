@@ -29,7 +29,8 @@ hacknetd_SOURCES =  						\
 		OBJ_Amulet.cpp OBJ_Amulet.h 			\
 		OBJ_Armour.cpp OBJ_Armour.h			\
 		OBJ_Manager.cpp OBJ_Manager.h 			\
-		OBJ_Weapon.cpp OBJ_Weapon.h			\
-		OBJ_Ring.cpp OBJ_Ring.h
+		OBJ_Potion.cpp OBJ_Potion.h			\
+		OBJ_Ring.cpp OBJ_Ring.h				\
+		OBJ_Weapon.cpp OBJ_Weapon.h			
 
 INCLUDES = -I../common/

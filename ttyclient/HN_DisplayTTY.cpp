@@ -159,7 +159,7 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			m_messageDisplayLine = (m_messageDisplayLine==0)?0:m_messageDisplayLine-1;
 			m_needsRefresh = true;
 			break;
-		case 'q':
+		case 'Q':
 			m_client->SendQuit(false);
 			m_done = true;
 			break;
@@ -233,6 +233,9 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 			break;
 		case 'R':
 			HandleRemove();
+			break;
+		case 'q':
+			HandleQuaff();
 			break;
 		case 'd':
 			HandleDrop();
@@ -357,6 +360,14 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 						else
 							TextMessage("You're not wearing that!");
 						break;
+					case ISM_Quaff:
+						if ( m_inventory[inventorySelected].type == OBJ_TYPE_Potion )
+						{
+							QuaffCommand(inventorySelected);
+							m_mode = MODE_Normal;
+						}
+						else
+							TextMessage("You can't quaff that!");
 					case ISM_Drop:
 						m_mode = MODE_Normal;
 						DropCommand(inventorySelected);
@@ -525,6 +536,21 @@ hnDisplayTTY::HandleRemove()
 	{
 		m_mode = MODE_InventorySelect;
 		m_inventoryMode = ISM_Remove;
+
+		m_needsRefresh = true;
+	}
+}
+
+
+void
+hnDisplayTTY::HandleQuaff()
+{
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Quaff;
 
 		m_needsRefresh = true;
 	}

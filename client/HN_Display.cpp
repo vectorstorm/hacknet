@@ -349,3 +349,11 @@ hnDisplay::RemoveCommand( uint8 inventorySlot )
 
 	PostTurnSubmit();
 }
+
+void
+hnDisplay::QuaffCommand( uint8 inventorySlot )
+{
+	m_client->SendQuaff(&m_inventory[inventorySlot], inventorySlot);
+
+	PostTurnSubmit();
+}

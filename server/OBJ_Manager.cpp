@@ -5,6 +5,7 @@
 #include "OBJ_Weapon.h"
 #include "OBJ_Armour.h"
 #include "OBJ_Amulet.h"
+#include "OBJ_Potion.h"
 #include "OBJ_Ring.h"
 
 //---------  Temporary #includes while setting up new object system
@@ -128,7 +129,7 @@ objManager::RandomItem(uint8 level, objType type)
 		type = g_objProbs[entry].type;
 	}
 
-	type = OBJ_TYPE_Ring;//temp -- generate only rings.
+	type = OBJ_TYPE_Potion;//temp -- generate only rings.
 
 	int value = rand() % m_objectTotalProbability[type];
 	
@@ -154,6 +155,9 @@ objManager::RandomItem(uint8 level, objType type)
 						break;
 					case OBJ_TYPE_Ring:
 						result = new objRing(i);
+						break;
+					case OBJ_TYPE_Potion:
+						result = new objPotion(i);
 						break;
 					default:
 						result = new objBase(i);

@@ -357,6 +357,11 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				okay = packet->ClientRemove(item);
 				m_game->ClientRemove(clientID, item.object, item.inventorySlot);
 				break;
+			case CPT_QuaffObject:
+				printf("Got quaff packet.\n");
+				okay = packet->ClientQuaff(item);
+				m_game->ClientQuaff(clientID, item.object, item.inventorySlot);
+				break;
 			case CPT_Name:
 				okay = packet->ClientName(localbuffer, bufferSize);
 				m_game->ClientName(clientID, localbuffer, bufferSize);

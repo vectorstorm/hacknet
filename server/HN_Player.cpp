@@ -245,6 +245,24 @@ hnPlayer::Remove( const objDescription &object, uint8 inventorySlot )
 }
 
 
+void
+hnPlayer::Quaff( const objDescription &object, uint8 inventorySlot )
+{
+	if ( IsValidInventoryItem( object, inventorySlot ) )
+	{
+		m_queuedTurn.type = queuedTurn::Quaff;
+		m_queuedTurn.quaff.object = m_clientInventoryMapping[inventorySlot];
+		m_queuedTurn.quaff.desc = object;
+		m_queuedTurn.quaff.inventorySlot = inventorySlot;
+	}
+	else
+	{
+		printf("Received illegal quaff request...\n");
+	}
+}
+
+
+
 
 void
 hnPlayer::UnWield()
@@ -422,9 +440,12 @@ hnPlayer::DoAction()
 				m_queuedTurn.wear.object->FillDescription(m_queuedTurn.wear.desc);
 			break;
 		case queuedTurn::Remove:
-			success = m_entity->Remove( m_queuedTurn.wear.object );
+			success = m_entity->Remove( m_queuedTurn.remove.object );
 			if ( m_queuedTurn.remove.object )
 				m_queuedTurn.remove.object->FillDescription(m_queuedTurn.remove.desc);
+			break;
+		case queuedTurn::Quaff:
+			success = m_entity->Quaff( m_queuedTurn.quaff.object );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.

@@ -6,6 +6,7 @@
 #include "HN_Point.h"
 
 class entBase;
+class hnPlayer;
 
 class objBase
 {
@@ -14,7 +15,6 @@ class objBase
 	hnPoint		m_position;
 	
 	uint8		m_blesscurse;
-	uint8		m_count;	// how many of us are there?
 
 
 	objBase *	m_next;
@@ -22,6 +22,7 @@ class objBase
 	
 protected:
 	uint16		m_flags;
+	uint8		m_count;	// how many of us are there?
 
 	void		Unlink();	
 	
@@ -42,9 +43,11 @@ public:
 	virtual bool		SetWieldedSecondary(bool);	// returns success
 
 	virtual bool		SetWorn(bool);			// returns success
+	virtual bool		Quaff(entBase *entity, hnPlayer *player) { return false; }	// can't quaff most stuff.
 
 	bool			IsWorn() { return m_flags & FLAG_Worn; }
 	bool			IsWielded() { return m_flags & FLAG_Wielded; }
+
 	
         void			AddObject(objBase *object);     // add us into our circular linked list
 	void			RemoveObject(objBase *object);  // find this object in our circular linked list and remove it

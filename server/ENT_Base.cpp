@@ -197,10 +197,9 @@ bool
 entBase::Wear( objBase *object )
 {
 	bool result = false;
-	if ( IsValidInventoryItem(object) || object == NULL )
+	if ( IsValidInventoryItem(object) )
 	{
-		if ( object != NULL )
-			result = object->SetWorn(true);
+		result = object->SetWorn(true);
 	}
 	return result;
 }
@@ -209,13 +208,24 @@ bool
 entBase::Remove( objBase *object )
 {
 	bool result = false;
-	if ( IsValidInventoryItem(object) || object == NULL )
+	if ( IsValidInventoryItem(object) )
 	{
-		if ( object != NULL )
-			result = object->SetWorn(false);
+		result = object->SetWorn(false);
 	}
 	return result;
 }
+
+bool
+entBase::Quaff( objBase *object )
+{
+	bool result = false;
+	if ( IsValidInventoryItem(object) )
+	{
+		result = object->Quaff(this,m_player);
+	}
+	return result;
+}
+
 
 
 bool

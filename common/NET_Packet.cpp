@@ -606,6 +606,19 @@ netMetaPacket::ClientRemove( netInventoryItem &packet )
 	return (!m_error);
 }
 
+bool
+netMetaPacket::ClientQuaff( netInventoryItem &packet )
+{
+	m_error = false;
+	
+	sint8 type = CPT_QuaffObject;
+	Sint8( type );
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+
 
 /*
 bool

@@ -60,6 +60,7 @@ public:
 	void		SendWield( objDescription * desc, uint8 inventoryID );
 	void		SendWear( objDescription * desc, uint8 inventoryID );
 	void		SendRemove( objDescription * desc, uint8 inventoryID );
+	void		SendQuaff( objDescription * desc, uint8 inventoryID );
 	
 	// --------  MAINTENANCE REQUESTS  ----------
 

@@ -454,6 +454,19 @@ netClient::SendRemove( objDescription *object, uint8 inventoryID )
 }
 
 void
+netClient::SendQuaff( objDescription *object, uint8 inventoryID )
+{
+	netInventoryItem packet;
+
+	packet.object = *object;
+	packet.inventorySlot = inventoryID;
+
+	StartMetaPacket();
+	m_packet->ClientQuaff(packet);
+	TransmitMetaPacket();
+}
+
+void
 netClient::Disconnect()
 {
 	//printf("Disconnecting...\n");

@@ -48,6 +48,7 @@ public:
 	void		WieldCommand( uint8 inventorySlot );
 	void		WearCommand( uint8 inventorySlot );
 	void		RemoveCommand( uint8 inventorySlot );
+	void		QuaffCommand( uint8 inventorySlot );
 	
 	virtual void	PostTurnSubmit() {}		// called after submittting a turn.
 
