@@ -1,6 +1,6 @@
 #include "OBJ_LongSword.h"
 #include "OBJ_Types.h"
-
+#include <stdlib.h>
 
 char * objLongSword::s_name = "long sword";
 
@@ -12,4 +12,10 @@ objLongSword::objLongSword(const hnPoint &where) :
 
 objLongSword::~objLongSword()
 {
+}
+
+sint16
+objLongSword::RollDamage()
+{
+	return rand() + 1;
 }

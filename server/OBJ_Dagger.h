@@ -10,6 +10,8 @@ public:
 			objDagger( const hnPoint &where );
 	virtual 	~objDagger();
 
+	virtual sint16	RollDamage();
+
 	virtual const char *	GetName() { return s_name; }
 };
 

@@ -17,6 +17,12 @@ objBase::~objBase()
 {
 }
 
+sint16
+objBase::RollDamage()
+{
+	return 1;	// arbitrary object does 1 point of damage.
+}
+
 const hnPoint &
 objBase::GetPosition()
 {

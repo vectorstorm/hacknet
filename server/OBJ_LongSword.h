@@ -10,6 +10,8 @@ public:
 			objLongSword( const hnPoint &where );
 	virtual 	~objLongSword();
 
+	virtual sint16		RollDamage();
+
 	virtual const char *	GetName() { return s_name; }
 };
 

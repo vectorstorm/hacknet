@@ -258,9 +258,12 @@ entBase::RollDamage( entBase *foe )
 {
 	int damage = 1;
 	
-	// do other stuff in here too, like checking the player's
-	// strength and the weapon...  objBase should have a function
-	// to call to check a base weapon damage amount.
+	if ( m_wieldedObject )
+		damage = m_wieldedObject->RollDamage();
+
+	// do other stuff in here too, like checking the 
+	// object's damage type and comparing that to
+	// strengths and weaknesses of the target.
 	
 	return damage;
 }

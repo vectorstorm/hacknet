@@ -24,6 +24,8 @@ public:
 				objBase( objType type, const hnPoint & where );
 	virtual 		~objBase();
 
+	virtual sint16		RollDamage();
+	
         const hnPoint &		GetPosition();
 	void			SetPosition( const hnPoint & );
 	objType			GetType() { return m_type; }
