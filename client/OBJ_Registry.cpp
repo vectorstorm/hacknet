@@ -105,7 +105,8 @@ objRegistry::GetObjectDescriptionText(const objDescription &desc, char *buffer, 
 		buffer[0]='\0';
 	else if ( desc.count == 1 )
 	{
-		if ( name[0] == 'a' || name[0] == 'i' || name[0] == 'u' )
+		if ( name[0] == 'a' || name[0] == 'i' || name[0] == 'u' ||
+			name[0] == 'o' )
 			snprintf(buffer, bufferlength, "an %s", name);
 		else
 			snprintf(buffer, bufferlength, "a %s", name);

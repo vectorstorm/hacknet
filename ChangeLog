@@ -19,6 +19,8 @@ July 22, 2001:
   * Object definitions (in a VERY crude form) are in OBJ_Definitions.cpp
     at the moment.  Will set up some macros to make them easier to
     create.
+  * Modified the 'a/an' rule slightly in OBJ_Registry.cpp.
+  * Added a couple more weapons to OBJ_Definitions.cpp.
   
 July 16, 2001:
   * Released version 0.0.5; incremented version number to 0.0.6
