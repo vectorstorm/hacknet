@@ -126,6 +126,10 @@ objRegistry::GetObjectDescriptionText(const objDescription &desc, char *buffer, 
 			snprintf(name, NAMEBUFFER_LEN, "spellbook");
 			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
 			break;
+		case OBJ_TYPE_Ring:
+			snprintf(name, NAMEBUFFER_LEN, "ring");
+			snprintf(adjective, NAMEBUFFER_LEN, " of %s", scrap );
+			break;
 		default:
 			name = scrap;
 			break;

@@ -11,6 +11,8 @@ February 4, 2002:
     adapted from Greg McIntyre's SDL FOV demo, who in turn took
     the algorithm from Gordon Lipford.  Thanks to everyone involved!
   * More fixes to properly generate objects of appropriate types.
+  * HN_ClientTTY.cpp: Made wands appear in object lists.
+  * OBJ_Registry.cpp: Made rings get the right names.
 
 January 7, 2002:
   * Imported all remaining NetHack items into HackNet.  (There seems

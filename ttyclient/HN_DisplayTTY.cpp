@@ -831,7 +831,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 	bool drawheaders = true;
 	bool drawletters = true;
 
-#define CATEGORY_COUNT (10)
+#define CATEGORY_COUNT (11)
 
 	const char * categoryName[CATEGORY_COUNT] =
 	{
@@ -843,6 +843,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		"Spellbooks",
 		"Potions",
 		"Rings",
+		"Wands",
 		"Tools",
 		"Gems"
 	};
@@ -857,6 +858,7 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inv
 		OBJ_TYPE_Spellbook,
 		OBJ_TYPE_Potion,
 		OBJ_TYPE_Ring,
+		OBJ_TYPE_Wand,
 		OBJ_TYPE_Tool,
 		OBJ_TYPE_Gem
 	};
