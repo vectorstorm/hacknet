@@ -10,6 +10,10 @@ April 21, 2001:
   a singleton -- to be considered for future updates).  This is in preparation
   for migrating the player update logic from the hnGame object into the entPlayer
   object.
+
+  Added hnDungeon class (singleton) to own all the levels in the dungeon.  Again,
+  trying to move as much out of the hnGame as possible, in preparation for moving
+  the movement code into the entPlayer.
 ---
 April 1, 2001:
   Continued discussions about timing issues.

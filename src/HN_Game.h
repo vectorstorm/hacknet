@@ -10,7 +10,7 @@
 //#define MAX_LEVELS	(50)
 #define MAX_LEVELS (2)
 
-class mapBase;
+//class mapBase;
 class netServer;
 class entPlayer;
 
@@ -18,7 +18,7 @@ struct playerData
 {
 	entPlayer	*entity;
 	hnPoint		pos;
-	mapBase		*m_visionMap[MAX_LEVELS];
+	//mapBase		*m_visionMap[MAX_LEVELS];
 };
 
 // hnGame is a singleton.
@@ -26,7 +26,7 @@ struct playerData
 class hnGame
 {
 	playerData		m_player[MAX_CLIENTS];
-	mapBase			*m_levelMap[MAX_LEVELS];
+//	mapBase			*m_levelMap[MAX_LEVELS];
 
 	static hnGame *		s_instance;
 	

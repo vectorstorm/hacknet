@@ -11,4 +11,8 @@ typedef int8_t		sint8;
 typedef int16_t		sint16;
 typedef int32_t		sint32;
 
+#ifndef NULL
+#define NULL (0L)
+#endif
+
 #endif
