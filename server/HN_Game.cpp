@@ -13,7 +13,7 @@
 hnGame * hnGame::s_instance = NULL;
 
 #define LEVEL_WIDTH (78)
-#define LEVEL_HEIGHT (19)
+#define LEVEL_HEIGHT (18)
 #define MAX_LEVELS (5)
 
 void
@@ -175,12 +175,13 @@ hnGame::ClientTalk(int playerID, char * talk)
 	if ( talkLength > 0 )
 	{	
 		hnPoint position = m_player[playerID]->GetPosition();
+		char name[128];
+		m_player[playerID]->GetFullName(name, 128);
 		
 		if ( talk[talkLength-1] == '!' )
 		{
 			// we're shouting.
 			char buffer[MAX_TALK_BUFFER];
-			char *name = m_player[playerID]->GetName();
 			
 			snprintf( buffer, MAX_TALK_BUFFER, "%s shouts, \"%s\"", name, talk );
 			
@@ -191,7 +192,6 @@ hnGame::ClientTalk(int playerID, char * talk)
 		else
 		{
 			char buffer[MAX_TALK_BUFFER];
-			char *name = m_player[playerID]->GetName();
 			
 			//----------------------------------------------------------
 			//  Use a different verb if the client is asking a question.

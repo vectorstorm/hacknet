@@ -184,6 +184,15 @@ hnPlayer::GetName()
 	return m_name;
 }
 
+void
+hnPlayer::GetFullName( char * buffer, int bufferSize )
+{
+	if ( m_entity )
+		m_entity->GetFullName(buffer, bufferSize);
+	else
+		strncpy(buffer,m_name,bufferSize);
+}
+
 
 void
 hnPlayer::DoAction()

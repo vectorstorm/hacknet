@@ -67,6 +67,8 @@ public:
 	int		GetID() { return m_playerID; }
 	char *		GetName();
 
+	void		GetFullName( char * buffer, int bufferSize );
+
 	bool		IsAlive();
 
 	

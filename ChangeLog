@@ -6,6 +6,10 @@
 ---  most recent checkins at the bottom.
 ---
 
+May 20, 2001:
+  * More name adjustments, so new names show up in talk messages and
+    elsewhere.
+
 May 19, 2001:
   * Basic damage-dealing.  Just one point per hit at the moment, but damage
     is actually done and the stat changes are sent to and visible to the
