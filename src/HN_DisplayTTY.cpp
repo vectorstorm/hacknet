@@ -386,7 +386,7 @@ hnDisplayTTY::Refresh()
 		{
 			move( 23, 0 );
 			printw("%d/%d group turns.  ", m_groupMemberTurnCount, m_groupMemberCount);
-			if ( !m_submittedTurn )
+			if ( !m_submittedTurn && m_groupMemberTurnCount > 0 )	// if somebody's entered a turn and I haven't..
 				printw("You haven't submitted a turn.");
 		}
 		// do upper prompts.

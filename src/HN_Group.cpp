@@ -214,7 +214,8 @@ hnGroupManager::AddPlayer( hnPlayer * player )
 	assert( 0 );
 }
 
-#define GROUP_DISTANCE_LEEWAY (100)
+#define GROUP_DISTANCE_LEEWAY 		(15)
+#define GROUP_DISTANCE_LEEWAY_SQ 	(GROUP_DISTANCE_LEEWAY * GROUP_DISTANCE_LEEWAY)
 
 void
 hnGroupManager::PutPlayerInGroup(int id)
@@ -241,7 +242,7 @@ hnGroupManager::PutPlayerInGroup(int id)
 		}
 	}
 
-	if ( minDistance < GROUP_DISTANCE_LEEWAY )
+	if ( minDistance <= GROUP_DISTANCE_LEEWAY_SQ )
 	{
 		m_group[minGroupID]->AddPlayer(player);
 		return;
