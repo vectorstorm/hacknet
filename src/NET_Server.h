@@ -71,7 +71,8 @@ public:
 	void		SendMapTile( const hnPoint & loc, const mapTile & floorType );  // new floortype
 	void		SendMapUpdateBBox( netMapUpdateBBox & bbox );
 	void		SendMapObjectList( const hnPoint & loc, int numObjects, entType floorType );  // change to list of objects on this square.  # of objects in pile, and topmost object type are sent to client.
-	void		SendMapReset( int width, int height );
+	void		SendDungeonReset( sint8 levelCount );
+	void		SendMapReset( int width, int height, int depth );
 	void		SendMessage( char * message );
 	
 	void		SendQuitConfirm( int clientID );	// doesn't require a metapacket

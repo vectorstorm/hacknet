@@ -216,8 +216,9 @@ hnDisplayTTY::UpdateLocation( const hnPoint &point )
 void
 hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 {
-	hnMaterialType floorType = m_map->MaterialAt(x,y);
-	hnWallType wallType = m_map->WallAt(x,y);
+	hnMaterialType floorType = m_map[m_position.z]->MaterialAt(x,y);
+	hnWallType wallType = m_map[m_position.z]->WallAt(x,y);
+	
 	
 	/*const char floorTileChar[] ={
 		'?',
@@ -275,9 +276,9 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 			break;
 	}
 	
-	if ( x >= 0 && x < m_map->GetWidth() && y >= 0 && y < m_map->GetHeight() )
+	if ( x >= 0 && x < m_map[m_position.z]->GetWidth() && y >= 0 && y < m_map[m_position.z]->GetHeight() )
 	{
-		mapClientTile & tile = m_map->MapTile(x,y);
+		mapClientTile & tile = m_map[m_position.z]->MapTile(x,y);
 		color_set( floorTileColor[floorType],NULL);
 
 		if ( tile.entity == ENTITY_Player )	// if someone is standing here...
@@ -301,18 +302,18 @@ hnDisplayTTY::PlotSquare(sint8 x, sint8 y)
 }
 
 void
-hnDisplayTTY::UpdateMapTile(sint8 x, sint8 y, const mapClientTile &tile)
+hnDisplayTTY::UpdateMapTile(const hnPoint &point, const mapClientTile &tile)
 {
-	hnDisplay::UpdateMapTile(x,y,tile);
+	hnDisplay::UpdateMapTile(point,tile);
 	m_needsRefresh = true;
 	//PlotSquare(x,y);
 }
 
 
 void
-hnDisplayTTY::UpdateMapCreature( sint8 x, sint8 y, entType type )
+hnDisplayTTY::UpdateMapCreature( const hnPoint &point, entType type )
 {
-	hnDisplay::UpdateMapCreature(x,y,type);
+	hnDisplay::UpdateMapCreature(point,type);
 	m_needsRefresh = true;
 	//PlotSquare(x,y);
 }
@@ -345,8 +346,8 @@ hnDisplayTTY::Refresh()
 #ifndef __DEBUGGING_NETWORK__
 		// redraw screen -- this is hackish.. I ought to make a single function that does this,
 		// instead of repeatedly calling a single function for every point on the screen.
-		for ( int j = 0; j < m_map->GetHeight(); j++ )
-			for ( int i = 0; i < m_map->GetWidth(); i++ )
+		for ( int j = 0; j < m_map[m_position.z]->GetHeight(); j++ )
+			for ( int i = 0; i < m_map[m_position.z]->GetWidth(); i++ )
 			{
 				PlotSquare(i,j);
 			}

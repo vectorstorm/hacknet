@@ -87,12 +87,12 @@ entPlayer::PostTurn()
 	//---------------------------------------------------------------
 	//  Calculate visibility
 	//---------------------------------------------------------------
-
+	
 	map->UpdateVisibility( GetPosition(), realMap );
 	
 	netMapUpdateBBox update;
 	
-	if ( m_changedLevel )
+/*	if ( m_changedLevel )
 	{
 		//--------------------------------------------------------
 		//  Instead of sending the whole level, send only the
@@ -105,18 +105,17 @@ entPlayer::PostTurn()
 		hnPoint2D 	tlpos = map->GetTopLeftMaxVisibility();
 		hnPoint2D	brpos = map->GetBottomRightMaxVisibility();
 		
-		netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight() );
-		
-		update.loc.Set( tlpos.x, tlpos.y, 0 );
+		update.loc.Set( tlpos.x, tlpos.y, GetPosition().z );
 		update.width = ( brpos.x - tlpos.x ) + 1;
 		update.height = ( brpos.y - tlpos.y ) + 1;
 		m_changedLevel = false;
 	}
-	else
+	else*/
 	{
 		hnPoint2D 	tlpos = map->GetTopLeftVisibility();
 		hnPoint2D	brpos = map->GetBottomRightVisibility();
-		update.loc.Set( tlpos.x, tlpos.y, 0 );
+		
+		update.loc.Set( tlpos.x, tlpos.y, GetPosition().z );
 		update.width = (brpos.x - tlpos.x) + 1;
 		update.height = (brpos.y - tlpos.y) + 1;
 	}
@@ -140,7 +139,67 @@ entPlayer::PostTurn()
 	delete [] update.material;
 	delete [] update.wall;
 	delete [] update.entityType;
-
+	
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 
+}
+
+void
+entPlayer::RefreshMap( int level )
+{
+	// Send our visibility data on this level to our player.
+
+	netServer::GetInstance()->StartMetaPacket(m_playerID);
+
+	mapBase *realMap = hnDungeon::GetLevel( level );
+	
+	assert(realMap);
+
+
+	//  Allocate map storage if we haven't been here before.
+	if ( m_map[ level ] == NULL )
+		m_map[ level ] = new mapBase( realMap->GetWidth(), realMap->GetHeight(), level );
+
+	mapBase *map = m_map[ level ];
+	assert( map );
+
+	netMapUpdateBBox update;
+	
+	//--------------------------------------------------------
+	//  Instead of sending the whole level, send only the
+	//  bounding box around what the player has seen on the
+	//  level.  (And someday soon, we'll even only send THAT
+	//  if the client hasn't visited the level before during
+	//  this connect!)
+	//--------------------------------------------------------
+	
+	hnPoint2D 	tlpos = map->GetTopLeftMaxVisibility();
+	hnPoint2D	brpos = map->GetBottomRightMaxVisibility();
+	
+	update.loc.Set( tlpos.x, tlpos.y, GetPosition().z );
+	update.width = ( brpos.x - tlpos.x ) + 1;
+	update.height = ( brpos.y - tlpos.y ) + 1;
+
+	update.material = new sint16[update.width * update.height];
+	update.wall = new sint16[update.width * update.height];
+	update.entityType = new sint8[update.width * update.height];
+
+	for ( int j = 0; j < update.height; j++ )
+		for ( int i = 0; i < update.width; i++)
+		{
+			int x = update.loc.x+i;
+			int y = update.loc.y+j;
+			
+       			update.material[i+(j*update.width)] = map->MaterialAt(x,y);
+   			update.wall[i+(j*update.width)] = map->WallAt(x,y);
+			update.entityType[i+(j*update.width)] = map->MapTile(x,y).entityType;
+		}
+	
+	netServer::GetInstance()->SendMapUpdateBBox( update );
+
+	delete [] update.material;
+	delete [] update.wall;
+	delete [] update.entityType;
+
+	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }

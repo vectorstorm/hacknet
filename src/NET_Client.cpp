@@ -76,6 +76,7 @@ netClient::Go()
 	netMapReset mapReset;
 	netClientLocation clientLoc;
 	hnPoint	point;
+	sint8	levelCount;
 	
 	m_display->TextMessage("Trying to connect to server...\n");
 	if ( connect( m_socket, (sockaddr *)m_serverAddress, sizeof(sockaddr) ) == -1 )
@@ -148,9 +149,12 @@ netClient::Go()
 				case SPT_MapTile:
 					//printf("Map tile packet\n");
 					packet->MapTile(tileData);
-					tile.material = (hnMaterialType)tileData.material;
-					tile.wall = (hnWallType)tileData.wall;
-					m_display->UpdateMapTile(tileData.loc.x, tileData.loc.y, tile);
+					if ( m_display->isMapReady( tileData.loc.z ) )
+					{
+						tile.material = (hnMaterialType)tileData.material;
+						tile.wall = (hnWallType)tileData.wall;
+						m_display->UpdateMapTile(tileData.loc, tile);
+					}
 					break;
 				case SPT_Message:
 					packet->TextMessage(messageBuffer, messageBufferLength);
@@ -158,17 +162,29 @@ netClient::Go()
 					break;
 				case SPT_MapEntity:
 					packet->MapEntity(entityData);
-					m_display->UpdateMapCreature(entityData.loc.x, entityData.loc.y, entityData.objectType);
+					
+					if ( m_display->isMapReady( bbox.loc.z ) )
+						m_display->UpdateMapCreature(entityData.loc, entityData.objectType);
 					break;
+				case SPT_DungeonReset:
+					packet->DungeonReset(levelCount);
+					m_display->DungeonReset(levelCount);
 				case SPT_MapReset:
 					packet->MapReset(mapReset);
-					m_display->MapReset(mapReset.width, mapReset.height);
+					m_display->MapReset(mapReset.width, mapReset.height, mapReset.depth);
 					break;
 				case SPT_MapUpdateBBox:
 					//printf("Map bbox update packet\n");
 					packet->MapUpdateBBox(bbox);
 					//mapClientTile tile;
-
+					
+					if ( !m_display->isMapReady( bbox.loc.z ) )
+					{
+						SendRefreshRequest( bbox.loc.z );
+						break;
+					}
+					
+					
 					for ( int i = 0; i < bbox.width; i++ )
 						for ( int j = 0; j < bbox.height; j++ )
 						{
@@ -176,7 +192,7 @@ netClient::Go()
 							tile.wall = bbox.wall[i+(j*bbox.width)];
 							point.Set(bbox.loc.x+i, bbox.loc.y+j, 0);
 							tile.entity = bbox.entityType[i+(j*bbox.width)];
-							m_display->UpdateMapTile(bbox.loc.x+i, bbox.loc.y+j, tile);
+							m_display->UpdateMapTile( hnPoint(bbox.loc.x+i, bbox.loc.y+j, bbox.loc.z), tile);
 						}
 
 					delete [] bbox.material;
@@ -251,6 +267,14 @@ netClient::SendName(char * name)
 	sint16 nameLength = strlen(name);
 	StartMetaPacket();
 	m_packet->ClientName(name, nameLength);
+	TransmitMetaPacket();
+}
+
+void
+netClient::SendRefreshRequest( sint8 level )
+{
+	StartMetaPacket();
+	m_packet->ClientRequestRefresh(level);
 	TransmitMetaPacket();
 }
 

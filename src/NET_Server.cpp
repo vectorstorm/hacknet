@@ -285,6 +285,7 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 	{
 		sint8 type = packet->PeekChar();
 		sint8 direction;
+		sint8 level;
 		okay = true;
 		
 		switch(type)
@@ -302,6 +303,11 @@ netServer::ProcessClientPacket(int clientID, char *buffer, short incomingBytes)
 				packet->ClientName(localbuffer, bufferSize);
 				m_game->ClientName(clientID, localbuffer);
 				printf("Client %d calls himself %s\n", clientID, localbuffer);
+				break;
+			case CPT_RequestRefresh:
+				packet->ClientRequestRefresh(level);
+				printf("Client %d requests refresh of level %d.\n", clientID, level );
+				m_game->ClientRequestRefresh(clientID, level);
 				break;
 			case CPT_Save:	// no saving code yet -- just quit.
 				packet->ClientSave();
@@ -350,11 +356,18 @@ netServer::SendMapTile( const hnPoint & loc, const mapTile & tile )
 }
 
 void
-netServer::SendMapReset( int width, int height )
+netServer::SendDungeonReset( sint8 levelCount )
+{
+	m_metaPacket->DungeonReset( levelCount );
+}
+
+void
+netServer::SendMapReset( int width, int height, int depth )
 {
 	netMapReset packet;
 	packet.width = width;
 	packet.height = height;
+	packet.depth = depth;
 	m_metaPacket->MapReset( packet );
 }
 

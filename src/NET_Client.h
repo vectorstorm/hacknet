@@ -39,6 +39,7 @@ public:
 	
 	void		Go();
 	void		SendMove( hnDirection whichWay );
+	void		SendRefreshRequest( sint8 level );
 	void		SendName( char * name );
 	void		SendTalk( char * talk );
 	void		SendQuit( bool save );

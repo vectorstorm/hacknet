@@ -33,6 +33,8 @@ protected:
 	uint8			m_width;
 	uint8			m_height;
 	uint8			m_roomCount;		// how many rooms in this map?
+
+	bool			m_visited;		// have I been visited yet?
 	
 public:
 				mapClient( uint8 width, uint8 height );
@@ -40,7 +42,9 @@ public:
 
 	uint8			GetWidth() { return m_width; }
 	uint8			GetHeight() { return m_height; }
-
+	
+	bool			isVisited() { return m_visited; }
+	void			SetVisited(bool val) { m_visited = val; }
 	virtual void		Generate();
 	
 	void			RemoveObject( objType object );					// remove object from map

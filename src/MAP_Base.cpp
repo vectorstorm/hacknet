@@ -144,8 +144,8 @@ void
 mapBase::UpdateVisibility( const hnPoint & position, mapBase *sourceMap )
 {
 	// Reset our visibility bounding box
-	m_bottomRightVisibility.Set(0,0);
-	m_topLeftVisibility.Set(m_width,m_height);
+	m_bottomRightVisibility.Set(position.x,position.y);
+	m_topLeftVisibility.Set(position.x,position.y);
 	
 	
 	for ( int i = 0; i < m_width; i++ )

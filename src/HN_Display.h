@@ -16,7 +16,8 @@ protected:
 	char		m_name[MAX_NAME_BYTES];
 	netClient 	*m_client;
 	hnPoint		m_position;
-	mapClient	*m_map;	// this is our map of all the levels...
+	mapClient	**m_map;	// this is our map of all the levels...
+	int		m_levelCount;
 public:
 			hnDisplay( char * name );
 	virtual		~hnDisplay();
@@ -26,12 +27,15 @@ public:
 					// true if we're alive and saving, false
 					// if otherwise.
 	
+	bool		isMapReady( int mapID ) { return (m_map[mapID] != NULL); }
+	
 	virtual void	Refresh() {}
 	
-	virtual void	MapReset( sint8 width, sint8 height );
+	virtual void	DungeonReset( sint8 levelCount );
+	virtual void	MapReset( sint8 width, sint8 height, sint8 depth );
 	virtual void	UpdateLocation( const hnPoint &point ) { m_position = point; }
-	virtual void	UpdateMapTile( sint8 x, sint8 y, const mapClientTile & tile );
-	virtual void	UpdateMapCreature( sint8 x, sint8 y, entType type );
+	virtual void	UpdateMapTile( const hnPoint &point, const mapClientTile & tile );
+	virtual void	UpdateMapCreature( const hnPoint &point, entType type );
 	virtual void	TextMessage( char * message ) {}
 
 	char *		GetName() { return m_name; }

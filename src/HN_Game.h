@@ -36,6 +36,7 @@ public:
 	void			ClientJoined(int clientID);
 	void			ClientName(int clientID, char * name);
 	void			ClientTalk(int clientID, char * talk);
+	void			ClientRequestRefresh( int clientID, int level );
 	void			ClientQuit(int clientID);
 	void			ClientMove(int clientID, hnDirection dir);
 	void			ClientAttack(int clientID, hnDirection dir);

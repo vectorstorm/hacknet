@@ -8,7 +8,10 @@
 #define min(x,y) ( (x>y)?y:x )
 
 mapClient::mapClient(uint8 width, uint8 height):
-	m_width(width), m_height(height), m_roomCount(0)
+	m_width(width), 
+	m_height(height), 
+	m_roomCount(0),
+	m_visited(false)
 {
 	m_tile = new mapClientTile[width * height];
 	for ( int i = 0; i < width * height; i++ )

@@ -29,6 +29,17 @@ April 30, 2001:
   Network optimisations, so only previously visible part of the level is
   transmitted when you change levels, instead of sending the WHOLE level.
 
+  More, massive network optimisations.  Client now remembers all levels it
+  visits during the session, so re-visiting a level no longer requires
+  downloading all remembered visibility information for the level, but
+  the client can request a refresh of all remembered visibility
+  information if it needs to.  If a client has seen all of a level, this
+  refresh will take a total of about 7k of data.. but with the current
+  client, this will only ever happen if a client saves and quits, then
+  resumes and revisits a level which it had fully explored on a previous
+  connection.  (And since we don't currently support save/restoring games,
+  this will _never_ happen, at the moment)
+
 April 29, 2001:
   Minor bugfix.  Sort of.  Was intentionally emulating what I believe is 
   a bug in the NetHack level generation code, involving the creation of

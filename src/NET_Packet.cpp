@@ -65,6 +65,18 @@ netMetaPacket::MapTile( netMapTile &packet )
 }
 
 bool
+netMetaPacket::DungeonReset( sint8 & levelCount )
+{
+	bool success = true;
+
+	sint8 type = SPT_DungeonReset;
+	Char(type);
+	Char( levelCount );
+
+	return success;
+}
+
+bool
 netMetaPacket::MapReset( netMapReset &packet )
 {
 	bool success = true;
@@ -73,6 +85,7 @@ netMetaPacket::MapReset( netMapReset &packet )
 	Char( type );
 	Char( packet.width );
 	Char( packet.height );
+	Char( packet.depth );
 	
 	return success;
 }
@@ -213,6 +226,18 @@ netMetaPacket::ClientTalk( char * talkbuffer, sint16 & bufferlength )
 	Char(type);
 	String( talkbuffer, bufferlength );
 	
+	return success;
+}
+
+bool
+netMetaPacket::ClientRequestRefresh( sint8 & level )
+{
+	bool success = true;
+
+	sint8 type = CPT_RequestRefresh;
+	Char(type);
+	Char(level);
+
 	return success;
 }
 

@@ -9,6 +9,7 @@
 enum{
 	SPT_ClientLocation,
 	SPT_MapTile,
+	SPT_DungeonReset,
 	SPT_MapReset,
 	SPT_MapUpdateBBox,
 	SPT_MapObjectList,
@@ -37,6 +38,7 @@ struct netMapReset		// we've moved to a new map.. init a map with this width/hei
 {
 	sint8 width;
 	sint8 height;
+	sint8 depth;
 };
 
 struct netMapUpdateBBox
@@ -69,6 +71,7 @@ enum
 	CPT_Move,
 	CPT_Name,
 	CPT_Talk,
+	CPT_RequestRefresh,	// request refreshed information on this level
 	CPT_Save,	// Save and quit
 	CPT_Quit,	// Quit without saving.
 	CPT_MAX
@@ -96,6 +99,7 @@ public:
 	bool			ClientLocation( netClientLocation &packet );
 	bool			TextMessage( char * messagebuffer, sint16 & bufferlength );
 	bool			MapTile( netMapTile &packet );
+	bool			DungeonReset( sint8 & levelCount );
 	bool			MapReset( netMapReset &packet );
 	bool			MapUpdateBBox( netMapUpdateBBox &packet );
 	bool			MapEntity( netMapEntity &packet );
@@ -109,6 +113,7 @@ public:
 	bool			ClientMove( sint8 & direction );
 	bool			ClientName( char * namebuffer, sint16 & bufferLength );
 	bool			ClientTalk( char * talkbuffer, sint16 & bufferLength );
+	bool			ClientRequestRefresh( sint8 & level );
 	bool			ClientSave();
 	bool			ClientQuit();
 

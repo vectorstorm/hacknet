@@ -119,12 +119,29 @@ hnGame::ClientJoined(int playerID)
 	hnDungeon::GetLevel(z)->PutEntityAt( m_player[playerID], x, y );
 	
 	netServer::GetInstance()->StartMetaPacket( playerID );
-	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
+	netServer::GetInstance()->SendDungeonReset( hnDungeon::GetInstance()->GetLevelCount() );
 	mapBase *map = hnDungeon::GetLevel(z);
-	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight() );
+	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight(), z );
+	netServer::GetInstance()->SendClientLocation( m_player[playerID]->GetPosition() );
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!  Send it!
 	
 	m_player[playerID]->PostTurn();
+}
+
+void
+hnGame::ClientRequestRefresh(int playerID, int level)
+{
+	netServer::GetInstance()->StartMetaPacket( playerID );
+	mapBase *map = hnDungeon::GetLevel(level);
+	
+	netServer::GetInstance()->SendMapReset( map->GetWidth(), map->GetHeight(), level );
+	netServer::GetInstance()->TransmitMetaPacket();
+	
+	// now send all data we have on this map.
+	
+	printf("Sending map refresh for level %d.\n", level);
+	m_player[playerID]->RefreshMap( level );
+	
 }
 
 void

@@ -39,6 +39,8 @@ public:
 	virtual bool	CanSee( const hnPoint & position );
 	
 	virtual void	PostTurn();
+
+	virtual void	RefreshMap( int level );
 };
 
 #endif
