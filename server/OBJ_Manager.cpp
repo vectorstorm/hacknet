@@ -126,7 +126,7 @@ objManager::RandomItem(uint8 level, objType type)
 		type = g_objProbs[entry].type;
 	}
 
-	type = OBJ_TYPE_Potion;//temp -- generate only rings.
+	//type = OBJ_TYPE_Potion;//temp -- generate only potions.
 
 	int value = hnRandom::GetInstance()->Get( m_objectTotalProbability[type] );
 	

@@ -6,6 +6,13 @@
 ---  most recent checkins at the bottom.
 ---
 
+April 6, 2002:
+  * HN_DisplayTTY.cpp:  Added mutex to protect 'Refresh()' function
+    from being called by the TTY's network and io threads simultaneously.
+    I'll have to double-check, but I believe this is the only code and
+    data that both threads access.  And I highly doubt that ncurses
+    is (or could be) thread-safe, anyway.
+    
 February 28, 2002:
   * ENT_Base.cpp: More potion effects added.
 

@@ -29,6 +29,7 @@
 
 #define min(x,y) ((x<y)?x:y)
 
+static pthread_mutex_t refresh_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 hnDisplayTTY::hnDisplayTTY( char * name ):
 	hnDisplay(name),
@@ -55,6 +56,8 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 
 	if ( has_colors() )
 	{
+		short fore, back;
+		
 		start_color();
 		use_default_colors();
 		init_pair(COLOR_BLACK, COLOR_BLACK, -1);
@@ -65,7 +68,10 @@ hnDisplayTTY::hnDisplayTTY( char * name ):
 		init_pair(COLOR_MAGENTA, COLOR_MAGENTA, -1);
 		init_pair(COLOR_BLUE, COLOR_BLUE, -1);
 		init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);
-		init_pair(COLOR_INVERSE, COLOR_BLACK, -1);
+
+		// TODO:  This assumes the default color scheme is white on black.
+		// We should really check the default color scheme and select colours intelligently!
+		init_pair(COLOR_INVERSE, COLOR_BLACK, COLOR_WHITE);
 		
 	}
 	
@@ -805,6 +811,8 @@ hnDisplayTTY::UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, b
 void
 hnDisplayTTY::Refresh()
 {
+	pthread_mutex_lock(&refresh_mutex);
+	
 	if ( m_needsRefresh )
 	{
 		hnDisplay::Refresh();
@@ -915,6 +923,8 @@ hnDisplayTTY::Refresh()
 #endif
 		m_needsRefresh = false;
 	}
+
+	pthread_mutex_unlock(&refresh_mutex);
 }
 
 void
@@ -948,7 +958,7 @@ hnDisplayTTY::DisplayItems()
                         	TextMessage(buffer);
                         }
 
-                        Refresh();
+                        //Refresh();	// we can't call this here -- we've already locked the Refresh function!
                 }
         }
 }
