@@ -186,9 +186,8 @@ entBase::Wield( objBase *object )
 			m_inventory->GetObject(i)->SetWieldedPrimary(false);
 			
 		if ( object != NULL )
-			object->SetWieldedPrimary(true);
+			result = object->SetWieldedPrimary(true);
 		m_wieldedObject = object;
-		result = true;
 	}
 	return result;
 }
@@ -201,8 +200,7 @@ entBase::Wear( objBase *object )
 	if ( IsValidInventoryItem(object) || object == NULL )
 	{
 		if ( object != NULL )
-			object->SetWorn(true);
-		result = true;
+			result = object->SetWorn(true);
 	}
 	return result;
 }
@@ -214,8 +212,7 @@ entBase::Remove( objBase *object )
 	if ( IsValidInventoryItem(object) || object == NULL )
 	{
 		if ( object != NULL )
-			object->SetWorn(false);
-		result = true;
+			result = object->SetWorn(false);
 	}
 	return result;
 }

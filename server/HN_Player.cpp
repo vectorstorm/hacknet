@@ -422,7 +422,6 @@ hnPlayer::DoAction()
 				m_queuedTurn.wear.object->FillDescription(m_queuedTurn.wear.desc);
 			break;
 		case queuedTurn::Remove:
-			printf("Performing remove...\n");
 			success = m_entity->Remove( m_queuedTurn.wear.object );
 			if ( m_queuedTurn.remove.object )
 				m_queuedTurn.remove.object->FillDescription(m_queuedTurn.remove.desc);

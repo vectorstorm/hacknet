@@ -27,7 +27,7 @@ enum {
 };
 typedef uint16 objType;
 
-
+#if 0
 enum {
 	FLAG_Worn_Suit 		= 0x0001,
 	FLAG_Worn_Helm 		= 0x0002,
@@ -52,6 +52,18 @@ enum {
 				|FLAG_Worn_Boots|FLAG_Worn_Gloves \
 				|FLAG_Worn_Amulet|FLAG_Worn_Amulet \
 				|FLAG_Worn_LeftRing|FLAG_Worn_RightRing)
+#define FLAG_Wielded		(FLAG_WieldedPrimary|FLAG_WieldedSecondary)
+#endif
+
+enum {
+	FLAG_Worn	 	= 0x0001,
+	FLAG_Wearable		= 0x0002,	// set if this object can be worn right now.  (not set if already worn)
+	
+	FLAG_WieldedPrimary 	= 0x0004,
+	FLAG_WieldedSecondary 	= 0x0008,
+	FLAG_Wieldable		= 0x0010,	// set if this object can be wielded right now.  (not set if already wielded)
+						// note that any object can be wielded..  this is a cue that this is a real weapon that should be offered as a selection.
+};
 #define FLAG_Wielded		(FLAG_WieldedPrimary|FLAG_WieldedSecondary)
 
 

@@ -5,7 +5,6 @@
 
 class objArmour: public objBase
 {
-	uint16		m_wearFlag;
 public:
 			objArmour( uint32 type );
 	virtual 	~objArmour();

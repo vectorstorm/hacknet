@@ -228,6 +228,12 @@ hnDisplayTTY::HandleKeypressNormal(int commandkey)
 		case 'T':
 			HandleTakeOff();
 			break;
+		case 'P':
+			HandlePutOn();
+			break;
+		case 'R':
+			HandleRemove();
+			break;
 		case 'd':
 			HandleDrop();
 			break;
@@ -332,6 +338,7 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 							TextMessage("You're already wielding that!");
 						break;
 					case ISM_Wear:
+					case ISM_PutOn:
 						if ( !(m_inventory[inventorySelected].flags & FLAG_Worn) ) // if we're not already wearing this item...
 						{
 							WearCommand(inventorySelected);
@@ -341,6 +348,7 @@ hnDisplayTTY::HandleKeypressInventorySelect( int commandKey )
 							TextMessage("You're already wearing that!");
 						break;
 					case ISM_TakeOff:
+					case ISM_Remove:
 						if ( (m_inventory[inventorySelected].flags & FLAG_Worn) ) // if we're wearing this item...
 						{
 							RemoveCommand(inventorySelected);
@@ -463,9 +471,8 @@ hnDisplayTTY::HandleDrop()
 void
 hnDisplayTTY::HandleWield()
 {
-	// we've requested to drop something.  If we have an
-	// inventory, drop the topmost item in it.
-	// TODO: Check to see if there's at least one item in the inventory!
+	// we've had a wield command issued -- bring up the inventory
+	// select screen in wield mode.
 	
 	if ( m_inventoryCount == 0 )
 		TextMessage("You are empty-handed.");
@@ -481,9 +488,7 @@ hnDisplayTTY::HandleWield()
 void
 hnDisplayTTY::HandleWear()
 {
-	// we've requested to drop something.  If we have an
-	// inventory, drop the topmost item in it.
-	// TODO: Check to see if there's at least one item in the inventory!
+	// we've requested to wear something.
 	
 	if ( m_inventoryCount == 0 )
 		TextMessage("You are empty-handed.");
@@ -491,6 +496,35 @@ hnDisplayTTY::HandleWear()
 	{
 		m_mode = MODE_InventorySelect;
 		m_inventoryMode = ISM_Wear;
+
+		m_needsRefresh = true;
+	}
+}
+
+
+void
+hnDisplayTTY::HandlePutOn()
+{
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_PutOn;
+
+		m_needsRefresh = true;
+	}
+}
+
+void
+hnDisplayTTY::HandleRemove()
+{
+	if ( m_inventoryCount == 0 )
+		TextMessage("You are empty-handed.");
+	else
+	{
+		m_mode = MODE_InventorySelect;
+		m_inventoryMode = ISM_Remove;
 
 		m_needsRefresh = true;
 	}
@@ -831,8 +865,12 @@ hnDisplayTTY::Refresh()
 			if ( m_inventoryMode == ISM_Wield )
 				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wieldable,true);
 			else if ( m_inventoryMode == ISM_Wear )
-				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wearable,true);
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wearable|FLAG_Worn,true);	// for whatever reason, NetHack shows both worn and wearable objects when you request to wear something.
 			else if ( m_inventoryMode == ISM_TakeOff )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Worn,true);
+			else if ( m_inventoryMode == ISM_PutOn )
+				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Wearable|FLAG_Worn,true);	// for whatever reason, NetHack shows both worn and wearable objects when you request to wear something.
+			else if ( m_inventoryMode == ISM_Remove )
 				DrawObjectArrayFiltered(m_inventory,m_inventoryCount,FLAG_Worn,true);
 			else
 				DrawObjectArray(m_inventory,m_inventoryCount,true);
@@ -954,7 +992,7 @@ hnDisplayTTY::DrawObjectArrayFiltered(objDescription *objects,uint8 objectCount,
 		
 		for ( int i = 0; i < objectCount; i++ )
 		{
-			if ( objects[i].count > 0 && (!flagFilter || objects[i].flags & flagFilter) && objRegistry::GetInstance()->GetType(objects[i].itemID) == categoryValue[j] )
+			if ( objects[i].count > 0 && ((flagFilter==0) || objects[i].flags & flagFilter) && objRegistry::GetInstance()->GetType(objects[i].itemID) == categoryValue[j] )
 			{
 				if ( !somethingInThisCategory && drawheaders )
 				{

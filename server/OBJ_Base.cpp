@@ -10,7 +10,7 @@ objBase::objBase( uint32 itemID ):
 	m_count(1),
 	m_next(this),
 	m_prev(this),
-	m_flags(FLAG_Legal)
+	m_flags(0)
 {
         const objPrototype &proto = objManager::GetInstance()->GetPrototype( GetItemID() );
 	m_type = proto.type;
@@ -88,6 +88,7 @@ objBase::SetWieldedSecondary( bool wielded )
 bool
 objBase::SetWorn( bool worn )
 {
+	printf("Received wear request for something that can't be worn.\n");
 	return false;	// you can't wear anything but armour, rings, and some tools.
 }
 

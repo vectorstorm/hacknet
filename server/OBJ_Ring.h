@@ -6,8 +6,10 @@
 class objRing : public objBase
 {
 public:
-			objRing(int id);
+			objRing(uint32 id);
 			~objRing();
+
+	virtual bool	SetWorn(bool);
 };
 
 #endif // OBJ_AMULET_H

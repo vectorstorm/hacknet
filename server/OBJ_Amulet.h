@@ -6,8 +6,10 @@
 class objAmulet : public objBase
 {
 public:
-			objAmulet(int id);
+			objAmulet(uint32 id);
 			~objAmulet();
+	
+	virtual bool	SetWorn(bool);
 };
 
 #endif // OBJ_AMULET_H
