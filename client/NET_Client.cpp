@@ -89,6 +89,7 @@ netClient::Go()
 	hnPoint	point;
 	sint8	levelCount;
 	netInventory inven;
+	netInventoryItem item;
 	objDescription *objList;
 	
 	m_display->TextMessage("Trying to connect to server...\n");
@@ -254,6 +255,18 @@ netClient::Go()
 						objList[i] = inven.GetObject(i);
 					m_display->UpdateInventory(inven.GetObjectCount(), objList);
 					delete [] objList;
+					break;
+				case SPT_TakenItem:
+					packet->TakenItem(item);
+					m_display->TakenItem(item.object, item.inventorySlot);
+					break;
+				case SPT_DroppedItem:
+					packet->DroppedItem(item);
+					m_display->DroppedItem(item.object);
+					break;
+				case SPT_WieldedItem:
+					packet->WieldedItem(item);
+					m_display->WieldedItem(item.object, item.inventorySlot);
 					break;
 				case SPT_BadPacketNotice:
 					packet->BadPacketNotice();

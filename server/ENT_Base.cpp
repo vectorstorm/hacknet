@@ -110,9 +110,11 @@ entBase::GetTakeTarget( const objDescription &desc, uint8 stackID )
 	return result;
 }*/
 
-void
+bool
 entBase::Take( objBase *object, uint8 count )
 {
+	bool result = false;
+	
 	if ( IsValidTake(object) )
 	{
 		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
@@ -122,12 +124,14 @@ entBase::Take( objBase *object, uint8 count )
 			hnPoint pos = GetPosition();
 			objBase *taken = map->MapTile(pos.x,pos.y).object->RemoveObjectQuantity(object, count);
 			m_inventory->AddObject(taken);
+			result = true;
 		}
 		else
 		{
 			printf("Weird -- GetTakeTarget() worked, but Take() didn't.\n");
 		}
 	}
+	return result;
 }
 
 bool
@@ -148,9 +152,10 @@ entBase::IsValidInventoryItem( objBase *object )
 	return result;
 }
 
-void
+bool
 entBase::Drop( objBase *object, uint8 count )
 {
+	bool result = false;
 	if ( IsValidInventoryItem(object) )
 	{
 		mapBase *map = hnDungeon::GetLevel( GetPosition().z );
@@ -161,17 +166,22 @@ entBase::Drop( objBase *object, uint8 count )
 			
 			hnPoint pos = GetPosition();
 			map->MapTile(pos.x,pos.y).object->AddObject(dropped);
+			result = true;
 		}
 	}
+	return result;
 }
 
-void
+bool
 entBase::Wield( objBase *object )
 {
+	bool result = false;
 	if ( IsValidInventoryItem(object) )
 	{
 		m_wieldedObject = object;
+		result = true;
 	}
+	return result;
 }
 
 

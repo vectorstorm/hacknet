@@ -10,6 +10,7 @@
 #include "HN_Config_Server.h"
 #include "NET_Packet.h"
 #include "ENT_Base.h"
+#include "OBJ_Types.h"
 
 class mapTile;
 class hnGame;
@@ -80,6 +81,10 @@ public:
 	void		SendDungeonReset( sint8 levelCount );
 	void		SendMapReset( int width, int height, int depth );
 	void		SendMessage( char * message );
+
+	void		SendDroppedItem( const objDescription & object );
+	void		SendTakenItem( const objDescription & object, int inventorySlot );
+	void		SendWieldedItem( const objDescription & object, int inventorySlot );
 	
 	void		SendQuitConfirm( int clientID );	// doesn't require a metapacket
 	void		SendBadPacketNotice( int clientID );	// doesn't require a metapacket

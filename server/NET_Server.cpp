@@ -17,6 +17,7 @@
 #include "NET_Packet.h"
 #include "HN_Game.h"
 #include "MAP_Base.h"
+#include "OBJ_Base.h"
 
 #define HACKNET_PORT 		(9274)
 #define MAX_CONNECTIONS		(16)
@@ -472,6 +473,37 @@ netServer::SendMapObjectList( const hnPoint & loc, int numObjects, entType objec
 	
 	m_metaPacket->MapObjectList(packet);*/
 }
+
+void
+netServer::SendDroppedItem( const objDescription &desc )
+{
+	netInventoryItem packet;
+	packet.object = desc;
+	packet.inventorySlot = 0;
+
+	m_metaPacket->DroppedItem(packet);
+}
+
+void
+netServer::SendTakenItem( const objDescription &desc, int inventorySlot )
+{
+	netInventoryItem packet;
+	packet.object = desc;
+	packet.inventorySlot = inventorySlot;
+
+	m_metaPacket->TakenItem(packet);
+}
+
+void
+netServer::SendWieldedItem( const objDescription &desc, int inventorySlot )
+{
+	netInventoryItem packet;
+	packet.object = desc;
+	packet.inventorySlot = inventorySlot;
+
+	m_metaPacket->WieldedItem(packet);
+}
+
 
 void
 netServer::SendMessage( char * message )

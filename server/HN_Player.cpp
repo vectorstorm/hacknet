@@ -46,6 +46,7 @@ hnPlayer::hnPlayer( int playerID, const hnPoint &where ):
 	}
 	
 	m_queuedTurn.type = queuedTurn::None;
+	m_completedTurn.type = queuedTurn::None;
 
 	if ( m_entity == NULL )
 		printf("Unable to allocate entity!\n");
@@ -168,6 +169,7 @@ hnPlayer::Take( const objDescription &desc, uint8 stackID )
 	if ( IsValidTake( desc, stackID ) )
 	{
 		m_queuedTurn.type = queuedTurn::Take;
+		m_queuedTurn.take.desc = desc;
 		m_queuedTurn.take.object = GetTakeTarget(desc,stackID);
 		m_queuedTurn.take.takeCount = desc.count;
 	}
@@ -179,6 +181,7 @@ hnPlayer::Drop( const objDescription &object, uint8 inventorySlot )
 	if ( IsValidInventoryItem( object, inventorySlot ) )
 	{
 		m_queuedTurn.type = queuedTurn::Drop;
+		m_queuedTurn.drop.desc = object;
 		m_queuedTurn.drop.object = m_clientInventoryMapping[inventorySlot];
 		m_queuedTurn.drop.dropCount = object.count;
 	}
@@ -195,12 +198,16 @@ hnPlayer::Wield( const objDescription &object, uint8 inventorySlot )
 	{
 		m_queuedTurn.type = queuedTurn::Wield;
 		m_queuedTurn.wield.object = m_clientInventoryMapping[inventorySlot];
+		m_queuedTurn.wield.desc = object;
+		m_queuedTurn.wield.inventorySlot = inventorySlot;
 	}
 	else
 	{
 		// unwield instead.
 		m_queuedTurn.type = queuedTurn::Wield;
 		m_queuedTurn.wield.object = NULL;
+		m_queuedTurn.wield.desc.type = OBJECT_None;
+		m_queuedTurn.wield.inventorySlot = inventorySlot;
 	}
 }
 
@@ -328,11 +335,13 @@ hnPlayer::DoAction()
 	int result;
 	char name[128];
 	char buffer[128];
+	bool success = false;
 
 	switch ( m_queuedTurn.type )
 	{
 		case queuedTurn::Move:
 			m_movePending = m_entity->FindMoveDestination( m_moveDestination, m_queuedTurn.move.direction );
+			success = true;
 			break;
 		case queuedTurn::Attack:
 			
@@ -353,24 +362,25 @@ hnPlayer::DoAction()
 			
 			hnGame::GetInstance()->SeenEvent(this,buffer);
 			
-			//netServer::GetInstance()->StartMetaPacket(m_playerID);
-			//netServer::GetInstance()->SendMessage(buffer);
-			//netServer::GetInstance()->TransmitMetaPacket();
+			success = true;
 			break;
 		case queuedTurn::Take:
-			m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.takeCount );
+			success = m_entity->Take( m_queuedTurn.take.object, m_queuedTurn.take.takeCount );
 			break;
 		case queuedTurn::Drop:
-			m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.dropCount );
+			success = m_entity->Drop( m_queuedTurn.drop.object, m_queuedTurn.drop.dropCount );
 			break;
 		case queuedTurn::Wield:
-			m_entity->Wield( m_queuedTurn.wield.object );
+			success = m_entity->Wield( m_queuedTurn.wield.object );
 			break;
 		case queuedTurn::Wait:
 			// do nothing.
 			break;
 	}
-
+	
+	if ( success )
+		m_completedTurn = m_queuedTurn;
+	
 	m_queuedTurn.type = queuedTurn::None;
 }
 
@@ -524,6 +534,7 @@ hnPlayer::SendUpdate()
 	}
 
 	objBase *inventory = m_entity->GetInventory();
+	uint8 updatedID = 0;
 
 	if ( inventory )
 	{
@@ -558,6 +569,7 @@ hnPlayer::SendUpdate()
 						slotUsed[j] = true;
 						if ( !object->ExactMatch(m_clientInventory[j]) )
 						{
+							updatedID = j;
 							object->FillDescription( m_clientInventory[j] );
 							inventoryUpdated = true;
 						}
@@ -577,6 +589,7 @@ hnPlayer::SendUpdate()
 					{
 						if ( m_clientInventoryMapping[j] == NULL && m_clientInventory[j].type == result.type )
 						{
+							updatedID = j;
 							finished = true;
 							inventoryUpdated = true;
 							m_clientInventory[j] = result;
@@ -592,6 +605,7 @@ hnPlayer::SendUpdate()
 						{
 							if ( m_clientInventoryMapping[j] == NULL )
 							{
+								updatedID = j;
 								m_clientInventoryMapping[j] = object;
 								m_clientInventory[j] = result;
 								finished = true;
@@ -628,11 +642,29 @@ hnPlayer::SendUpdate()
 		}
 	}
 
-       //----------------------------------------------------------------
-       // Send the metapacket now.  The server will recognize if there's
-       // no data in the packet, and will abort the send (returning
-       // false, although we don't really care about that).
-       //----------------------------------------------------------------
+	//---------------------------------------------------------------
+	// Check to see if we need to send the result of an action..
+	//---------------------------------------------------------------
+
+	switch( m_completedTurn.type )
+	{
+		case queuedTurn::Take:
+			netServer::GetInstance()->SendTakenItem( m_completedTurn.take.desc, updatedID );
+			break;
+		case queuedTurn::Drop:
+			netServer::GetInstance()->SendDroppedItem( m_completedTurn.drop.desc );
+			break;
+		case queuedTurn::Wield:
+			netServer::GetInstance()->SendWieldedItem( m_completedTurn.wield.desc, m_completedTurn.wield.inventorySlot );
+			break;
+	}
+	m_completedTurn.type = queuedTurn::None;
+
+	//----------------------------------------------------------------
+	// Send the metapacket now.  The server will recognize if there's
+       	// no data in the packet, and will abort the send (returning
+       	// false, although we don't really care about that).
+       	//----------------------------------------------------------------
 	
 	netServer::GetInstance()->TransmitMetaPacket();	// all done!
 }

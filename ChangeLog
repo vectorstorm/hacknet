@@ -13,6 +13,8 @@ July 14, 2001:
   * Wired up 'wielding' networking on client side.
   * Client-side UI to wielding objects.
   * Wielded weapons now do more damage in attacks.
+  * Extra confirmation messages to client to tell him when objects
+    are taken/dropped/wielded, identical to NetHack messages.
 
 July 13, 2001:
   * Converted Take command to the newly modified system, so entBase

@@ -24,6 +24,8 @@ protected:
 	objDescription 	m_inventory[INVENTORY_MAX];
 	uint8		m_inventoryCount;
 
+	sint8		m_wieldedItem;
+
 	hnStatus *	m_status;	// status of our player.
 
 	int		m_groupMemberCount;		// how many members in my group.
@@ -60,6 +62,10 @@ public:
 	virtual void	UpdateGroupData( int groupMemberCount, int groupMemberTurnCount, bool submittedTurn );
 	virtual void	UpdateInventory( int objectCount, objDescription *objectArray );
 	virtual void	TextMessage( char * message ) {}
+
+	virtual void	TakenItem( const objDescription &desc, int inventoryID );
+	virtual void	DroppedItem( const objDescription &desc );
+	virtual void	WieldedItem( const objDescription &desc, int inventoryID );
 
 	char *		GetName() { return m_name; }
 

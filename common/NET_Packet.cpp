@@ -282,6 +282,42 @@ netMetaPacket::Inventory( netInventory &packet )
 }
 
 bool
+netMetaPacket::TakenItem( netInventoryItem &packet )
+{
+	m_error = false;
+	
+	sint8 type = SPT_TakenItem;
+	Sint8(type);
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::DroppedItem( netInventoryItem &packet )
+{	
+	m_error = false;
+	
+	sint8 type = SPT_DroppedItem;
+	Sint8(type);
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+bool
+netMetaPacket::WieldedItem( netInventoryItem &packet )
+{	
+	m_error = false;
+	
+	sint8 type = SPT_WieldedItem;
+	Sint8(type);
+	NetInventoryItem(packet);
+	
+	return (!m_error);
+}
+
+bool
 netMetaPacket::MapEntity( netMapEntity &packet )
 {
 	m_error = false;

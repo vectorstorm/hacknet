@@ -71,12 +71,12 @@ public:
 	virtual int		Attack( hnDirection direction );
 
 	virtual bool		IsValidTake( objBase *object );
-	virtual void		Take( objBase *object, uint8 count );
+	virtual bool		Take( objBase *object, uint8 count );
 
 	virtual bool		IsValidInventoryItem( objBase *object );
 
-	virtual void		Drop( objBase *object, uint8 count );
-	virtual void		Wield( objBase *object );
+	virtual bool		Drop( objBase *object, uint8 count );
+	virtual bool		Wield( objBase *object );
 	
 	virtual void		PreTurn() {}			// Called before processing a turn
 	virtual void		PostTurn() {}			// Called after processing a turn

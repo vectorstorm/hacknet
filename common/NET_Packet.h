@@ -22,6 +22,9 @@ enum{
 	SPT_MapUpdateBBox,
 	SPT_MapObjectList,
 	SPT_MapEntity,
+	SPT_TakenItem,		// this item was just taken
+	SPT_DroppedItem,	// this item was just dropped
+	SPT_WieldedItem,	// this item was just wielded
 	SPT_GroupData,		// sending information on the player's group.
 	SPT_Inventory,
 	SPT_QuitConfirm,	// yes, you're out of the game
@@ -204,6 +207,9 @@ public:
 	bool			MapEntity( netMapEntity &packet );
 	bool			MapObjectList( netMapObjectList &packet );
 	bool			Inventory( netInventory &packet );
+	bool			TakenItem( netInventoryItem &packet );
+	bool			DroppedItem( netInventoryItem &packet );
+	bool			WieldedItem( netInventoryItem &packet );
 	bool			JoinOK();
 	bool			QuitConfirm();
 	bool			SaveConfirm();

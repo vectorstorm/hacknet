@@ -34,14 +34,18 @@ struct queuedTurn
 		} attack;
 		struct{
 			objBase * object;
+			objDescription desc;
 			uint8 takeCount;
 		} take;
 		struct{
 			objBase * object;
+			objDescription desc;
 			uint8 dropCount;
 		} drop;
 		struct{
 			objBase * object;
+			objDescription desc;
+			uint8	inventorySlot;
 		} wield;
 	};
 };
@@ -64,6 +68,7 @@ class hnPlayer
 	hnGroup *	m_group;				// pointer to the group we're a part of.
 	
 	queuedTurn	m_queuedTurn;
+	queuedTurn	m_completedTurn;
 	
 	int		m_lastSentGroupPlayerCount;
 	int		m_lastSentGroupPlayerQueuedTurns;

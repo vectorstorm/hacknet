@@ -60,7 +60,7 @@ public:
 	void		HandleWield();
 	void		HandleInventory();
 
-	void		DrawObjectArray(objDescription *array, uint8 count);
+	void		DrawObjectArray(objDescription *array, uint8 count, bool inventory);
 	
 	virtual void	PostTurnSubmit();
 	

@@ -717,13 +717,13 @@ hnDisplayTTY::Refresh()
 		if ( m_mode == MODE_InventoryDisplay ||
 			m_mode == MODE_InventorySelect )
 		{
-			DrawObjectArray(m_inventory,m_inventoryCount);
+			DrawObjectArray(m_inventory,m_inventoryCount,true);
 		}
 		else if ( m_mode == MODE_FloorObjectDisplay ||
 			m_mode == MODE_FloorObjectSelect )
 		{
 			mapClientTile &tile = m_map[m_position.z]->MapTile(m_position.x,m_position.y);
-			DrawObjectArray(tile.object, tile.objectCount);
+			DrawObjectArray(tile.object, tile.objectCount,false);
 		}
 	
 		refresh();
@@ -769,7 +769,7 @@ hnDisplayTTY::DisplayItems()
 }
 
 void
-hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount)
+hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount,bool inventory)
 {
 	const char inventoryLetters[56] =
 	{
@@ -837,7 +837,10 @@ hnDisplayTTY::DrawObjectArray(objDescription *objects,uint8 objectCount)
 				}
 				GetObjectDescriptionText(objects[i],buffer,256);
 				move(y++,x);
-				if ( drawletters )
+				
+				if ( inventory && m_wieldedItem == i )
+					printw("%c - %s (weapon in hands)", inventoryLetters[i], buffer);
+				else if ( drawletters )
 					printw("%c - %s", inventoryLetters[i], buffer);
 				else
 					printw("%s", buffer);
